@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #080808;
+    --s1:       #0f0f0f;
+    --s2:       #141414;
+    --s3:       #1a1a1a;
+    --border:   #222;
+    --border2:  #2a2a2a;
+    --text:     #e8e8e8;
+    --muted:    #555;
+    --muted2:   #888;
+    --white:    #ffffff;
+    --green:    #00d084;
+    --green-d:  #00d08415;
+    --green-b:  #00d08430;
+    --meta:     #0082fb;
+    --meta-d:   #0082fb15;
+    --tt:       #ff2d55;
+    --tt-d:     #ff2d5515;
+    --yt:       #ff0000;
+    --yt-d:     #ff000015;
+    --up:       #00d084;
+    --down:     #ff4d4d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 220px;
+    background: var(--s1);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 0;
+    z-index: 100;
+  }
+
+  .logo {
+    padding: 0 24px 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .logo-mark svg { width: 16px; height: 16px; }
+
+  .logo-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .nav { padding: 0 12px; flex: 1; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted2);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    font-weight: 500;
+  }
+
+  .nav-item:hover { background: var(--s2); color: var(--text); }
+  .nav-item.active { background: var(--s2); color: var(--white); }
+
+  .nav-icon { width: 16px; height: 16px; opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .nav-section {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 16px 12px 6px;
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .live-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    margin-left: auto;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .sidebar-footer {
+    padding: 16px 24px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted2);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 220px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+  }
+
+  .topbar-date {
+    font-size: 12px;
+    color: var(--muted2);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .refresh-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--s2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted2);
+  }
+
+  .refresh-btn:hover { border-color: var(--green); color: var(--green); }
+  .refresh-btn.spinning svg { animation: spin 0.6s linear; }
+
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ── CONTENT ── */
+  .content {
+    padding: 32px;
+    flex: 1;
+  }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--border2); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, #fff2), transparent);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted2);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stat-icon {
+    width: 14px; height: 14px;
+    opacity: 0.6;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-value .currency {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--muted2);
+    letter-spacing: 0;
+  }
+
+  .stat-change {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .stat-change.up { color: var(--up); }
+  .stat-change.down { color: var(--down); }
+  .stat-change.neutral { color: var(--muted2); }
+
+  /* ── PLATFORM BREAKDOWN ── */
+  .section-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .card-badge {
+    font-size: 10px;
+    font-family: 'Geist Mono', monospace;
+    color: var(--muted2);
+    background: var(--s2);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .card-body { padding: 16px 20px; }
+
+  /* PLATFORM BARS */
+  .platform-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .platform-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 80px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .platform-info { display: flex; align-items: center; gap: 8px; }
+
+  .platform-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .platform-name { font-size: 12px; font-weight: 500; color: var(--text); }
+
+  .bar-track {
+    height: 4px;
+    background: var(--s3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .platform-amount {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    text-align: right;
+    font-family: 'Geist Mono', monospace;
+  }
+
+  /* CONVERSION RATE */
+  .conversion-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .conv-big {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .conv-number {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .conv-pct {
+    font-size: 20px;
+    color: var(--muted2);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+
+  .conv-desc {
+    font-size: 12px;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+
+  .conv-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted2);
+    font-family: 'Geist Mono', monospace;
+    margin-bottom: 6px;
+  }
+
+  .conv-track {
+    height: 6px;
+    background: var(--s3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .conv-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green), #00ffaa);
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── ORDERS TABLE ── */
+  .table-card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted2);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--s2); }
+
+  tbody td {
+    padding: 13px 16px;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .platform-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .tag-meta { background: var(--meta-d); color: var(--meta); border: 1px solid #0082fb25; }
+  .tag-tt   { background: var(--tt-d);   color: var(--tt);   border: 1px solid #ff2d5525; }
+  .tag-yt   { background: var(--yt-d);   color: var(--yt);   border: 1px solid #ff000025; }
+
+  .tag-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+  .payout-cell {
+    font-weight: 600;
+    color: var(--green);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--green-d);
+    color: var(--green);
+    border: 1px solid var(--green-b);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .status-dot-badge {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  .time-cell {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--muted2);
+  }
+
+  .id-cell {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--muted2);
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    padding: 48px;
+    text-align: center;
+    color: var(--muted2);
+  }
+
+  .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-title { font-size: 14px; font-weight: 500; color: var(--muted2); margin-bottom: 6px; }
+  .empty-sub { font-size: 12px; color: var(--muted); }
+
+  /* LOADING */
+  .skeleton {
+    background: linear-gradient(90deg, var(--s2) 25%, var(--s3) 50%, var(--s2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .skeleton-text { height: 14px; width: 80%; }
+  .skeleton-num  { height: 28px; width: 60%; margin-top: 8px; }
+
+  /* ERROR BANNER */
+  .error-banner {
+    background: #ff4d4d10;
+    border: 1px solid #ff4d4d30;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #ff8080;
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-banner.visible { display: flex; }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 800px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .section-row { grid-template-columns: 1fr; }
+  }
+
+  /* ANIMATIONS */
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.05s; }
+  .stat-card:nth-child(2) { animation-delay: 0.1s; }
+  .stat-card:nth-child(3) { animation-delay: 0.15s; }
+  .stat-card:nth-child(4) { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 16 16" fill="none">
+        <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" fill="#080808" stroke="#080808"/>
+        <path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" fill="white" opacity="0.9"/>
+      </svg>
+    </div>
+    <div class="logo-name">Network Tracker</div>
+    <div class="logo-sub">v1.0.0</div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="6" height="6" rx="1"/>
+        <rect x="9" y="1" width="6" height="6" rx="1"/>
+        <rect x="1" y="9" width="6" height="6" rx="1"/>
+        <rect x="9" y="9" width="6" height="6" rx="1"/>
+      </svg>
+      Dashboard
+      <div class="live-dot"></div>
+    </div>
+
+    <div class="nav-section">Platforms</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1.5C4.41 1.5 1.5 4.41 1.5 8C1.5 11.59 4.41 14.5 8 14.5C11.59 14.5 14.5 11.59 14.5 8C14.5 4.41 11.59 1.5 8 1.5Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M9.5 6H8.5V5.5C8.5 5.22 8.72 5 9 5H9.5V3.5H8.5C7.4 3.5 6.5 4.4 6.5 5.5V6H5.5V7.5H6.5V12.5H8.5V7.5H9.5L9.5 6Z" fill="currentColor"/>
+      </svg>
+      Meta
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1C4.13 1 1 4.13 1 8C1 11.87 4.13 15 8 15C11.87 15 15 11.87 15 8C15 4.13 11.87 1 8 1Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M6 5.5L11 8L6 10.5V5.5Z" fill="currentColor"/>
+      </svg>
+      YouTube
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 1H7V9.5C7 10.88 5.88 12 4.5 12C3.12 12 2 10.88 2 9.5C2 8.12 3.12 7 4.5 7C4.84 7 5.16 7.07 5.45 7.19V5.14C5.14 5.05 4.82 5 4.5 5C2.01 5 0 7.01 0 9.5C0 11.99 2.01 14 4.5 14C6.99 14 9 11.99 9 9.5V5C9.97 5.73 11.18 6.17 12.5 6.17V4.17C10.57 4.17 9 2.76 9 1Z"/>
+      </svg>
+      TikTok
+    </div>
+
+    <div class="nav-section">Data</div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 4H14M4 8H12M6 12H10"/>
+      </svg>
+      Orders
+    </div>
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 12L5 8L8 10L11 5L14 8"/>
+        <path d="M2 2V14H14"/>
+      </svg>
+      Analytics
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-indicator">
+      <div class="status-dot"></div>
+      Server online
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Dashboard</div>
+    <div class="topbar-date" id="current-date"></div>
+    <div class="refresh-btn" onclick="loadData()" title="Refresh">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M13.5 8C13.5 11.04 11.04 13.5 8 13.5C4.96 13.5 2.5 11.04 2.5 8C2.5 4.96 4.96 2.5 8 2.5C9.74 2.5 11.3 3.28 12.36 4.5"/>
+        <path d="M10.5 2L13 4.5L10.5 7"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ERROR BANNER -->
+    <div class="error-banner" id="error-banner">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="6.5"/>
+        <path d="M8 5V8.5M8 11V11.5"/>
+      </svg>
+      <span id="error-text">Could not connect to server. Showing demo data.</span>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card fade-in" style="--accent-color: #00d08440">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 1L10 6H15L11 9.5L12.5 14.5L8 11.5L3.5 14.5L5 9.5L1 6H6L8 1Z"/>
+          </svg>
+          Revenue Today
+        </div>
+        <div class="stat-value" id="revenue-today"><span class="currency">$</span><span class="skeleton skeleton-num" style="display:inline-block;width:80px;height:28px;vertical-align:middle"></span></div>
+        <div class="stat-change neutral" id="revenue-change">Loading...</div>
+      </div>
+
+      <div class="stat-card fade-in" style="--accent-color: #0082fb40">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1.5" y="3.5" width="13" height="9" rx="1.5"/>
+            <path d="M5 7H11M5 9.5H8.5"/>
+          </svg>
+          Orders Today
+        </div>
+        <div class="stat-value" id="orders-today"><span class="skeleton skeleton-num" style="display:inline-block;width:60px;height:28px;vertical-align:middle"></span></div>
+        <div class="stat-change neutral" id="orders-change">Loading...</div>
+      </div>
+
+      <div class="stat-card fade-in" style="--accent-color: #ff2d5540">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M8 1C4.13 1 1 4.13 1 8C1 11.87 4.13 15 8 15C11.87 15 15 11.87 15 8C15 4.13 11.87 1 8 1Z"/>
+            <path d="M8 4V8L11 10"/>
+          </svg>
+          Total Revenue
+        </div>
+        <div class="stat-value" id="revenue-total"><span class="currency">$</span><span class="skeleton skeleton-num" style="display:inline-block;width:80px;height:28px;vertical-align:middle"></span></div>
+        <div class="stat-change neutral" id="total-orders-label">Loading...</div>
+      </div>
+
+      <div class="stat-card fade-in" style="--accent-color: #ffffff20">
+        <div class="stat-label">
+          <svg class="stat-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M2 12L5 8L8 10L11 5L14 8"/>
+          </svg>
+          Conversion Rate
+        </div>
+        <div class="stat-value" id="conv-rate"><span class="skeleton skeleton-num" style="display:inline-block;width:70px;height:28px;vertical-align:middle"></span></div>
+        <div class="stat-change neutral" id="conv-label">Loading...</div>
+      </div>
+    </div>
+
+    <!-- PLATFORM + CONVERSION -->
+    <div class="section-row">
+
+      <!-- PLATFORM BREAKDOWN -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Revenue by Platform</div>
+          <div class="card-badge" id="platform-period">Today</div>
+        </div>
+        <div class="card-body">
+          <div class="platform-list" id="platform-list">
+            <div class="platform-row">
+              <div class="platform-info"><div class="platform-dot" style="background:var(--meta)"></div><div class="platform-name">Meta</div></div>
+              <div class="bar-track"><div class="bar-fill skeleton" style="width:100%;background:none"></div></div>
+              <div class="platform-amount skeleton" style="width:50px;height:14px;display:inline-block"></div>
+            </div>
+            <div class="platform-row">
+              <div class="platform-info"><div class="platform-dot" style="background:var(--yt)"></div><div class="platform-name">YouTube</div></div>
+              <div class="bar-track"><div class="bar-fill skeleton" style="width:100%;background:none"></div></div>
+              <div class="platform-amount skeleton" style="width:50px;height:14px;display:inline-block"></div>
+            </div>
+            <div class="platform-row">
+              <div class="platform-info"><div class="platform-dot" style="background:var(--tt)"></div><div class="platform-name">TikTok</div></div>
+              <div class="bar-track"><div class="bar-fill skeleton" style="width:100%;background:none"></div></div>
+              <div class="platform-amount skeleton" style="width:50px;height:14px;display:inline-block"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONVERSION RATE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Conversion Rate</div>
+          <div class="card-badge">Clicks → Orders</div>
+        </div>
+        <div class="card-body">
+          <div class="conversion-wrap">
+            <div class="conv-big">
+              <div class="conv-number" id="conv-big-number">–</div>
+              <div class="conv-pct">%</div>
+            </div>
+            <div class="conv-desc" id="conv-desc">Loading conversion data...</div>
+            <div class="conv-bar-wrap">
+              <div class="conv-bar-label">
+                <span>0%</span>
+                <span id="conv-bar-label-right">–</span>
+              </div>
+              <div class="conv-track">
+                <div class="conv-fill" id="conv-fill" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ORDERS TABLE -->
+    <div class="table-card">
+      <div class="card-header">
+        <div class="card-title">Recent Orders</div>
+        <div class="card-badge" id="orders-count-badge">Loading...</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>Platform</th>
+              <th>Campaign</th>
+              <th>Payout</th>
+              <th>Status</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="orders-tbody">
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <div class="skeleton" style="height:12px;width:200px;margin:0 auto 8px"></div>
+                  <div class="skeleton" style="height:12px;width:140px;margin:0 auto"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── DATE ──
+  function updateDate() {
+    const now = new Date();
+    document.getElementById('current-date').textContent =
+      now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+  }
+  updateDate();
+
+  // ── PLATFORM COLORS ──
+  const PLATFORM_COLORS = {
+    meta:     { color: '#0082fb', dim: '#0082fb15', border: '#0082fb25', label: 'Meta' },
+    facebook: { color: '#0082fb', dim: '#0082fb15', border: '#0082fb25', label: 'Meta' },
+    youtube:  { color: '#ff0000', dim: '#ff000015', border: '#ff000025', label: 'YouTube' },
+    tiktok:   { color: '#ff2d55', dim: '#ff2d5515', border: '#ff2d5525', label: 'TikTok' },
+    unknown:  { color: '#888',    dim: '#88888815', border: '#88888825', label: 'Unknown' }
+  };
+
+  function getPlatform(source) {
+    const s = (source || '').toLowerCase();
+    if (s.includes('meta') || s.includes('facebook') || s.includes('fb')) return 'meta';
+    if (s.includes('youtube') || s.includes('yt') || s.includes('google')) return 'youtube';
+    if (s.includes('tiktok') || s.includes('tt')) return 'tiktok';
+    return 'unknown';
+  }
+
+  // ── FORMAT ──
+  function fmt(n) {
+    return parseFloat(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function timeAgo(dateStr) {
+    const diff = (Date.now() - new Date(dateStr)) / 1000;
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+    return new Date(dateStr).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  }
+
+  // ── LOAD DATA ──
+  async function loadData() {
+    const btn = document.querySelector('.refresh-btn');
+    btn.classList.add('spinning');
+
+    try {
+      const [statsRes, ordersRes] = await Promise.all([
+        fetch('/api/stats'),
+        fetch('/api/orders?limit=20')
+      ]);
+
+      if (!statsRes.ok || !ordersRes.ok) throw new Error('Server error');
+
+      const stats  = await statsRes.json();
+      const orders = await ordersRes.json();
+
+      document.getElementById('error-banner').classList.remove('visible');
+      renderStats(stats);
+      renderOrders(orders);
+
+    } catch(e) {
+      // Show demo data if server not connected yet
+      document.getElementById('error-banner').classList.add('visible');
+      renderStats(getDemoStats());
+      renderOrders(getDemoOrders());
+    }
+
+    setTimeout(() => btn.classList.remove('spinning'), 500);
+  }
+
+  // ── RENDER STATS ──
+  function renderStats(stats) {
+    // Revenue today
+    document.getElementById('revenue-today').innerHTML =
+      `<span class="currency">$</span>${fmt(stats.revenue_today)}`;
+
+    // Orders today
+    document.getElementById('orders-today').textContent = stats.orders_today || 0;
+
+    // Total revenue
+    document.getElementById('revenue-total').innerHTML =
+      `<span class="currency">$</span>${fmt(stats.revenue_total)}`;
+
+    // Conversion rate
+    const rate = stats.conversion_rate || 0;
+    document.getElementById('conv-rate').textContent = `${rate.toFixed(1)}%`;
+    document.getElementById('conv-big-number').textContent = rate.toFixed(1);
+    document.getElementById('conv-fill').style.width = `${Math.min(rate * 5, 100)}%`;
+    document.getElementById('conv-desc').textContent =
+      `${stats.total_clicks || 0} clicks → ${stats.total_orders || 0} orders all time`;
+    document.getElementById('conv-bar-label-right').textContent = `${rate.toFixed(1)}%`;
+
+    // Changes
+    const rChange = stats.revenue_change || 0;
+    const oChange = stats.orders_change || 0;
+    document.getElementById('revenue-change').innerHTML =
+      `<span class="${rChange >= 0 ? 'up' : 'down'}">${rChange >= 0 ? '↑' : '↓'} ${Math.abs(rChange).toFixed(1)}% vs yesterday</span>`;
+    document.getElementById('orders-change').innerHTML =
+      `<span class="${oChange >= 0 ? 'up' : 'down'}">${oChange >= 0 ? '↑' : '↓'} ${Math.abs(oChange)} vs yesterday</span>`;
+    document.getElementById('total-orders-label').textContent =
+      `${stats.total_orders || 0} total orders`;
+    document.getElementById('conv-label').textContent =
+      `Based on ${stats.total_clicks || 0} tracked clicks`;
+
+    // Platform breakdown
+    renderPlatforms(stats.by_platform || []);
+
+    // Badge
+    document.getElementById('orders-count-badge').textContent =
+      `${stats.orders_today || 0} today`;
+  }
+
+  // ── RENDER PLATFORMS ──
+  function renderPlatforms(platforms) {
+    const total = platforms.reduce((s, p) => s + parseFloat(p.revenue || 0), 0);
+    const order = ['meta', 'youtube', 'tiktok'];
+
+    // Merge with defaults
+    const map = {};
+    platforms.forEach(p => { map[getPlatform(p.source)] = p; });
+
+    const list = document.getElementById('platform-list');
+    list.innerHTML = order.map(key => {
+      const p = map[key];
+      const rev = p ? parseFloat(p.revenue || 0) : 0;
+      const pct = total > 0 ? (rev / total * 100) : 0;
+      const cfg = PLATFORM_COLORS[key];
+      return `
+        <div class="platform-row">
+          <div class="platform-info">
+            <div class="platform-dot" style="background:${cfg.color}"></div>
+            <div class="platform-name">${cfg.label}</div>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${pct}%;background:${cfg.color};opacity:0.8"></div>
+          </div>
+          <div class="platform-amount">$${fmt(rev)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── RENDER ORDERS ──
+  function renderOrders(orders) {
+    const tbody = document.getElementById('orders-tbody');
+
+    if (!orders || orders.length === 0) {
+      tbody.innerHTML = `
+        <tr><td colspan="6">
+          <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <div class="empty-title">No orders yet</div>
+            <div class="empty-sub">Orders will appear here as postbacks arrive</div>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = orders.map(o => {
+      const pk = getPlatform(o.traffic_source);
+      const cfg = PLATFORM_COLORS[pk];
+      const tagClass = pk === 'meta' ? 'tag-meta' : pk === 'youtube' ? 'tag-yt' : pk === 'tiktok' ? 'tag-tt' : '';
+      return `
+        <tr>
+          <td class="id-cell">${(o.transaction_id || '–').substring(0, 16)}...</td>
+          <td><span class="platform-tag ${tagClass}"><span class="tag-dot"></span>${cfg.label}</span></td>
+          <td style="color:var(--muted2);font-size:12px">${o.campaign_id || '–'}</td>
+          <td class="payout-cell">+$${fmt(o.payout)}</td>
+          <td><span class="status-badge"><span class="status-dot-badge"></span>Confirmed</span></td>
+          <td class="time-cell">${timeAgo(o.received_at)}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── DEMO DATA (shown when server not connected) ──
+  function getDemoStats() {
+    return {
+      revenue_today: 1240.00,
+      orders_today: 27,
+      revenue_total: 18450.00,
+      total_orders: 412,
+      total_clicks: 8240,
+      conversion_rate: 5.0,
+      revenue_change: 12.4,
+      orders_change: 5,
+      by_platform: [
+        { source: 'meta',    revenue: 620 },
+        { source: 'youtube', revenue: 380 },
+        { source: 'tiktok',  revenue: 240 }
+      ]
+    };
+  }
+
+  function getDemoOrders() {
+    const sources = ['meta', 'youtube', 'tiktok'];
+    const campaigns = ['Summer_v3', 'Broad_01', 'Retarget', 'LAL_v2', 'YT_brand'];
+    return Array.from({ length: 8 }, (_, i) => ({
+      transaction_id: `DEMO_${Math.random().toString(36).substr(2,12).toUpperCase()}`,
+      traffic_source: sources[i % 3],
+      campaign_id: campaigns[i % 5],
+      payout: (Math.random() * 40 + 20).toFixed(2),
+      received_at: new Date(Date.now() - i * 1000 * 60 * 15).toISOString()
+    }));
+  }
+
+  // ── INIT ──
+  loadData();
+  // Auto-refresh every 30 seconds
+  setInterval(loadData, 30000);
+</script>
+</body>
+</html>
