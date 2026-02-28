@@ -6,521 +6,515 @@
 <title>Network Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#080808;--s1:#0f0f0f;--s2:#141414;--s3:#1c1c1c;
-    --border:#222;--border2:#2a2a2a;
-    --text:#e8e8e8;--muted:#555;--muted2:#888;--white:#fff;
-    --green:#00d084;--green-d:#00d08415;--green-b:#00d08430;
-    --meta:#0082fb;--meta-d:#0082fb15;
-    --tt:#ff2d55;--tt-d:#ff2d5515;
-    --yt:#ff0000;--yt-d:#ff000015;
-    --red:#ff4d4d;--red-d:#ff4d4d15;--red-b:#ff4d4d30;
-    --orange:#ff9500;--orange-d:#ff950015;
-    --sidebar-w:228px;
-  }
-  [data-theme="light"]{
-    --bg:#f5f5f5;--s1:#ffffff;--s2:#f0f0f0;--s3:#e8e8e8;
-    --border:#e0e0e0;--border2:#d0d0d0;
-    --text:#1a1a1a;--muted:#aaa;--muted2:#777;--white:#1a1a1a;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background 0.2s,color 0.2s;}
+:root{--bg:#080808;--s1:#0f0f0f;--s2:#141414;--s3:#1c1c1c;--border:#222;--border2:#2a2a2a;--text:#e8e8e8;--muted:#555;--muted2:#888;--white:#fff;--green:#00d084;--green-d:#00d08415;--green-b:#00d08430;--meta:#0082fb;--meta-d:#0082fb15;--tt:#ff2d55;--tt-d:#ff2d5515;--snap:#b8b000;--snap-d:#FFFC0015;--google:#4285f4;--google-d:#4285f415;--red:#ff4d4d;--red-d:#ff4d4d15;--red-b:#ff4d4d30;--orange:#ff9500;--sw:228px;}
+[data-theme="light"]{--bg:#f4f4f4;--s1:#fff;--s2:#f0f0f0;--s3:#e8e8e8;--border:#e0e0e0;--border2:#d0d0d0;--text:#1a1a1a;--muted:#bbb;--muted2:#777;--white:#111;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;transition:background .2s,color .2s;}
 
-  /* ── LOGIN ── */
-  .login-page{display:none;min-height:100vh;align-items:center;justify-content:center;}
-  .login-page.active{display:flex;}
-  .login-box{width:100%;max-width:420px;padding:20px;}
-  .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px;justify-content:center;}
-  .login-logo-mark{width:42px;height:42px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;}
-  .login-logo-name{font-size:20px;font-weight:700;color:var(--white);}
-  .login-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:32px;}
-  .login-title{font-size:22px;font-weight:700;color:var(--white);margin-bottom:4px;}
-  .login-sub{font-size:13px;color:var(--muted2);margin-bottom:24px;}
-  .form-group{margin-bottom:14px;}
-  .form-label{font-size:12px;color:var(--muted2);margin-bottom:5px;display:block;font-weight:500;}
-  .form-input{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 13px;font-size:14px;color:var(--text);font-family:'Geist',sans-serif;outline:none;transition:border-color 0.15s;}
-  .form-input:focus{border-color:var(--green);}
-  .form-input::placeholder{color:var(--muted);}
-  .btn-primary{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;transition:opacity 0.15s;margin-top:6px;}
-  .btn-primary:hover{opacity:0.88;}
-  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
-  .login-switch{text-align:center;margin-top:18px;font-size:13px;color:var(--muted2);}
-  .login-switch a{color:var(--green);text-decoration:none;cursor:pointer;}
-  .form-error{font-size:12px;color:var(--red);margin-top:6px;display:none;}
-  .form-error.visible{display:block;}
+.login-page{display:none;min-height:100vh;align-items:center;justify-content:center;}
+.login-page.active{display:flex;}
+.lbox{width:100%;max-width:420px;padding:20px;}
+.llogo{display:flex;align-items:center;gap:12px;margin-bottom:36px;justify-content:center;}
+.llogo-mark{width:40px;height:40px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.llogo-name{font-size:19px;font-weight:700;color:var(--white);}
+.lcard{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:30px;}
+.ltitle{font-size:21px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.lsub{font-size:13px;color:var(--muted2);margin-bottom:22px;}
+.fg{margin-bottom:13px;}
+.fl{font-size:11px;color:var(--muted2);margin-bottom:5px;display:block;font-weight:500;}
+.fi{width:100%;background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:10px 13px;font-size:13px;color:var(--text);font-family:'Geist',sans-serif;outline:none;transition:border-color .15s;}
+.fi:focus{border-color:var(--green);}
+.fi::placeholder{color:var(--muted);}
+select.fi{cursor:pointer;}
+.bp{width:100%;background:var(--green);color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;margin-top:6px;}
+.bp:hover{opacity:.88;}
+.bp:disabled{opacity:.5;cursor:not-allowed;}
+.lswitch{text-align:center;margin-top:16px;font-size:12px;color:var(--muted2);}
+.lswitch a{color:var(--green);cursor:pointer;}
+.ferr{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+.ferr.v{display:block;}
 
-  /* ── APP ── */
-  .app{display:none;}
-  .app.active{display:flex;min-height:100vh;}
+.app{display:none;}
+.app.active{display:flex;min-height:100vh;}
 
-  /* ── SIDEBAR ── */
-  .sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:22px 0;z-index:100;transition:transform 0.25s;}
-  .logo{padding:0 18px 20px;border-bottom:1px solid var(--border);margin-bottom:16px;}
-  .logo-mark{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
-  .logo-name{font-size:13px;font-weight:700;color:var(--white);}
-  .logo-sub{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;}
-  .nav{padding:0 8px;flex:1;overflow-y:auto;}
-  .nav-section{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:12px 10px 5px;font-family:'Geist Mono',monospace;}
-  .nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:12px;color:var(--muted2);cursor:pointer;transition:all 0.15s;margin-bottom:1px;font-weight:500;border:none;background:none;width:100%;text-align:left;}
-  .nav-item:hover{background:var(--s2);color:var(--text);}
-  .nav-item.active{background:var(--s2);color:var(--white);}
-  .nav-icon{width:14px;height:14px;flex-shrink:0;opacity:0.6;}
-  .nav-item.active .nav-icon,.nav-item:hover .nav-icon{opacity:1;}
-  .live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;margin-left:auto;animation:pulse 2s infinite;}
-  .platform-dot-nav{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .sidebar-footer{padding:14px 18px 0;border-top:1px solid var(--border);}
-  .user-info{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
-  .user-avatar{width:26px;height:26px;border-radius:50%;background:var(--green-d);border:1px solid var(--green-b);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--green);flex-shrink:0;}
-  .user-name{font-size:12px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .user-role{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;}
-  .footer-actions{display:flex;gap:8px;align-items:center;}
-  .logout-btn{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Geist',sans-serif;padding:0;}
-  .logout-btn:hover{color:var(--red);}
-  .theme-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;margin-left:auto;}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0;z-index:100;transition:transform .25s;}
+.logo{padding:0 16px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.logo-mark{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;margin-bottom:7px;}
+.logo-name{font-size:13px;font-weight:700;color:var(--white);}
+.logo-sub{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;}
+.nav{padding:0 7px;flex:1;overflow-y:auto;}
+.ns{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:11px 10px 5px;font-family:'Geist Mono',monospace;}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;font-size:12px;color:var(--muted2);cursor:pointer;transition:all .15s;margin-bottom:1px;font-weight:500;border:none;background:none;width:100%;text-align:left;}
+.ni:hover{background:var(--s2);color:var(--text);}
+.ni.active{background:var(--s2);color:var(--white);}
+.ni-icon{width:13px;height:13px;flex-shrink:0;opacity:.6;}
+.ni.active .ni-icon,.ni:hover .ni-icon{opacity:1;}
+.ldot{width:5px;height:5px;background:var(--green);border-radius:50%;margin-left:auto;animation:pulse 2s infinite;}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sf{padding:13px 16px 0;border-top:1px solid var(--border);}
+.uinfo{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.uav{width:25px;height:25px;border-radius:50%;background:var(--green-d);border:1px solid var(--green-b);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--green);flex-shrink:0;}
+.uname{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.urole{font-size:10px;color:var(--muted);font-family:'Geist Mono',monospace;}
+.fa{display:flex;align-items:center;gap:8px;}
+.lout{font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:'Geist',sans-serif;padding:0;}
+.lout:hover{color:var(--red);}
+.ib{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;color:var(--muted2);}
+.ib:hover{border-color:var(--green);color:var(--green);}
 
-  /* ── MOBILE MENU ── */
-  .mobile-bar{display:none;position:fixed;top:0;left:0;right:0;height:52px;background:var(--s1);border-bottom:1px solid var(--border);z-index:200;align-items:center;padding:0 16px;gap:12px;}
-  .hamburger{width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-direction:column;gap:4px;padding:8px;}
-  .hamburger span{display:block;width:14px;height:1.5px;background:var(--muted2);border-radius:1px;}
-  .mobile-title{font-size:14px;font-weight:600;color:var(--white);}
-  .overlay{display:none;position:fixed;inset:0;background:#00000060;z-index:99;}
-  .overlay.visible{display:block;}
+.mbar{display:none;position:fixed;top:0;left:0;right:0;height:50px;background:var(--s1);border-bottom:1px solid var(--border);z-index:200;align-items:center;padding:0 14px;gap:10px;}
+.hbg{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--s2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px;cursor:pointer;padding:7px;}
+.hbg span{display:block;width:13px;height:1.5px;background:var(--muted2);border-radius:1px;}
+.mtitle{font-size:13px;font-weight:600;color:var(--white);}
+.ov{display:none;position:fixed;inset:0;background:#00000060;z-index:99;}
+.ov.v{display:block;}
 
-  /* ── MAIN ── */
-  .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
-  .topbar{height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:10px;background:var(--bg);position:sticky;top:0;z-index:50;}
-  .topbar-title{font-size:14px;font-weight:600;color:var(--white);flex:1;}
-  .topbar-date{font-size:11px;color:var(--muted2);font-family:'Geist Mono',monospace;}
-  .icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted2);transition:all 0.15s;font-size:12px;}
-  .icon-btn:hover{border-color:var(--green);color:var(--green);}
-  .content{padding:24px;flex:1;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;}
+.topbar{height:50px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:9px;background:var(--bg);position:sticky;top:0;z-index:50;}
+.tb-title{font-size:13px;font-weight:600;color:var(--white);flex:1;}
+.tb-date{font-size:11px;color:var(--muted2);font-family:'Geist Mono',monospace;}
+.content{padding:22px;flex:1;}
 
-  /* ── PAGES ── */
-  .page{display:none;}
-  .page.active{display:block;animation:fadeIn 0.25s ease;}
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .2s ease;}
 
-  /* ── STATS GRID ── */
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
-  .stat-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:16px;}
-  .stat-label{font-size:11px;color:var(--muted2);font-weight:500;margin-bottom:9px;}
-  .stat-value{font-size:24px;font-weight:700;color:var(--white);letter-spacing:-0.8px;line-height:1;margin-bottom:5px;font-variant-numeric:tabular-nums;}
-  .stat-value .currency{font-size:13px;font-weight:500;color:var(--muted2);}
-  .stat-change{font-size:11px;font-family:'Geist Mono',monospace;}
-  .up{color:var(--green);}
-  .down{color:var(--red);}
-  .neutral{color:var(--muted2);}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:16px;}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:15px;}
+.slabel{font-size:10px;color:var(--muted2);font-weight:500;margin-bottom:8px;}
+.sval{font-size:22px;font-weight:700;color:var(--white);letter-spacing:-.8px;line-height:1;margin-bottom:5px;font-variant-numeric:tabular-nums;}
+.sval .cur{font-size:12px;font-weight:500;color:var(--muted2);}
+.schange{font-size:10px;font-family:'Geist Mono',monospace;}
+.up{color:var(--green);}.down{color:var(--red);}.neu{color:var(--muted2);}
 
-  /* ── CARD ── */
-  .section-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
-  .card{background:var(--s1);border:1px solid var(--border);border-radius:11px;overflow:hidden;}
-  .card-header{padding:14px 16px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
-  .card-title{font-size:13px;font-weight:600;color:var(--white);}
-  .card-badge{font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);background:var(--s2);border:1px solid var(--border);padding:2px 7px;border-radius:4px;white-space:nowrap;}
-  .card-body{padding:14px 16px;}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.ch{padding:13px 15px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.ct{font-size:12px;font-weight:600;color:var(--white);}
+.cb{font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);background:var(--s2);border:1px solid var(--border);padding:2px 7px;border-radius:4px;}
+.cbody{padding:13px 15px;}
 
-  /* ── PLATFORM BARS ── */
-  .platform-list{display:flex;flex-direction:column;gap:11px;}
-  .platform-row{display:grid;grid-template-columns:85px 1fr 65px;align-items:center;gap:10px;}
-  .platform-info{display:flex;align-items:center;gap:7px;}
-  .platform-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .platform-name{font-size:12px;font-weight:500;color:var(--text);}
-  .bar-track{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
-  .bar-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
-  .platform-amount{font-size:11px;font-weight:600;color:var(--white);text-align:right;font-family:'Geist Mono',monospace;}
+.pl{display:flex;flex-direction:column;gap:10px;}
+.pr{display:grid;grid-template-columns:80px 1fr 60px;align-items:center;gap:9px;}
+.pi{display:flex;align-items:center;gap:6px;}
+.pname{font-size:11px;font-weight:500;color:var(--text);}
+.bt{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.bf{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.pamt{font-size:11px;font-weight:600;color:var(--white);text-align:right;font-family:'Geist Mono',monospace;}
 
-  /* ── CONVERSION ── */
-  .conv-big{display:flex;align-items:flex-end;gap:5px;margin-bottom:10px;}
-  .conv-number{font-size:40px;font-weight:700;color:var(--white);letter-spacing:-2px;line-height:1;}
-  .conv-pct{font-size:16px;color:var(--muted2);margin-bottom:3px;}
-  .conv-desc{font-size:11px;color:var(--muted2);margin-bottom:12px;}
-  .conv-bar-label{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-bottom:5px;}
-  .conv-track{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;}
-  .conv-fill{height:100%;background:linear-gradient(90deg,var(--green),#00ffaa);border-radius:2px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1);}
+.cvb{display:flex;align-items:flex-end;gap:5px;margin-bottom:9px;}
+.cvn{font-size:38px;font-weight:700;color:var(--white);letter-spacing:-2px;line-height:1;}
+.cvp{font-size:15px;color:var(--muted2);margin-bottom:3px;}
+.cvd{font-size:11px;color:var(--muted2);margin-bottom:11px;}
+.cvbl{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-bottom:5px;}
+.cvt{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;}
+.cvf{height:100%;background:linear-gradient(90deg,var(--green),#00ffaa);border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
 
-  /* ── FILTERS ── */
-  .filters{display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
-  .filter-btn{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--s1);color:var(--muted2);font-size:11px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;transition:all 0.15s;}
-  .filter-btn:hover{border-color:var(--border2);color:var(--text);}
-  .filter-btn.active{background:var(--green-d);border-color:var(--green-b);color:var(--green);}
+.filters{display:flex;align-items:center;gap:6px;margin-bottom:13px;flex-wrap:wrap;}
+.fb{padding:5px 11px;border-radius:7px;border:1px solid var(--border);background:var(--s1);color:var(--muted2);font-size:11px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;transition:all .15s;}
+.fb:hover{border-color:var(--border2);color:var(--text);}
+.fb.active{background:var(--green-d);border-color:var(--green-b);color:var(--green);}
 
-  /* ── SEARCH BAR ── */
-  .search-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
-  .search-input{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 13px;font-size:13px;color:var(--text);font-family:'Geist',sans-serif;outline:none;transition:border-color 0.15s;}
-  .search-input:focus{border-color:var(--green);}
-  .search-input::placeholder{color:var(--muted);}
-  .export-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--s1);color:var(--muted2);font-size:12px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;transition:all 0.15s;white-space:nowrap;}
-  .export-btn:hover{border-color:var(--green);color:var(--green);}
+.sbar{display:flex;align-items:center;gap:8px;margin-bottom:13px;}
+.si{flex:1;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);font-family:'Geist',sans-serif;outline:none;transition:border-color .15s;}
+.si:focus{border-color:var(--green);}
+.si::placeholder{color:var(--muted);}
+.eb{padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--s1);color:var(--muted2);font-size:11px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;white-space:nowrap;}
+.eb:hover{border-color:var(--green);color:var(--green);}
 
-  /* ── TABLE ── */
-  .table-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin-bottom:18px;}
-  .table-wrap{overflow-x:auto;}
-  table{width:100%;border-collapse:collapse;}
-  thead th{padding:10px 13px;font-size:10px;font-weight:500;color:var(--muted2);text-align:left;border-bottom:1px solid var(--border);font-family:'Geist Mono',monospace;letter-spacing:0.5px;text-transform:uppercase;white-space:nowrap;}
-  tbody tr{border-bottom:1px solid var(--border);transition:background 0.1s;}
-  tbody tr:last-child{border-bottom:none;}
-  tbody tr:hover{background:var(--s2);}
-  tbody td{padding:11px 13px;font-size:12px;white-space:nowrap;}
-  .platform-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;}
-  .tag-meta{background:var(--meta-d);color:var(--meta);border:1px solid #0082fb25;}
-  .tag-tt{background:var(--tt-d);color:var(--tt);border:1px solid #ff2d5525;}
-  .tag-yt{background:var(--yt-d);color:var(--yt);border:1px solid #ff000025;}
-  .tag-dot{width:4px;height:4px;border-radius:50%;background:currentColor;}
-  .payout-cell{font-weight:600;color:var(--green);font-family:'Geist Mono',monospace;}
-  .status-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:4px;background:var(--green-d);color:var(--green);border:1px solid var(--green-b);font-family:'Geist Mono',monospace;}
-  .time-cell{font-family:'Geist Mono',monospace;font-size:11px;color:var(--muted2);}
-  .id-cell{font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted2);}
-  .pixel-cell{display:flex;gap:3px;}
-  .pixel-dot{width:16px;height:16px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;}
-  .pixel-on{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
-  .pixel-off{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
+.tc{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:9px 12px;font-size:10px;font-weight:500;color:var(--muted2);text-align:left;border-bottom:1px solid var(--border);font-family:'Geist Mono',monospace;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--s2);}
+tbody td{padding:10px 12px;font-size:11px;white-space:nowrap;}
+.ptag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;}
+.tag-meta{background:var(--meta-d);color:var(--meta);border:1px solid #0082fb25;}
+.tag-tt{background:var(--tt-d);color:var(--tt);border:1px solid #ff2d5525;}
+.tag-snap{background:#FFFC0015;color:var(--snap);border:1px solid #FFFC0030;}
+.tag-google{background:var(--google-d);color:var(--google);border:1px solid #4285f425;}
+.tdot{width:4px;height:4px;border-radius:50%;background:currentColor;}
+.pc{font-weight:600;color:var(--green);font-family:'Geist Mono',monospace;}
+.tc2{font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted2);}
+.ic{font-family:'Geist Mono',monospace;font-size:10px;color:var(--muted2);}
+.pxc{display:flex;gap:3px;}
+.pxd{width:15px;height:15px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;}
+.px-on{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.px-off{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
 
-  /* ── POSTBACK PAGE ── */
-  .postback-hero{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:24px;margin-bottom:14px;}
-  .postback-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;}
-  .postback-sub{font-size:13px;color:var(--muted2);margin-bottom:20px;line-height:1.7;}
-  .postback-url-box{background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:14px 16px;font-family:'Geist Mono',monospace;font-size:12px;color:var(--green);word-break:break-all;line-height:1.7;margin-bottom:12px;}
-  .copy-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;border:1px solid var(--green-b);background:var(--green-d);color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;transition:all 0.15s;}
-  .copy-btn:hover{background:var(--green);color:#000;}
-  .copy-success{font-size:11px;color:var(--green);margin-left:10px;opacity:0;transition:opacity 0.3s;}
-  .copy-success.visible{opacity:1;}
-  .macro-table{width:100%;border-collapse:collapse;margin-top:16px;}
-  .macro-table td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border);}
-  .macro-table tr:last-child td{border-bottom:none;}
-  .macro-table td:first-child{font-family:'Geist Mono',monospace;color:var(--green);width:180px;}
-  .macro-table td:last-child{color:var(--muted2);}
+.pbh{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:13px;}
+.pburl{background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:13px 15px;font-family:'Geist Mono',monospace;font-size:11px;color:var(--green);word-break:break-all;line-height:1.8;margin-bottom:11px;}
+.cpbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border-radius:8px;border:1px solid var(--green-b);background:var(--green-d);color:var(--green);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;}
+.cpbtn:hover{background:var(--green);color:#000;}
+.cpsuc{font-size:11px;color:var(--green);margin-left:10px;opacity:0;transition:opacity .3s;}
+.cpsuc.v{opacity:1;}
+.mt{width:100%;border-collapse:collapse;margin-top:14px;}
+.mt td{padding:7px 11px;font-size:11px;border-bottom:1px solid var(--border);}
+.mt tr:last-child td{border-bottom:none;}
+.mt td:first-child{font-family:'Geist Mono',monospace;color:var(--green);width:180px;}
+.mt td:last-child{color:var(--muted2);}
 
-  /* ── NOTIFICATIONS PAGE ── */
-  .notif-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:24px;margin-bottom:14px;}
-  .notif-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px;}
-  .notif-sub{font-size:12px;color:var(--muted2);margin-bottom:20px;line-height:1.7;}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-  .btn-save{background:var(--green);color:#000;border:none;border-radius:7px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;}
-  .btn-save:hover{opacity:0.88;}
-  .btn-secondary{background:var(--s2);color:var(--text);border:1px solid var(--border2);border-radius:7px;padding:9px 18px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;margin-left:8px;}
-  .success-msg{font-size:12px;color:var(--green);margin-top:8px;display:none;}
-  .success-msg.visible{display:block;}
+.nc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:13px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px;}
+.bsave{background:var(--green);color:#000;border:none;border-radius:7px;padding:8px 17px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;}
+.bsave:hover{opacity:.88;}
+.bsec{background:var(--s2);color:var(--text);border:1px solid var(--border2);border-radius:7px;padding:8px 17px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;margin-left:8px;}
+.smsg{font-size:11px;color:var(--green);margin-top:8px;display:none;}
+.smsg.v{display:block;}
+.errmsg{font-size:11px;color:var(--red);margin-top:8px;display:none;}
+.errmsg.v{display:block;}
 
-  /* ── PIXEL SETTINGS ── */
-  .pixel-form-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:24px;margin-bottom:14px;}
+.px-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.px-item{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;}
+.px-name{font-size:12px;font-weight:600;color:var(--white);}
+.px-id{font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-top:2px;}
+.px-del{padding:4px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif;}
+.px-add{background:var(--s1);border:1px solid var(--border2);border-radius:8px;padding:14px 15px;margin-top:12px;}
+.px-add-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:12px;}
 
-  /* ── ROI PAGE ── */
-  .roi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-bottom:18px;}
-  .roi-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:16px;}
-  .roi-offer{font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .roi-platform{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin-bottom:12px;}
-  .roi-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
-  .roi-stat{background:var(--s2);border-radius:6px;padding:8px;text-align:center;}
-  .roi-stat-val{font-size:13px;font-weight:600;font-family:'Geist Mono',monospace;}
-  .roi-stat-label{font-size:10px;color:var(--muted2);margin-top:2px;}
-  .roi-profit{padding:8px 10px;border-radius:7px;text-align:center;font-size:13px;font-weight:700;font-family:'Geist Mono',monospace;}
-  .roi-profit.positive{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
-  .roi-profit.negative{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
-  .roi-profit.neutral{background:var(--s3);color:var(--muted2);border:1px solid var(--border);}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:9px;margin-bottom:16px;}
+.rc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:15px;}
+.ro{font-size:12px;font-weight:600;color:var(--white);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rp{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin-bottom:11px;}
+.rs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px;}
+.rst{background:var(--s2);border-radius:6px;padding:7px;text-align:center;}
+.rsv{font-size:12px;font-weight:600;font-family:'Geist Mono',monospace;}
+.rsl{font-size:9px;color:var(--muted2);margin-top:2px;}
+.rprofit{padding:7px 10px;border-radius:7px;text-align:center;font-size:12px;font-weight:700;font-family:'Geist Mono',monospace;}
+.rprofit.pos{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.rprofit.neg{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
+.rprofit.neu2{background:var(--s3);color:var(--muted2);border:1px solid var(--border);}
 
-  /* ── CLICK MAP ── */
-  .clickmap-row{display:grid;grid-template-columns:1fr 80px 80px 80px 80px;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
-  .clickmap-row:last-child{border-bottom:none;}
-  .cm-campaign{font-size:12px;font-weight:500;color:var(--white);}
-  .cm-ad{font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-top:2px;}
-  .cm-num{font-size:12px;font-weight:600;text-align:right;font-family:'Geist Mono',monospace;}
+.cmr{display:grid;grid-template-columns:1fr 70px 70px 70px 80px;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);}
+.cmr:last-child{border-bottom:none;}
+.cmc{font-size:11px;font-weight:500;color:var(--white);}
+.cma{font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-top:2px;}
+.cmn{font-size:11px;font-weight:600;text-align:right;font-family:'Geist Mono',monospace;}
 
-  /* ── ANALYTICS ── */
-  .analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin-bottom:18px;}
-  .analytics-card{background:var(--s1);border:1px solid var(--border);border-radius:11px;padding:15px;}
-  .ac-platform{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin-bottom:10px;}
-  .ac-offer{font-size:13px;font-weight:600;color:var(--white);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .ac-url{font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .ac-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
-  .ac-stat{background:var(--s2);border-radius:5px;padding:6px;text-align:center;}
-  .ac-stat-val{font-size:13px;font-weight:600;color:var(--white);font-family:'Geist Mono',monospace;}
-  .ac-stat-label{font-size:9px;color:var(--muted2);margin-top:2px;}
-  .ac-meta{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
-  .ac-chip{font-size:9px;padding:2px 6px;border-radius:3px;background:var(--s3);color:var(--muted2);font-family:'Geist Mono',monospace;}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:9px;margin-bottom:16px;}
+.acard{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.apl{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin-bottom:9px;}
+.ao{font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.au{font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-bottom:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.as2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;}
+.ast{background:var(--s2);border-radius:5px;padding:6px;text-align:center;}
+.asv{font-size:12px;font-weight:600;color:var(--white);font-family:'Geist Mono',monospace;}
+.asl{font-size:9px;color:var(--muted2);margin-top:2px;}
+.am{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+.achip{font-size:9px;padding:2px 6px;border-radius:3px;background:var(--s3);color:var(--muted2);font-family:'Geist Mono',monospace;}
 
-  /* ── EMPTY ── */
-  .empty-state{padding:40px;text-align:center;}
-  .empty-icon{font-size:28px;margin-bottom:10px;opacity:0.3;}
-  .empty-title{font-size:13px;font-weight:500;color:var(--muted2);margin-bottom:5px;}
-  .empty-sub{font-size:11px;color:var(--muted);}
+.admin-panel{background:linear-gradient(135deg,#00d08410,#00d08405);border:1px solid var(--green-b);border-radius:10px;padding:20px;margin-bottom:16px;}
+.admin-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:var(--green);background:var(--green-d);border:1px solid var(--green-b);padding:3px 10px;border-radius:5px;margin-bottom:14px;font-family:'Geist Mono',monospace;letter-spacing:1px;}
+.user-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-bottom:16px;}
+.user-card{background:var(--s1);border:1px solid var(--border);border-radius:9px;padding:13px;cursor:pointer;transition:all .2s;}
+.user-card:hover,.user-card.selected{border-color:var(--green-b);background:var(--green-d);}
+.uc-av{width:30px;height:30px;border-radius:50%;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px;}
+.uc-name{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.uc-email{font-size:10px;color:var(--muted2);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.uc-role{font-size:9px;font-family:'Geist Mono',monospace;padding:2px 6px;border-radius:4px;display:inline-block;}
+.role-admin{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.role-member{background:var(--s3);color:var(--muted2);border:1px solid var(--border);}
+.user-detail{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.ud-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.ud-name{font-size:15px;font-weight:700;color:var(--white);}
+.ud-email{font-size:11px;color:var(--muted2);}
+.ud-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.ud-stat{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:11px;text-align:center;}
+.ud-stat-val{font-size:17px;font-weight:700;color:var(--white);font-family:'Geist Mono',monospace;}
+.ud-stat-label{font-size:10px;color:var(--muted2);margin-top:3px;}
 
-  /* ── ADD SPEND MODAL ── */
-  .modal-overlay{display:none;position:fixed;inset:0;background:#00000070;z-index:300;align-items:center;justify-content:center;}
-  .modal-overlay.visible{display:flex;}
-  .modal{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:420px;margin:20px;}
-  .modal-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px;}
-  .modal-sub{font-size:12px;color:var(--muted2);margin-bottom:18px;}
-  .modal-footer{display:flex;gap:8px;margin-top:16px;}
-  .btn-cancel{background:var(--s2);color:var(--muted2);border:1px solid var(--border);border-radius:7px;padding:9px 16px;font-size:12px;cursor:pointer;font-family:'Geist',sans-serif;}
+.faq-section-label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:2px;text-transform:uppercase;font-family:'Geist Mono',monospace;margin:18px 0 8px;display:block;}
+.faq-list{display:flex;flex-direction:column;gap:6px;}
+.faq-item{background:var(--s1);border:1px solid var(--border);border-radius:9px;overflow:hidden;}
+.faq-q{padding:13px 15px;font-size:12px;font-weight:600;color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
+.faq-q:hover{background:var(--s2);}
+.faq-arrow{font-size:10px;color:var(--muted2);transition:transform .2s;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 15px 13px;font-size:12px;color:var(--muted2);line-height:1.9;border-top:1px solid var(--border);}
+.faq-item.open .faq-a{display:block;}
+.faq-a code{font-family:'Geist Mono',monospace;background:var(--s3);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--green);}
 
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+.mo{display:none;position:fixed;inset:0;background:#00000070;z-index:300;align-items:center;justify-content:center;}
+.mo.v{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%;max-width:420px;margin:20px;}
+.modal-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:3px;}
+.modal-sub{font-size:11px;color:var(--muted2);margin-bottom:16px;}
+.mf{display:flex;gap:8px;margin-top:14px;}
+.bcancel{background:var(--s2);color:var(--muted2);border:1px solid var(--border);border-radius:7px;padding:8px 15px;font-size:11px;cursor:pointer;font-family:'Geist',sans-serif;}
 
-  @media(max-width:900px){
-    .stats-grid{grid-template-columns:repeat(2,1fr);}
-    .section-row{grid-template-columns:1fr;}
-    .form-row{grid-template-columns:1fr;}
-  }
-  @media(max-width:700px){
-    .sidebar{transform:translateX(-100%);}
-    .sidebar.open{transform:translateX(0);}
-    .main{margin-left:0;padding-top:52px;}
-    .mobile-bar{display:flex;}
-    .topbar{display:none;}
-    .stats-grid{grid-template-columns:1fr 1fr;}
-    .content{padding:16px;}
-    .clickmap-row{grid-template-columns:1fr 60px 60px;}
-  }
+.empty{padding:36px;text-align:center;}
+.eicon{font-size:26px;margin-bottom:9px;opacity:.3;}
+.etitle{font-size:12px;font-weight:500;color:var(--muted2);margin-bottom:4px;}
+.esub{font-size:11px;color:var(--muted);}
+
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:900px){.sg{grid-template-columns:repeat(2,1fr);}.sr{grid-template-columns:1fr;}.fr{grid-template-columns:1fr;}.ud-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:680px){.sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.main{margin-left:0;padding-top:50px;}.mbar{display:flex;}.topbar{display:none;}.sg{grid-template-columns:1fr 1fr;}.content{padding:14px;}.cmr{grid-template-columns:1fr 55px 55px;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-page active" id="login-page">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="login-logo-mark">
-        <svg width="22" height="22" viewBox="0 0 20 20" fill="none"><path d="M10 2L17 6V14L10 18L3 14V6L10 2Z" fill="#080808"/></svg>
-      </div>
-      <div class="login-logo-name">Network Tracker</div>
+  <div class="lbox">
+    <div class="llogo">
+      <div class="llogo-mark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L17 6V14L10 18L3 14V6L10 2Z" fill="#080808"/></svg></div>
+      <div class="llogo-name">Network Tracker</div>
     </div>
-    <div class="login-card">
-      <div id="login-form">
-        <div class="login-title">Welcome back</div>
-        <div class="login-sub">Sign in to your account</div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="login-email" placeholder="you@example.com"></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
-        <div class="form-error" id="login-error"></div>
-        <button class="btn-primary" onclick="login()">Sign in</button>
-        <div class="login-switch">No account? <a onclick="showSignup()">Sign up</a></div>
+    <div class="lcard">
+      <div id="lf">
+        <div class="ltitle">Welcome back</div><div class="lsub">Sign in to your account</div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="le" placeholder="you@example.com"></div>
+        <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()"></div>
+        <div class="ferr" id="lerr"></div>
+        <button class="bp" onclick="login()">Sign in</button>
+        <div class="lswitch">No account? <a onclick="showSU()">Sign up</a></div>
       </div>
-      <div id="signup-form" style="display:none">
-        <div class="login-title">Create account</div>
-        <div class="login-sub">First account created becomes admin</div>
-        <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="signup-name" placeholder="Your name"></div>
-        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="signup-email" placeholder="you@example.com"></div>
-        <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="signup-password" placeholder="Min 6 characters"></div>
-        <div class="form-error" id="signup-error"></div>
-        <button class="btn-primary" onclick="signup()">Create account</button>
-        <div class="login-switch">Have an account? <a onclick="showLogin()">Sign in</a></div>
+      <div id="suf" style="display:none">
+        <div class="ltitle">Create account</div><div class="lsub">First account = admin. Others = member.</div>
+        <div class="fg"><label class="fl">Full Name</label><input class="fi" type="text" id="sn" placeholder="Your name"></div>
+        <div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="se" placeholder="you@example.com"></div>
+        <div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="sp" placeholder="Min 6 characters"></div>
+        <div class="ferr" id="serr"></div>
+        <button class="bp" onclick="signup()">Create account</button>
+        <div class="lswitch">Have an account? <a onclick="showLI()">Sign in</a></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="app">
-  <!-- MOBILE BAR -->
-  <div class="mobile-bar">
-    <div class="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
-    <div class="mobile-title" id="mobile-title">Dashboard</div>
-    <div class="icon-btn" onclick="toggleTheme()" style="margin-left:auto">🌙</div>
+  <div class="mbar">
+    <div class="hbg" onclick="toggleSB()"><span></span><span></span><span></span></div>
+    <div class="mtitle" id="mtitle">Dashboard</div>
+    <div class="ib" onclick="toggleTheme()" style="margin-left:auto" id="mtheme">🌙</div>
   </div>
-  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <div class="ov" id="ov" onclick="toggleSB()"></div>
 
-  <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
     <div class="logo">
-      <div class="logo-mark"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" fill="#080808"/></svg></div>
+      <div class="logo-mark"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" fill="#080808"/></svg></div>
       <div class="logo-name">Network Tracker</div>
-      <div class="logo-sub">v3.0.0</div>
+      <div class="logo-sub">v4.0.0</div>
     </div>
     <div class="nav">
-      <div class="nav-section">Main</div>
-      <button class="nav-item active" onclick="showPage('dashboard',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-        Dashboard <div class="live-dot"></div>
+      <div class="ns">Main</div>
+      <button class="ni active" onclick="gp('dashboard',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Dashboard <div class="ldot"></div>
       </button>
-
-      <div class="nav-section">Platforms</div>
-      <button class="nav-item" onclick="showPage('pixels-meta',this)">
-        <div class="platform-dot-nav" style="background:var(--meta)"></div>Meta
+      <button class="ni admin-only" id="nav-admin" style="display:none" onclick="gp('admin',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6"/></svg>
+        Team & Users
       </button>
-      <button class="nav-item" onclick="showPage('pixels-youtube',this)">
-        <div class="platform-dot-nav" style="background:var(--yt)"></div>YouTube
+      <div class="ns">Platforms</div>
+      <button class="ni" onclick="gp('pixels-meta',this)"><div class="pdot" style="background:#0082fb"></div>Meta</button>
+      <button class="ni" onclick="gp('pixels-tiktok',this)"><div class="pdot" style="background:#ff2d55"></div>TikTok</button>
+      <button class="ni" onclick="gp('pixels-google',this)"><div class="pdot" style="background:#4285f4"></div>Google</button>
+      <button class="ni" onclick="gp('pixels-snapchat',this)"><div class="pdot" style="background:#FFFC00"></div>Snapchat</button>
+      <div class="ns">Data</div>
+      <button class="ni" onclick="gp('orders',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4H14M4 8H12M6 12H10"/></svg>Orders
       </button>
-      <button class="nav-item" onclick="showPage('pixels-tiktok',this)">
-        <div class="platform-dot-nav" style="background:var(--tt)"></div>TikTok
+      <button class="ni" onclick="gp('analytics',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L5 8L8 10L11 5L14 8"/><path d="M2 2V14H14"/></svg>Analytics
       </button>
-
-      <div class="nav-section">Data</div>
-      <button class="nav-item" onclick="showPage('orders',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4H14M4 8H12M6 12H10"/></svg>
-        Orders
+      <button class="ni" onclick="gp('clickmap',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4v4l3 2"/></svg>Click Map
       </button>
-      <button class="nav-item" onclick="showPage('analytics',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L5 8L8 10L11 5L14 8"/><path d="M2 2V14H14"/></svg>
-        Analytics
+      <button class="ni" onclick="gp('roi',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13L6 8l3 3 5-7"/></svg>ROI
       </button>
-      <button class="nav-item" onclick="showPage('clickmap',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4v4l3 2"/></svg>
-        Click Map
+      <div class="ns">Settings</div>
+      <button class="ni" onclick="gp('postback',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M8 3l-5 5 5 5"/></svg>Postback URLs
       </button>
-      <button class="nav-item" onclick="showPage('roi',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 13L6 8l3 3 5-7"/></svg>
-        ROI
+      <button class="ni" onclick="gp('notifications',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14c.55 0 1-.45 1-1H7c0 .55.45 1 1 1zm5-3V7c0-2.76-1.86-5.07-4.5-5.69V1c0-.55-.45-1-1-1s-1 .45-1 1v.31C3.86 1.93 2 4.24 2 7v4l-1 1v1h14v-1l-1-1z"/></svg>Notifications
       </button>
-
-      <div class="nav-section">Settings</div>
-      <button class="nav-item" onclick="showPage('postback',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M8 3l-5 5 5 5"/></svg>
-        Postback URLs
-      </button>
-      <button class="nav-item" onclick="showPage('notifications',this)">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14c.55 0 1-.45 1-1H7c0 .55.45 1 1 1zm5-3V7c0-2.76-1.86-5.07-4.5-5.69V1c0-.55-.45-1-1-1s-1 .45-1 1v.31C3.86 1.93 2 4.24 2 7v4l-1 1v1h14v-1l-1-1z"/></svg>
-        Notifications
+      <button class="ni" onclick="gp('help',this)">
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M6 6c0-1.1.9-2 2-2s2 .9 2 2c0 1.1-.89 1.79-1.71 2.14C7.53 8.46 7.5 8.77 7.5 9"/><circle cx="8" cy="11.5" r=".5" fill="currentColor"/></svg>Help & FAQ
       </button>
     </div>
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar" id="user-avatar">?</div>
-        <div style="overflow:hidden">
-          <div class="user-name" id="user-name">Loading...</div>
-          <div class="user-role" id="user-role">member</div>
-        </div>
+    <div class="sf">
+      <div class="uinfo">
+        <div class="uav" id="uav">?</div>
+        <div style="overflow:hidden"><div class="uname" id="uname">Loading...</div><div class="urole" id="urole">member</div></div>
       </div>
-      <div class="footer-actions">
-        <button class="logout-btn" onclick="logout()">Sign out</button>
-        <div class="theme-btn icon-btn" onclick="toggleTheme()" id="theme-icon">🌙</div>
+      <div class="fa">
+        <button class="lout" onclick="logout()">Sign out</button>
+        <div class="ib" onclick="toggleTheme()" id="theme-icon" style="margin-left:auto">🌙</div>
       </div>
     </div>
   </nav>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <div class="topbar-title" id="page-title">Dashboard</div>
-      <div class="topbar-date" id="current-date"></div>
-      <div class="icon-btn" onclick="refreshPage()">↻</div>
+      <div class="tb-title" id="pgtitle">Dashboard</div>
+      <div class="tb-date" id="curdate"></div>
+      <div class="ib" onclick="refreshPage()">↻</div>
     </div>
     <div class="content">
 
       <!-- DASHBOARD -->
       <div class="page active" id="page-dashboard">
-        <div class="stats-grid">
-          <div class="stat-card"><div class="stat-label">Revenue Today</div><div class="stat-value" id="revenue-today"><span class="currency">$</span>0.00</div><div class="stat-change neutral" id="revenue-change">–</div></div>
-          <div class="stat-card"><div class="stat-label">Orders Today</div><div class="stat-value" id="orders-today">0</div><div class="stat-change neutral" id="orders-change">–</div></div>
-          <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-value" id="revenue-total"><span class="currency">$</span>0.00</div><div class="stat-change neutral" id="total-label">–</div></div>
-          <div class="stat-card"><div class="stat-label">Conversion Rate</div><div class="stat-value" id="conv-rate">0%</div><div class="stat-change neutral" id="conv-label">–</div></div>
-        </div>
-        <div class="section-row">
-          <div class="card">
-            <div class="card-header"><div class="card-title">Revenue by Platform</div><div class="card-badge">Today</div></div>
-            <div class="card-body">
-              <div class="platform-list" id="platform-list">
-                <div class="platform-row"><div class="platform-info"><div class="platform-dot" style="background:var(--meta)"></div><div class="platform-name">Meta</div></div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--meta)"></div></div><div class="platform-amount">$0.00</div></div>
-                <div class="platform-row"><div class="platform-info"><div class="platform-dot" style="background:var(--yt)"></div><div class="platform-name">YouTube</div></div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--yt)"></div></div><div class="platform-amount">$0.00</div></div>
-                <div class="platform-row"><div class="platform-info"><div class="platform-dot" style="background:var(--tt)"></div><div class="platform-name">TikTok</div></div><div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--tt)"></div></div><div class="platform-amount">$0.00</div></div>
-              </div>
+        <div class="admin-panel" id="admin-panel" style="display:none">
+          <div class="admin-badge">⚡ ADMIN VIEW</div>
+          <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:12px;">Team Members</div>
+          <div class="user-cards" id="user-cards"></div>
+          <div id="user-detail-section" style="display:none">
+            <div class="filters" id="ud-filters" style="margin-bottom:10px">
+              <button class="fb active" onclick="filterUD('30days',this)">30 Days</button>
+              <button class="fb" onclick="filterUD('today',this)">Today</button>
+              <button class="fb" onclick="filterUD('7days',this)">7 Days</button>
+              <button class="fb" onclick="filterUD('6months',this)">6 Months</button>
+              <button class="fb" onclick="filterUD('year',this)">Year</button>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">Conversion Rate</div><div class="card-badge">Clicks → Orders</div></div>
-            <div class="card-body">
-              <div class="conv-big"><div class="conv-number" id="conv-big">0</div><div class="conv-pct">%</div></div>
-              <div class="conv-desc" id="conv-desc">No data yet</div>
-              <div class="conv-bar-label"><span>0%</span><span id="conv-bar-right">0%</span></div>
-              <div class="conv-track"><div class="conv-fill" id="conv-fill" style="width:0%"></div></div>
-            </div>
+            <div class="user-detail" id="user-detail"></div>
           </div>
         </div>
-        <div class="table-card">
-          <div class="card-header"><div class="card-title">Recent Orders</div><div class="card-badge" id="recent-badge">0 today</div></div>
-          <div class="table-wrap"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Campaign</th><th>Payout</th><th>Pixels</th><th>Time</th></tr></thead><tbody id="dashboard-tbody"><tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No orders yet</div></div></td></tr></tbody></table></div>
+        <div class="sg">
+          <div class="sc"><div class="slabel">Revenue Today</div><div class="sval" id="rev-today"><span class="cur">$</span>0.00</div><div class="schange neu" id="rev-change">–</div></div>
+          <div class="sc"><div class="slabel">Orders Today</div><div class="sval" id="ord-today">0</div><div class="schange neu" id="ord-change">–</div></div>
+          <div class="sc"><div class="slabel">Total Revenue</div><div class="sval" id="rev-total"><span class="cur">$</span>0.00</div><div class="schange neu" id="total-lbl">–</div></div>
+          <div class="sc"><div class="slabel">Conversion Rate</div><div class="sval" id="cvr-rate">0%</div><div class="schange neu" id="cvr-lbl">–</div></div>
+        </div>
+        <div class="sr">
+          <div class="card">
+            <div class="ch"><div class="ct">Revenue by Platform</div><div class="cb">Today</div></div>
+            <div class="cbody"><div class="pl" id="platform-list"></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Conversion Rate</div><div class="cb">Clicks → Orders</div></div>
+            <div class="cbody">
+              <div class="cvb"><div class="cvn" id="cvn">0</div><div class="cvp">%</div></div>
+              <div class="cvd" id="cvd">No data yet</div>
+              <div class="cvbl"><span>0%</span><span id="cvbr">0%</span></div>
+              <div class="cvt"><div class="cvf" id="cvf" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
+          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Campaign</th><th>Payout</th><th>Pixels</th><th>Time</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="page" id="page-admin">
+        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px;">Team & Users</div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:16px;">Click a user to view their full stats</div>
+        <div class="user-cards" id="admin-user-cards"></div>
+        <div id="admin-detail-section" style="display:none">
+          <div class="filters" id="admin-ud-filters" style="margin-bottom:10px">
+            <button class="fb active" onclick="filterAdminUD('30days',this)">30 Days</button>
+            <button class="fb" onclick="filterAdminUD('today',this)">Today</button>
+            <button class="fb" onclick="filterAdminUD('7days',this)">7 Days</button>
+            <button class="fb" onclick="filterAdminUD('6months',this)">6 Months</button>
+            <button class="fb" onclick="filterAdminUD('year',this)">Year</button>
+          </div>
+          <div class="user-detail" id="admin-user-detail"></div>
         </div>
       </div>
 
       <!-- ORDERS -->
       <div class="page" id="page-orders">
         <div class="filters">
-          <button class="filter-btn active" onclick="filterOrders('all',this)">All Time</button>
-          <button class="filter-btn" onclick="filterOrders('today',this)">Today</button>
-          <button class="filter-btn" onclick="filterOrders('yesterday',this)">Yesterday</button>
-          <button class="filter-btn" onclick="filterOrders('7days',this)">7 Days</button>
-          <button class="filter-btn" onclick="filterOrders('30days',this)">30 Days</button>
+          <button class="fb active" onclick="foFilter('all',this)">All Time</button>
+          <button class="fb" onclick="foFilter('today',this)">Today</button>
+          <button class="fb" onclick="foFilter('yesterday',this)">Yesterday</button>
+          <button class="fb" onclick="foFilter('7days',this)">7 Days</button>
+          <button class="fb" onclick="foFilter('30days',this)">30 Days</button>
+          <button class="fb" onclick="foFilter('6months',this)">6 Months</button>
+          <button class="fb" onclick="foFilter('year',this)">Year</button>
         </div>
-        <div class="search-bar">
-          <input class="search-input" type="text" id="order-search" placeholder="Search by transaction ID..." oninput="searchOrders()">
-          <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+        <div class="sbar">
+          <input class="si" type="text" id="osearch" placeholder="Search by transaction ID..." oninput="searchOrders()">
+          <button class="eb" onclick="exportCSV()">⬇ CSV</button>
         </div>
-        <div class="table-card">
-          <div class="card-header"><div class="card-title">Orders</div><div class="card-badge" id="orders-badge">–</div></div>
-          <div class="table-wrap"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Offer</th><th>Campaign</th><th>Country</th><th>Device</th><th>Payout</th><th>Network</th><th>Time</th></tr></thead><tbody id="orders-tbody"><tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No orders yet</div></div></td></tr></tbody></table></div>
+        <div class="tc">
+          <div class="ch"><div class="ct">Orders</div><div class="cb" id="ord-badge">–</div></div>
+          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Type</th><th>Offer</th><th>Campaign</th><th>Country</th><th>Device</th><th>Payout</th><th>Network</th><th>Pixels</th><th>Time</th></tr></thead><tbody id="ord-tbody"></tbody></table></div>
         </div>
       </div>
 
       <!-- ANALYTICS -->
       <div class="page" id="page-analytics">
         <div class="filters">
-          <button class="filter-btn active" onclick="filterAnalytics('30days',this)">30 Days</button>
-          <button class="filter-btn" onclick="filterAnalytics('today',this)">Today</button>
-          <button class="filter-btn" onclick="filterAnalytics('yesterday',this)">Yesterday</button>
-          <button class="filter-btn" onclick="filterAnalytics('7days',this)">7 Days</button>
+          <button class="fb active" onclick="faFilter('30days',this)">30 Days</button>
+          <button class="fb" onclick="faFilter('today',this)">Today</button>
+          <button class="fb" onclick="faFilter('yesterday',this)">Yesterday</button>
+          <button class="fb" onclick="faFilter('7days',this)">7 Days</button>
+          <button class="fb" onclick="faFilter('6months',this)">6 Months</button>
+          <button class="fb" onclick="faFilter('year',this)">Year</button>
         </div>
-        <div class="analytics-grid" id="analytics-grid"><div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No data yet</div></div></div>
+        <div class="ag" id="analytics-grid"></div>
       </div>
 
       <!-- CLICK MAP -->
       <div class="page" id="page-clickmap">
         <div class="filters">
-          <button class="filter-btn active" onclick="filterClickmap('7days',this)">7 Days</button>
-          <button class="filter-btn" onclick="filterClickmap('today',this)">Today</button>
-          <button class="filter-btn" onclick="filterClickmap('30days',this)">30 Days</button>
+          <button class="fb active" onclick="fcFilter('7days',this)">7 Days</button>
+          <button class="fb" onclick="fcFilter('today',this)">Today</button>
+          <button class="fb" onclick="fcFilter('30days',this)">30 Days</button>
+          <button class="fb" onclick="fcFilter('6months',this)">6 Months</button>
+          <button class="fb" onclick="fcFilter('year',this)">Year</button>
         </div>
-        <div class="table-card">
-          <div class="card-header">
-            <div class="card-title">Clicks vs Conversions by Ad</div>
-            <div class="card-badge">Campaign → Ad level</div>
-          </div>
-          <div class="card-body">
-            <div style="display:grid;grid-template-columns:1fr 80px 80px 80px 80px;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:4px;">
-              <div style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;">Campaign / Ad</div>
-              <div style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right;text-transform:uppercase;letter-spacing:1px;">Clicks</div>
-              <div style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right;text-transform:uppercase;letter-spacing:1px;">Sales</div>
-              <div style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right;text-transform:uppercase;letter-spacing:1px;">CVR</div>
-              <div style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right;text-transform:uppercase;letter-spacing:1px;">Revenue</div>
+        <div class="tc">
+          <div class="ch"><div class="ct">Clicks vs Conversions</div><div class="cb">Campaign → Ad level</div></div>
+          <div class="cbody">
+            <div style="display:grid;grid-template-columns:1fr 70px 70px 70px 80px;gap:9px;padding-bottom:7px;border-bottom:1px solid var(--border);margin-bottom:3px;">
+              <div style="font-size:9px;font-family:'Geist Mono',monospace;color:var(--muted2);text-transform:uppercase;letter-spacing:1px">Campaign / Ad</div>
+              <div style="font-size:9px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right">CLICKS</div>
+              <div style="font-size:9px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right">SALES</div>
+              <div style="font-size:9px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right">CVR</div>
+              <div style="font-size:9px;font-family:'Geist Mono',monospace;color:var(--muted2);text-align:right">REVENUE</div>
             </div>
-            <div id="clickmap-list"><div class="empty-state"><div class="empty-icon">🗺</div><div class="empty-title">No click data yet</div></div></div>
+            <div id="clickmap-list"></div>
           </div>
         </div>
       </div>
 
       <!-- ROI -->
       <div class="page" id="page-roi">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-          <div class="filters" style="margin-bottom:0;flex:1">
-            <button class="filter-btn active" onclick="filterROI('30days',this)">30 Days</button>
-            <button class="filter-btn" onclick="filterROI('today',this)">Today</button>
-            <button class="filter-btn" onclick="filterROI('7days',this)">7 Days</button>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px;flex-wrap:wrap;">
+          <div class="filters" style="margin-bottom:0;flex:1;flex-wrap:wrap">
+            <button class="fb active" onclick="frFilter('30days',this)">30 Days</button>
+            <button class="fb" onclick="frFilter('today',this)">Today</button>
+            <button class="fb" onclick="frFilter('7days',this)">7 Days</button>
+            <button class="fb" onclick="frFilter('6months',this)">6 Months</button>
+            <button class="fb" onclick="frFilter('year',this)">Year</button>
           </div>
-          <button class="export-btn" onclick="document.getElementById('spend-modal').classList.add('visible')">+ Add Spend</button>
+          <button class="eb" onclick="document.getElementById('spend-modal').classList.add('v')">+ Add Spend</button>
         </div>
-        <div class="roi-grid" id="roi-grid"><div class="empty-state"><div class="empty-icon">💰</div><div class="empty-title">No ROI data yet</div><div class="empty-sub">Add ad spend to calculate profit</div></div></div>
+        <div class="rg" id="roi-grid"></div>
       </div>
 
       <!-- POSTBACK -->
       <div class="page" id="page-postback">
-        <div class="postback-hero">
-          <div class="postback-title">Your Postback URL</div>
-          <div class="postback-sub">Copy this URL and paste it into your CPA network's postback/conversion URL settings. Every time a sale is confirmed, the network will call this URL and your tracker will record it.</div>
-          <div class="postback-url-box" id="postback-url-display">Loading your URL...</div>
-          <button class="copy-btn" onclick="copyPostback()">📋 Copy URL</button>
-          <span class="copy-success" id="copy-success">✓ Copied!</span>
+        <div class="pbh">
+          <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:5px">Your Postback URL</div>
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:18px;line-height:1.8">Copy this URL and paste it into your CPA network's postback settings. Every confirmed sale triggers this URL and gets logged.</div>
+          <div class="pburl" id="pb-url">Loading...</div>
+          <button class="cpbtn" onclick="copyPB()">📋 Copy URL</button>
+          <span class="cpsuc" id="cpsuc">✓ Copied!</span>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Available Macros</div><div class="card-badge">Replace with network placeholders</div></div>
-          <div class="card-body">
-            <table class="macro-table">
-              <tr><td>{CLICK_ID}</td><td>Your tracking click ID — must be passed through from your landing page</td></tr>
-              <tr><td>{PAYOUT}</td><td>Sale payout amount (e.g. 45.00)</td></tr>
-              <tr><td>{TRANSACTION_ID}</td><td>Network's unique transaction/order ID</td></tr>
+          <div class="ch"><div class="ct">Available Macros</div><div class="cb">Replace with network placeholders</div></div>
+          <div class="cbody">
+            <table class="mt">
+              <tr><td>{CLICK_ID}</td><td>Your click tracking ID — must be passed from landing page through to offer</td></tr>
+              <tr><td>{PAYOUT}</td><td>Confirmed sale payout amount (e.g. 45.00)</td></tr>
+              <tr><td>{TRANSACTION_ID}</td><td>Network's unique transaction or order ID</td></tr>
               <tr><td>{OFFER_ID}</td><td>Offer ID from the network</td></tr>
-              <tr><td>{OFFER_NAME}</td><td>Offer name (optional but recommended)</td></tr>
-              <tr><td>{COUNTRY}</td><td>Buyer's country code (optional)</td></tr>
+              <tr><td>{OFFER_NAME}</td><td>Offer name — used for analytics grouping and pixel assignment</td></tr>
+              <tr><td>{COUNTRY}</td><td>Buyer's country code (e.g. US, MA, FR)</td></tr>
+              <tr><td>{DEVICE}</td><td>Device type (mobile / desktop)</td></tr>
             </table>
-            <div style="margin-top:16px;padding:12px;background:var(--s2);border-radius:8px;font-size:12px;color:var(--muted2);line-height:1.7">
-              <strong style="color:var(--text)">Network-specific macro formats:</strong><br>
-              Adexico: <span style="font-family:'Geist Mono',monospace;color:var(--green)">{clickid}</span> · <span style="font-family:'Geist Mono',monospace;color:var(--green)">{payout}</span> · <span style="font-family:'Geist Mono',monospace;color:var(--green)">{transaction_id}</span><br>
-              Most networks: check their postback documentation for exact macro names
+            <div style="margin-top:14px;padding:11px;background:var(--s2);border-radius:8px;font-size:11px;color:var(--muted2);line-height:1.9">
+              <strong style="color:var(--text)">Adexico:</strong> use <code>{clickid}</code> · <code>{payout}</code> · <code>{transaction_id}</code><br>
+              <strong style="color:var(--text)">Click tracking format:</strong> <code>?click_id=ID&source=meta&campaign=NAME&campaign_type=search&ad=AD_ID&user_id=YOUR_UID</code>
             </div>
           </div>
         </div>
@@ -528,437 +522,402 @@
 
       <!-- NOTIFICATIONS -->
       <div class="page" id="page-notifications">
-        <div class="notif-card">
-          <div class="notif-title">🔔 Push Notifications</div>
-          <div class="notif-sub">Get a push notification on your iPhone every time a sale comes in. Uses Pushover — free app, takes 5 minutes to set up.</div>
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">Pushover User Key</label><input class="form-input" type="text" id="notif-user-key" placeholder="Your Pushover user key"></div>
-            <div class="form-group"><label class="form-label">Pushover API Token</label><input class="form-input" type="text" id="notif-api-token" placeholder="Your app API token"></div>
+        <div class="nc">
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px">🔔 Push Notifications</div>
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:18px;line-height:1.8">Get an iPhone push notification with a cash register sound every time a sale comes in. Free via Pushover.</div>
+          <div class="fr">
+            <div class="fg"><label class="fl">Pushover User Key</label><input class="fi" type="text" id="nuk" placeholder="Your Pushover user key"></div>
+            <div class="fg"><label class="fl">Pushover API Token</label><input class="fi" type="text" id="nat" placeholder="Your app API token"></div>
           </div>
-          <button class="btn-save" onclick="saveNotifications()">Save Settings</button>
-          <button class="btn-secondary" onclick="testNotification()">Send Test</button>
-          <div class="success-msg" id="notif-success">✓ Saved — you'll receive a push notification for every sale</div>
+          <button class="bsave" onclick="saveNotif()">Save Settings</button>
+          <button class="bsec" onclick="testNotif()">Send Test</button>
+          <div class="smsg" id="nsmsg">✓ Saved — notifications active</div>
+          <div class="errmsg" id="nerrmsg"></div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">How to set up Pushover</div></div>
-          <div class="card-body" style="font-size:13px;color:var(--muted2);line-height:2">
-            1. Go to <strong style="color:var(--text)">pushover.net</strong> and create a free account<br>
-            2. Copy your <strong style="color:var(--text)">User Key</strong> from the dashboard<br>
-            3. Click "Create an Application" → name it "My Tracker" → copy the <strong style="color:var(--text)">API Token</strong><br>
-            4. Download <strong style="color:var(--text)">Pushover</strong> on your iPhone and log in<br>
-            5. Paste both keys above and click Save
+          <div class="ch"><div class="ct">How to set up Pushover</div></div>
+          <div class="cbody" style="font-size:12px;color:var(--muted2);line-height:2.2">
+            1. Go to <strong style="color:var(--text)">pushover.net</strong> → create free account<br>
+            2. Copy your <strong style="color:var(--text)">User Key</strong><br>
+            3. Click "Create Application" → name it anything → copy <strong style="color:var(--text)">API Token</strong><br>
+            4. Download <strong style="color:var(--text)">Pushover</strong> on iPhone → log in<br>
+            5. Paste both keys above → Save → Send Test
           </div>
         </div>
       </div>
 
       <!-- PIXEL PAGES -->
       <div class="page" id="page-pixels-meta"><div id="pf-meta"></div></div>
-      <div class="page" id="page-pixels-youtube"><div id="pf-youtube"></div></div>
       <div class="page" id="page-pixels-tiktok"><div id="pf-tiktok"></div></div>
+      <div class="page" id="page-pixels-google"><div id="pf-google"></div></div>
+      <div class="page" id="page-pixels-snapchat"><div id="pf-snapchat"></div></div>
+
+      <!-- HELP -->
+      <div class="page" id="page-help">
+        <div style="font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px">Help & FAQ</div>
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:16px">Everything you need to know to use the platform</div>
+        <div id="faq-container"></div>
+      </div>
 
     </div>
   </div>
 </div>
 
-<!-- ADD SPEND MODAL -->
-<div class="modal-overlay" id="spend-modal">
+<div class="mo" id="spend-modal">
   <div class="modal">
     <div class="modal-title">Add Ad Spend</div>
-    <div class="modal-sub">Enter how much you spent on this campaign to calculate ROI</div>
-    <div class="form-group"><label class="form-label">Platform</label>
-      <select class="form-input" id="spend-platform"><option value="meta">Meta</option><option value="youtube">YouTube</option><option value="tiktok">TikTok</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">Campaign ID</label><input class="form-input" type="text" id="spend-campaign" placeholder="e.g. Summer_v3"></div>
-    <div class="form-group"><label class="form-label">Offer Name</label><input class="form-input" type="text" id="spend-offer" placeholder="e.g. Product X"></div>
-    <div class="form-group"><label class="form-label">Amount Spent ($)</label><input class="form-input" type="number" id="spend-amount" placeholder="e.g. 250.00"></div>
-    <div class="form-group"><label class="form-label">Date</label><input class="form-input" type="date" id="spend-date"></div>
-    <div class="modal-footer">
-      <button class="btn-save" onclick="saveSpend()">Save Spend</button>
-      <button class="btn-cancel" onclick="document.getElementById('spend-modal').classList.remove('visible')">Cancel</button>
-    </div>
+    <div class="modal-sub">Enter spend to calculate ROI and profit per offer</div>
+    <div class="fg"><label class="fl">Platform</label><select class="fi" id="sm-plat"><option value="meta">Meta</option><option value="google">Google</option><option value="tiktok">TikTok</option><option value="snapchat">Snapchat</option></select></div>
+    <div class="fg"><label class="fl">Campaign ID</label><input class="fi" type="text" id="sm-camp" placeholder="e.g. Summer_v3"></div>
+    <div class="fg"><label class="fl">Offer Name</label><input class="fi" type="text" id="sm-offer" placeholder="e.g. Product X"></div>
+    <div class="fg"><label class="fl">Amount Spent ($)</label><input class="fi" type="number" id="sm-amt" placeholder="250.00"></div>
+    <div class="fg"><label class="fl">Date</label><input class="fi" type="date" id="sm-date"></div>
+    <div class="mf"><button class="bsave" onclick="saveSpend()">Save</button><button class="bcancel" onclick="document.getElementById('spend-modal').classList.remove('v')">Cancel</button></div>
   </div>
 </div>
 
 <script>
-  // ── STATE ──
-  let token = localStorage.getItem('tracker_token');
-  let currentUser = null;
-  let currentPage = 'dashboard';
-  let currentOrderPeriod = 'all';
-  let currentAnalyticsPeriod = '30days';
-  let currentClickmapPeriod = '7days';
-  let currentROIPeriod = '30days';
-  let allOrders = [];
-  let pixelData = {};
-  let isDark = localStorage.getItem('theme') !== 'light';
+let token=localStorage.getItem('tracker_token');
+let CU=null,curPage='dashboard',oPeriod='all',aPeriod='30days',cPeriod='7days',rPeriod='30days',udPeriod='30days',adminUDPeriod='30days';
+let allOrders=[],pixelData={},teamData=[],selUser=null,adminSelUser=null;
+let isDark=localStorage.getItem('theme')!=='light';
 
-  const PC = {
-    meta:    {color:'#0082fb',label:'Meta',    tag:'tag-meta',icon:'📘'},
-    facebook:{color:'#0082fb',label:'Meta',    tag:'tag-meta',icon:'📘'},
-    youtube: {color:'#ff0000',label:'YouTube', tag:'tag-yt',  icon:'▶️'},
-    tiktok:  {color:'#ff2d55',label:'TikTok',  tag:'tag-tt',  icon:'🎵'},
-    unknown: {color:'#888',   label:'Unknown', tag:'',        icon:'❓'}
-  };
+const PC={
+  meta:{c:'#0082fb',l:'Meta',tag:'tag-meta'},facebook:{c:'#0082fb',l:'Meta',tag:'tag-meta'},
+  tiktok:{c:'#ff2d55',l:'TikTok',tag:'tag-tt'},
+  google:{c:'#4285f4',l:'Google',tag:'tag-google'},youtube:{c:'#4285f4',l:'Google',tag:'tag-google'},
+  snapchat:{c:'#b8b000',l:'Snapchat',tag:'tag-snap'},snap:{c:'#b8b000',l:'Snapchat',tag:'tag-snap'},
+  unknown:{c:'#888',l:'Unknown',tag:''}
+};
 
-  function gp(s){
-    const v=(s||'').toLowerCase();
-    if(v.includes('meta')||v.includes('facebook')||v.includes('fb'))return 'meta';
-    if(v.includes('youtube')||v.includes('yt')||v.includes('google'))return 'youtube';
-    if(v.includes('tiktok')||v.includes('tt'))return 'tiktok';
-    return 'unknown';
+const PCFG={
+  meta:{icon:'📘',color:'#0082fb',label:'Meta',fields:[{key:'pixel_id',label:'Pixel ID',ph:'e.g. 1234567890'},{key:'access_token',label:'CAPI Access Token',ph:'e.g. EAAxxxxxx'}],help:'Facebook Events Manager → Your Dataset → Settings → Dataset ID. For CAPI token: Events Manager → Settings → Conversions API → Generate Access Token.'},
+  tiktok:{icon:'🎵',color:'#ff2d55',label:'TikTok',fields:[{key:'pixel_id',label:'Pixel ID',ph:'e.g. CXXXXXXXXX'},{key:'access_token',label:'Events API Access Token',ph:'e.g. xxxxxx'}],help:'TikTok Ads Manager → Assets → Events → Web Events → your pixel → Events API tab → Generate Access Token.'},
+  google:{icon:'🔍',color:'#4285f4',label:'Google',fields:[{key:'pixel_id',label:'Customer ID',ph:'e.g. 123-456-7890'},{key:'access_token',label:'OAuth2 Access Token',ph:'e.g. ya29.xxxxxx'}],help:'Google Ads → Tools → Conversions. Supports Search, Display, YouTube, Shopping, and Performance Max (PMax) campaigns. Pass campaign_type parameter in your click URL: search | display | youtube | shopping | pmax.'},
+  snapchat:{icon:'👻',color:'#FFFC00',label:'Snapchat',fields:[{key:'pixel_id',label:'Pixel ID (CAPI)',ph:'e.g. xxxxxxxx-xxxx-xxxx-xxxx'},{key:'access_token',label:'Access Token (CAPI)',ph:'e.g. eyJhbGc...'},{key:'snap_pixel_id',label:'Snap Pixel ID (browser)',ph:'e.g. xxxxxxxx'}],help:'Snapchat Ads Manager → Assets → Pixels → your pixel → Setup → API & Access Token. Browser pixel fires on page load; CAPI fires server-side on confirmed sale.'}
+};
+
+function gpk(s){const v=(s||'').toLowerCase();if(v.includes('meta')||v.includes('facebook')||v.includes('fb'))return'meta';if(v.includes('tiktok')||v.includes('tt'))return'tiktok';if(v.includes('google')||v.includes('youtube')||v.includes('yt'))return'google';if(v.includes('snap'))return'snapchat';return'unknown';}
+function fmt(n){return parseFloat(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function ago(d){const diff=(Date.now()-new Date(d))/1000;if(diff<60)return'just now';if(diff<3600)return`${Math.floor(diff/60)}m ago`;if(diff<86400)return`${Math.floor(diff/3600)}h ago`;return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+async function api(url,opts={}){const r=await fetch(url,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`,...(opts.headers||{})}});return r.json();}
+
+function toggleTheme(){isDark=!isDark;applyTheme();localStorage.setItem('theme',isDark?'dark':'light');}
+function applyTheme(){document.body.setAttribute('data-theme',isDark?'':'light');const ic=isDark?'🌙':'☀️';['theme-icon','mtheme'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=ic;});}
+function toggleSB(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('ov').classList.toggle('v');}
+function showSU(){document.getElementById('lf').style.display='none';document.getElementById('suf').style.display='block';}
+function showLI(){document.getElementById('suf').style.display='none';document.getElementById('lf').style.display='block';}
+
+async function login(){
+  const email=document.getElementById('le').value,password=document.getElementById('lp').value;
+  const err=document.getElementById('lerr');err.classList.remove('v');
+  if(!email||!password){err.textContent='Please fill in all fields';err.classList.add('v');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Signing in...';
+  const d=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email,password})});
+  btn.disabled=false;btn.textContent='Sign in';
+  if(d.error){err.textContent=d.error;err.classList.add('v');return;}
+  token=d.token;localStorage.setItem('tracker_token',token);CU=d.user;showApp();
+}
+
+async function signup(){
+  const name=document.getElementById('sn').value,email=document.getElementById('se').value,password=document.getElementById('sp').value;
+  const err=document.getElementById('serr');err.classList.remove('v');
+  if(!name||!email||!password){err.textContent='Please fill in all fields';err.classList.add('v');return;}
+  if(password.length<6){err.textContent='Min 6 characters';err.classList.add('v');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Creating...';
+  const d=await api('/api/auth/signup',{method:'POST',body:JSON.stringify({name,email,password})});
+  btn.disabled=false;btn.textContent='Create account';
+  if(d.error){err.textContent=d.error;err.classList.add('v');return;}
+  token=d.token;localStorage.setItem('tracker_token',token);CU=d.user;showApp();
+}
+
+function logout(){localStorage.removeItem('tracker_token');token=null;CU=null;document.getElementById('app').classList.remove('active');document.getElementById('login-page').classList.add('active');}
+
+function showApp(){
+  document.getElementById('login-page').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('uname').textContent=CU.name||CU.email;
+  document.getElementById('urole').textContent=CU.role;
+  document.getElementById('uav').textContent=(CU.name||CU.email)[0].toUpperCase();
+  document.getElementById('curdate').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  applyTheme();
+  if(CU.role==='admin'){
+    document.getElementById('nav-admin').style.display='flex';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('page-admin').style.display='none';
+    loadTeam();
   }
+  renderPB();loadDash();loadPixels();loadNotifSettings();renderFAQ();
+  document.getElementById('sm-date').value=new Date().toISOString().split('T')[0];
+}
 
-  function fmt(n){return parseFloat(n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+const pgTitles={dashboard:'Dashboard',admin:'Team & Users',orders:'Orders',analytics:'Analytics',clickmap:'Click Map',roi:'ROI',postback:'Postback URLs',notifications:'Notifications',help:'Help & FAQ','pixels-meta':'Meta — Pixels','pixels-tiktok':'TikTok — Pixels','pixels-google':'Google — Pixels','pixels-snapchat':'Snapchat — Pixels'};
 
-  function timeAgo(d){
-    const diff=(Date.now()-new Date(d))/1000;
-    if(diff<60)return 'just now';
-    if(diff<3600)return `${Math.floor(diff/60)}m ago`;
-    if(diff<86400)return `${Math.floor(diff/3600)}h ago`;
-    return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  }
+function gp(page,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('page-'+page);
+  if(el){el.style.display='';el.classList.add('active');}
+  if(btn)btn.classList.add('active');
+  curPage=page;
+  const t=pgTitles[page]||page;
+  document.getElementById('pgtitle').textContent=t;
+  document.getElementById('mtitle').textContent=t;
+  if(page==='orders')loadOrders(oPeriod);
+  if(page==='analytics')loadAnalytics(aPeriod);
+  if(page==='clickmap')loadClickmap(cPeriod);
+  if(page==='roi')loadROI(rPeriod);
+  if(page.startsWith('pixels-'))renderPixelForm(page.replace('pixels-',''));
+  if(page==='admin')renderAdminPage();
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('ov').classList.remove('v');
+}
 
-  async function api(url,opts={}){
-    const res=await fetch(url,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`,...(opts.headers||{})}});
-    return res.json();
-  }
+function refreshPage(){
+  if(curPage==='dashboard')loadDash();
+  else if(curPage==='orders')loadOrders(oPeriod);
+  else if(curPage==='analytics')loadAnalytics(aPeriod);
+  else if(curPage==='clickmap')loadClickmap(cPeriod);
+  else if(curPage==='roi')loadROI(rPeriod);
+}
 
-  // ── THEME ──
-  function toggleTheme(){
-    isDark=!isDark;
-    document.body.setAttribute('data-theme',isDark?'':'light');
-    localStorage.setItem('theme',isDark?'dark':'light');
-    const icon=isDark?'🌙':'☀️';
-    document.getElementById('theme-icon').textContent=icon;
-  }
+function renderPB(){
+  const base=window.location.origin,uid=CU?.id||'YOUR_USER_ID';
+  document.getElementById('pb-url').textContent=`${base}/postback?click_id={CLICK_ID}&payout={PAYOUT}&transaction_id={TRANSACTION_ID}&offer_id={OFFER_ID}&network=adexico&offer_name={OFFER_NAME}&country={COUNTRY}&device={DEVICE}&user_id=${uid}`;
+}
 
-  function applyTheme(){
-    if(!isDark){document.body.setAttribute('data-theme','light');}
-    const icon=isDark?'🌙':'☀️';
-    const ti=document.getElementById('theme-icon');
-    if(ti)ti.textContent=icon;
-  }
+function copyPB(){
+  navigator.clipboard.writeText(document.getElementById('pb-url').textContent);
+  const el=document.getElementById('cpsuc');el.classList.add('v');setTimeout(()=>el.classList.remove('v'),2500);
+}
 
-  // ── MOBILE ──
-  function toggleSidebar(){
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('visible');
-  }
+async function loadDash(){
+  const s=await api('/api/stats');if(s.error)return;
+  document.getElementById('rev-today').innerHTML=`<span class="cur">$</span>${fmt(s.revenue_today)}`;
+  document.getElementById('ord-today').textContent=s.orders_today||0;
+  document.getElementById('rev-total').innerHTML=`<span class="cur">$</span>${fmt(s.revenue_total)}`;
+  document.getElementById('cvr-rate').textContent=`${(s.conversion_rate||0).toFixed(1)}%`;
+  document.getElementById('cvn').textContent=(s.conversion_rate||0).toFixed(1);
+  document.getElementById('cvf').style.width=`${Math.min((s.conversion_rate||0)*5,100)}%`;
+  document.getElementById('cvbr').textContent=`${(s.conversion_rate||0).toFixed(1)}%`;
+  document.getElementById('cvd').textContent=`${s.total_clicks||0} clicks → ${s.total_orders||0} orders`;
+  document.getElementById('cvr-lbl').textContent=`${s.total_clicks||0} tracked clicks`;
+  document.getElementById('total-lbl').textContent=`${s.total_orders||0} total orders`;
+  document.getElementById('recent-badge').textContent=`${s.orders_today||0} today`;
+  const rc=s.revenue_change||0,oc=s.orders_change||0;
+  document.getElementById('rev-change').innerHTML=`<span class="${rc>=0?'up':'down'}">${rc>=0?'↑':'↓'} ${Math.abs(rc).toFixed(1)}% vs yesterday</span>`;
+  document.getElementById('ord-change').innerHTML=`<span class="${oc>=0?'up':'down'}">${oc>=0?'+':''}${oc} vs yesterday</span>`;
+  renderPlatforms(s.by_platform||[]);
+  const orders=await api('/api/orders?limit=8');renderRows(orders,'dash-tbody',true);
+}
 
-  // ── AUTH ──
-  function showSignup(){document.getElementById('login-form').style.display='none';document.getElementById('signup-form').style.display='block';}
-  function showLogin(){document.getElementById('signup-form').style.display='none';document.getElementById('login-form').style.display='block';}
+function renderPlatforms(pts){
+  const total=pts.reduce((s,p)=>s+parseFloat(p.revenue||0),0);
+  const keys=['meta','google','tiktok','snapchat'];
+  const map={};pts.forEach(p=>{map[gpk(p.source)]=p;});
+  document.getElementById('platform-list').innerHTML=keys.map(k=>{
+    const p=map[k];const rev=p?parseFloat(p.revenue||0):0;const pct=total>0?(rev/total*100):0;const cfg=PC[k];
+    return `<div class="pr"><div class="pi"><div class="pdot" style="background:${cfg.c}"></div><div class="pname">${cfg.l}</div></div><div class="bt"><div class="bf" style="width:${pct}%;background:${cfg.c};opacity:.8"></div></div><div class="pamt">$${fmt(rev)}</div></div>`;
+  }).join('');
+}
 
-  async function login(){
-    const email=document.getElementById('login-email').value;
-    const password=document.getElementById('login-password').value;
-    const errEl=document.getElementById('login-error');
-    errEl.classList.remove('visible');
-    if(!email||!password){errEl.textContent='Please fill in all fields';errEl.classList.add('visible');return;}
-    const btn=event.target;btn.disabled=true;btn.textContent='Signing in...';
-    const data=await api('/api/auth/login',{method:'POST',body:JSON.stringify({email,password})});
-    btn.disabled=false;btn.textContent='Sign in';
-    if(data.error){errEl.textContent=data.error;errEl.classList.add('visible');return;}
-    token=data.token;localStorage.setItem('tracker_token',token);currentUser=data.user;showApp();
-  }
+function foFilter(p,btn){oPeriod=p;document.querySelectorAll('#page-orders .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadOrders(p);}
+async function loadOrders(period){
+  const url=period==='all'?'/api/orders?limit=300':`/api/orders?limit=300&period=${period}`;
+  allOrders=await api(url);
+  document.getElementById('ord-badge').textContent=`${Array.isArray(allOrders)?allOrders.length:0} orders`;
+  renderRows(allOrders,'ord-tbody',false);
+}
+function searchOrders(){const q=document.getElementById('osearch').value.toLowerCase();if(!q){renderRows(allOrders,'ord-tbody',false);return;}renderRows(allOrders.filter(o=>(o.transaction_id||'').toLowerCase().includes(q)),'ord-tbody',false);}
+function exportCSV(){
+  if(!allOrders.length){alert('No orders to export');return;}
+  const h=['Transaction ID','Platform','Type','Offer','Campaign','Country','Device','Payout','Network','Time'];
+  const rows=allOrders.map(o=>[o.transaction_id,gpk(o.traffic_source),o.campaign_type||'',o.offer_name||'',o.campaign_id||'',o.country||'',o.device_type||'',o.payout,o.network,o.received_at].map(v=>`"${v||''}"`).join(','));
+  const csv=[h.join(','),...rows].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=`orders_${new Date().toISOString().split('T')[0]}.csv`;a.click();
+}
 
-  async function signup(){
-    const name=document.getElementById('signup-name').value;
-    const email=document.getElementById('signup-email').value;
-    const password=document.getElementById('signup-password').value;
-    const errEl=document.getElementById('signup-error');
-    errEl.classList.remove('visible');
-    if(!name||!email||!password){errEl.textContent='Please fill in all fields';errEl.classList.add('visible');return;}
-    if(password.length<6){errEl.textContent='Password must be at least 6 characters';errEl.classList.add('visible');return;}
-    const btn=event.target;btn.disabled=true;btn.textContent='Creating...';
-    const data=await api('/api/auth/signup',{method:'POST',body:JSON.stringify({name,email,password})});
-    btn.disabled=false;btn.textContent='Create account';
-    if(data.error){errEl.textContent=data.error;errEl.classList.add('visible');return;}
-    token=data.token;localStorage.setItem('tracker_token',token);currentUser=data.user;showApp();
-  }
+function renderRows(orders,id,compact){
+  const tbody=document.getElementById(id);const cols=compact?6:11;
+  if(!orders||!orders.length){tbody.innerHTML=`<tr><td colspan="${cols}"><div class="empty"><div class="eicon">📭</div><div class="etitle">No orders yet</div></div></td></tr>`;return;}
+  tbody.innerHTML=orders.map(o=>{
+    const pk=gpk(o.traffic_source);const cfg=PC[pk];
+    const pixels=`<div class="pxc"><div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}">FB</div><div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}">TT</div><div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}">SC</div><div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}">GG</div></div>`;
+    if(compact)return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,13)}...</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="color:var(--muted2)">${o.campaign_id||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td></tr>`;
+    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,13)}...</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="color:var(--muted2);font-size:10px">${o.campaign_type||'–'}</td><td style="color:var(--muted2);font-size:10px">${o.offer_name||'–'}</td><td style="color:var(--muted2);font-size:10px">${o.campaign_id||'–'}</td><td style="color:var(--muted2);font-size:10px">${o.country||'–'}</td><td style="color:var(--muted2);font-size:10px">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td style="color:var(--muted2);font-size:10px">${o.network||'–'}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td></tr>`;
+  }).join('');
+}
 
-  function logout(){
-    localStorage.removeItem('tracker_token');token=null;currentUser=null;
-    document.getElementById('app').classList.remove('active');
-    document.getElementById('login-page').classList.add('active');
-  }
+function faFilter(p,btn){aPeriod=p;document.querySelectorAll('#page-analytics .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadAnalytics(p);}
+async function loadAnalytics(period){
+  const data=await api(`/api/analytics?period=${period}`);const grid=document.getElementById('analytics-grid');
+  if(!data||!data.length){grid.innerHTML=`<div class="empty"><div class="eicon">📊</div><div class="etitle">No data</div></div>`;return;}
+  grid.innerHTML=data.map(r=>{
+    const pk=gpk(r.platform);const cfg=PC[pk];
+    return `<div class="acard"><div class="apl" style="background:${cfg.c}20;color:${cfg.c};border:1px solid ${cfg.c}30"><span class="tdot" style="background:${cfg.c}"></span>${cfg.l}${r.campaign_type?` · ${r.campaign_type}`:''}</div><div class="ao">${r.offer_name||'Unknown'}</div><div class="au">${r.landing_page_url||r.campaign_id||'–'}</div><div class="as2"><div class="ast"><div class="asv" style="color:var(--green)">$${fmt(r.revenue)}</div><div class="asl">Revenue</div></div><div class="ast"><div class="asv">${r.sales}</div><div class="asl">Sales</div></div><div class="ast"><div class="asv">$${fmt(r.avg_payout)}</div><div class="asl">Avg</div></div></div><div class="am">${r.ad_creative?`<span class="achip">🎨 ${r.ad_creative}</span>`:''} ${r.country?`<span class="achip">🌍 ${r.country}</span>`:''} ${r.device_type?`<span class="achip">📱 ${r.device_type}</span>`:''}</div></div>`;
+  }).join('');
+}
 
-  function showApp(){
-    document.getElementById('login-page').classList.remove('active');
-    document.getElementById('app').classList.add('active');
-    document.getElementById('user-name').textContent=currentUser.name||currentUser.email;
-    document.getElementById('user-role').textContent=currentUser.role;
-    document.getElementById('user-avatar').textContent=(currentUser.name||currentUser.email)[0].toUpperCase();
-    document.getElementById('current-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-    applyTheme();
-    renderPostbackURL();
-    loadDashboard();
-    loadPixelSettings();
-    loadNotificationSettings();
-    document.getElementById('spend-date').value=new Date().toISOString().split('T')[0];
-  }
+function fcFilter(p,btn){cPeriod=p;document.querySelectorAll('#page-clickmap .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadClickmap(p);}
+async function loadClickmap(period){
+  const data=await api(`/api/clickmap?period=${period}`);const list=document.getElementById('clickmap-list');
+  if(!data||!data.length){list.innerHTML=`<div class="empty"><div class="eicon">🗺</div><div class="etitle">No click data yet</div></div>`;return;}
+  list.innerHTML=data.map(r=>{
+    const pk=gpk(r.traffic_source);const cfg=PC[pk];const cvr=parseFloat(r.cvr||0);
+    return `<div class="cmr"><div><div class="cmc">${r.campaign_id||'Unknown'} <span class="ptag ${cfg.tag}" style="font-size:9px">${cfg.l}</span></div><div class="cma">${r.ad_id||'–'}${r.campaign_type?' · '+r.campaign_type:''}</div></div><div class="cmn" style="color:var(--text)">${r.clicks}</div><div class="cmn" style="color:var(--green)">${r.conversions}</div><div class="cmn" style="color:${cvr>3?'var(--green)':cvr>1?'var(--orange)':'var(--red)'}">${cvr}%</div><div class="cmn" style="color:var(--green)">$${fmt(r.revenue)}</div></div>`;
+  }).join('');
+}
 
-  // ── NAVIGATION ──
-  function showPage(page,btn){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-    document.getElementById('page-'+page).classList.add('active');
-    if(btn)btn.classList.add('active');
-    currentPage=page;
-    const titles={dashboard:'Dashboard',orders:'Orders',analytics:'Analytics',clickmap:'Click Map',roi:'ROI',postback:'Postback URLs','pixels-meta':'Meta — Pixel Settings','pixels-youtube':'YouTube — Pixel Settings','pixels-tiktok':'TikTok — Pixel Settings',notifications:'Notifications'};
-    const t=titles[page]||page;
-    document.getElementById('page-title').textContent=t;
-    document.getElementById('mobile-title').textContent=t;
-    if(page==='orders')loadOrders(currentOrderPeriod);
-    if(page==='analytics')loadAnalytics(currentAnalyticsPeriod);
-    if(page==='clickmap')loadClickmap(currentClickmapPeriod);
-    if(page==='roi')loadROI(currentROIPeriod);
-    if(page.startsWith('pixels-'))renderPixelForm(page.replace('pixels-',''));
-    // Close mobile sidebar
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('overlay').classList.remove('visible');
-  }
+function frFilter(p,btn){rPeriod=p;document.querySelectorAll('#page-roi .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadROI(p);}
+async function loadROI(period){
+  const data=await api(`/api/roi?period=${period}`);const grid=document.getElementById('roi-grid');
+  if(!data||!data.length){grid.innerHTML=`<div class="empty"><div class="eicon">💰</div><div class="etitle">No ROI data</div><div class="esub">Add ad spend to calculate profit</div></div>`;return;}
+  grid.innerHTML=data.map(r=>{
+    const pk=gpk(r.platform);const cfg=PC[pk];const profit=parseFloat(r.profit||0);
+    const cls=profit>0?'pos':profit<0?'neg':'neu2';
+    const roi=parseFloat(r.spend||0)>0?((profit/parseFloat(r.spend))*100).toFixed(0):null;
+    return `<div class="rc"><div class="ro">${r.offer_name||'Unknown'}</div><div class="rp" style="background:${cfg.c}20;color:${cfg.c};border:1px solid ${cfg.c}30"><span class="tdot" style="background:${cfg.c}"></span>${cfg.l}</div><div class="rs"><div class="rst"><div class="rsv" style="color:var(--green)">$${fmt(r.revenue)}</div><div class="rsl">Revenue</div></div><div class="rst"><div class="rsv" style="color:var(--red)">$${fmt(r.spend)}</div><div class="rsl">Spend</div></div><div class="rst"><div class="rsv">${r.sales}</div><div class="rsl">Sales</div></div><div class="rst"><div class="rsv">$${fmt(r.aov)}</div><div class="rsl">AOV</div></div></div><div class="rprofit ${cls}">${profit>=0?'+':''}$${fmt(profit)} profit${roi?` · ${roi}% ROI`:''}</div></div>`;
+  }).join('');
+}
 
-  function refreshPage(){
-    if(currentPage==='dashboard')loadDashboard();
-    else if(currentPage==='orders')loadOrders(currentOrderPeriod);
-    else if(currentPage==='analytics')loadAnalytics(currentAnalyticsPeriod);
-    else if(currentPage==='clickmap')loadClickmap(currentClickmapPeriod);
-    else if(currentPage==='roi')loadROI(currentROIPeriod);
-  }
+async function saveSpend(){
+  const spend=document.getElementById('sm-amt').value;if(!spend){alert('Enter spend amount');return;}
+  await api('/api/spend',{method:'POST',body:JSON.stringify({platform:document.getElementById('sm-plat').value,campaign_id:document.getElementById('sm-camp').value,offer_name:document.getElementById('sm-offer').value,spend,spend_date:document.getElementById('sm-date').value})});
+  document.getElementById('spend-modal').classList.remove('v');loadROI(rPeriod);
+}
 
-  // ── POSTBACK URL ──
-  function renderPostbackURL(){
-    const base=window.location.origin;
-    const uid=currentUser?.id||'YOUR_USER_ID';
-    const url=`${base}/postback?click_id={CLICK_ID}&payout={PAYOUT}&transaction_id={TRANSACTION_ID}&offer_id={OFFER_ID}&network=adexico&offer_name={OFFER_NAME}&country={COUNTRY}&user_id=${uid}`;
-    document.getElementById('postback-url-display').textContent=url;
-  }
+async function loadTeam(){
+  teamData=await api('/api/team');if(!Array.isArray(teamData))return;
+  const html=teamData.map(u=>`<div class="user-card" onclick="selectUser('${u.id}',this,'dash')"><div class="uc-av">${(u.name||u.email)[0].toUpperCase()}</div><div class="uc-name">${u.name||'–'}</div><div class="uc-email">${u.email}</div><span class="uc-role role-${u.role}">${u.role}</span></div>`).join('');
+  document.getElementById('user-cards').innerHTML=html;
+  document.getElementById('admin-user-cards').innerHTML=teamData.map(u=>`<div class="user-card" onclick="selectUser('${u.id}',this,'admin')"><div class="uc-av">${(u.name||u.email)[0].toUpperCase()}</div><div class="uc-name">${u.name||'–'}</div><div class="uc-email">${u.email}</div><span class="uc-role role-${u.role}">${u.role}</span></div>`).join('');
+}
 
-  function copyPostback(){
-    const url=document.getElementById('postback-url-display').textContent;
-    navigator.clipboard.writeText(url);
-    const el=document.getElementById('copy-success');
-    el.classList.add('visible');
-    setTimeout(()=>el.classList.remove('visible'),2500);
-  }
+function renderAdminPage(){if(teamData.length)return;}
 
-  // ── DASHBOARD ──
-  async function loadDashboard(){
-    const stats=await api('/api/stats');
-    if(stats.error)return;
-    document.getElementById('revenue-today').innerHTML=`<span class="currency">$</span>${fmt(stats.revenue_today)}`;
-    document.getElementById('orders-today').textContent=stats.orders_today||0;
-    document.getElementById('revenue-total').innerHTML=`<span class="currency">$</span>${fmt(stats.revenue_total)}`;
-    document.getElementById('conv-rate').textContent=`${(stats.conversion_rate||0).toFixed(1)}%`;
-    document.getElementById('conv-big').textContent=(stats.conversion_rate||0).toFixed(1);
-    document.getElementById('conv-fill').style.width=`${Math.min((stats.conversion_rate||0)*5,100)}%`;
-    document.getElementById('conv-bar-right').textContent=`${(stats.conversion_rate||0).toFixed(1)}%`;
-    document.getElementById('conv-desc').textContent=`${stats.total_clicks||0} clicks → ${stats.total_orders||0} orders`;
-    document.getElementById('conv-label').textContent=`${stats.total_clicks||0} tracked clicks`;
-    document.getElementById('total-label').textContent=`${stats.total_orders||0} total orders`;
-    document.getElementById('recent-badge').textContent=`${stats.orders_today||0} today`;
-    const rc=stats.revenue_change||0,oc=stats.orders_change||0;
-    document.getElementById('revenue-change').innerHTML=`<span class="${rc>=0?'up':'down'}">${rc>=0?'↑':'↓'} ${Math.abs(rc).toFixed(1)}% vs yesterday</span>`;
-    document.getElementById('orders-change').innerHTML=`<span class="${oc>=0?'up':'down'}">${oc>=0?'↑':'↓'} ${Math.abs(oc)} vs yesterday</span>`;
-    renderPlatforms(stats.by_platform||[]);
-    const orders=await api('/api/orders?limit=8');
-    renderOrderRows(orders,'dashboard-tbody',true);
-  }
+async function selectUser(uid,card,ctx){
+  const isAdmin=ctx==='admin';
+  const cards=isAdmin?document.querySelectorAll('#admin-user-cards .user-card'):document.querySelectorAll('#user-cards .user-card');
+  cards.forEach(c=>c.classList.remove('selected'));card.classList.add('selected');
+  if(isAdmin){adminSelUser=uid;document.getElementById('admin-detail-section').style.display='block';loadUserDetail(uid,adminUDPeriod,'admin-user-detail');}
+  else{selUser=uid;document.getElementById('user-detail-section').style.display='block';loadUserDetail(uid,udPeriod,'user-detail');}
+}
 
-  function renderPlatforms(platforms){
-    const total=platforms.reduce((s,p)=>s+parseFloat(p.revenue||0),0);
-    const keys=['meta','youtube','tiktok'];
-    const map={};platforms.forEach(p=>{map[gp(p.source)]=p;});
-    document.getElementById('platform-list').innerHTML=keys.map(k=>{
-      const p=map[k];const rev=p?parseFloat(p.revenue||0):0;
-      const pct=total>0?(rev/total*100):0;const cfg=PC[k];
-      return `<div class="platform-row"><div class="platform-info"><div class="platform-dot" style="background:${cfg.color}"></div><div class="platform-name">${cfg.label}</div></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cfg.color};opacity:0.8"></div></div><div class="platform-amount">$${fmt(rev)}</div></div>`;
-    }).join('');
-  }
+function filterUD(period,btn){udPeriod=period;document.querySelectorAll('#ud-filters .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(selUser)loadUserDetail(selUser,period,'user-detail');}
+function filterAdminUD(period,btn){adminUDPeriod=period;document.querySelectorAll('#admin-ud-filters .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(adminSelUser)loadUserDetail(adminSelUser,period,'admin-user-detail');}
 
-  // ── ORDERS ──
-  function filterOrders(period,btn){
-    currentOrderPeriod=period;
-    document.querySelectorAll('#page-orders .filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');loadOrders(period);
-  }
-
-  async function loadOrders(period){
-    const url=period==='all'?'/api/orders?limit=200':`/api/orders?limit=200&period=${period}`;
-    allOrders=await api(url);
-    document.getElementById('orders-badge').textContent=`${Array.isArray(allOrders)?allOrders.length:0} orders`;
-    renderOrderRows(allOrders,'orders-tbody',false);
-  }
-
-  function searchOrders(){
-    const q=document.getElementById('order-search').value.toLowerCase();
-    if(!q){renderOrderRows(allOrders,'orders-tbody',false);return;}
-    const filtered=allOrders.filter(o=>(o.transaction_id||'').toLowerCase().includes(q));
-    renderOrderRows(filtered,'orders-tbody',false);
-  }
-
-  function exportCSV(){
-    if(!allOrders.length){alert('No orders to export');return;}
-    const headers=['Transaction ID','Platform','Offer','Campaign','Country','Device','Payout','Network','Time'];
-    const rows=allOrders.map(o=>[o.transaction_id,gp(o.traffic_source),o.offer_name||'',o.campaign_id||'',o.country||'',o.device_type||'',o.payout,o.network,o.received_at].map(v=>`"${v||''}"`).join(','));
-    const csv=[headers.join(','),...rows].join('\n');
-    const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-    a.download=`orders_${new Date().toISOString().split('T')[0]}.csv`;a.click();
-  }
-
-  function renderOrderRows(orders,tbodyId,compact){
-    const tbody=document.getElementById(tbodyId);
-    const cols=compact?6:9;
-    if(!orders||!orders.length){
-      tbody.innerHTML=`<tr><td colspan="${cols}"><div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No orders yet</div></div></td></tr>`;return;
-    }
-    tbody.innerHTML=orders.map(o=>{
-      const pk=gp(o.traffic_source);const cfg=PC[pk];
-      const pixels=`<div class="pixel-cell"><div class="pixel-dot ${o.pixel_fired_fb?'pixel-on':'pixel-off'}">FB</div><div class="pixel-dot ${o.pixel_fired_tt?'pixel-on':'pixel-off'}">TT</div></div>`;
-      if(compact)return `<tr><td class="id-cell">${(o.transaction_id||'–').substring(0,14)}...</td><td><span class="platform-tag ${cfg.tag}"><span class="tag-dot"></span>${cfg.label}</span></td><td style="color:var(--muted2)">${o.campaign_id||'–'}</td><td class="payout-cell">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="time-cell">${timeAgo(o.received_at)}</td></tr>`;
-      return `<tr><td class="id-cell">${(o.transaction_id||'–').substring(0,14)}...</td><td><span class="platform-tag ${cfg.tag}"><span class="tag-dot"></span>${cfg.label}</span></td><td style="color:var(--muted2);font-size:11px">${o.offer_name||'–'}</td><td style="color:var(--muted2);font-size:11px">${o.campaign_id||'–'}</td><td style="color:var(--muted2);font-size:11px">${o.country||'–'}</td><td style="color:var(--muted2);font-size:11px">${o.device_type||'–'}</td><td class="payout-cell">+$${fmt(o.payout)}</td><td style="color:var(--muted2);font-size:11px">${o.network||'–'}</td><td class="time-cell">${timeAgo(o.received_at)}</td></tr>`;
-    }).join('');
-  }
-
-  // ── ANALYTICS ──
-  function filterAnalytics(period,btn){
-    currentAnalyticsPeriod=period;
-    document.querySelectorAll('#page-analytics .filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');loadAnalytics(period);
-  }
-
-  async function loadAnalytics(period){
-    const data=await api(`/api/analytics?period=${period}`);
-    const grid=document.getElementById('analytics-grid');
-    if(!data||!data.length){grid.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No data for this period</div></div>`;return;}
-    grid.innerHTML=data.map(r=>{
-      const pk=gp(r.platform);const cfg=PC[pk];
-      return `<div class="analytics-card"><div class="ac-platform" style="background:${cfg.color}20;color:${cfg.color};border:1px solid ${cfg.color}30"><span class="tag-dot" style="background:${cfg.color}"></span>${cfg.label}</div><div class="ac-offer">${r.offer_name||'Unknown Offer'}</div><div class="ac-url">${r.landing_page_url||r.campaign_id||'–'}</div><div class="ac-stats"><div class="ac-stat"><div class="ac-stat-val" style="color:var(--green)">$${fmt(r.revenue)}</div><div class="ac-stat-label">Revenue</div></div><div class="ac-stat"><div class="ac-stat-val">${r.sales}</div><div class="ac-stat-label">Sales</div></div><div class="ac-stat"><div class="ac-stat-val">$${fmt(r.avg_payout)}</div><div class="ac-stat-label">Avg</div></div></div><div class="ac-meta">${r.ad_creative?`<span class="ac-chip">🎨 ${r.ad_creative}</span>`:''} ${r.country?`<span class="ac-chip">🌍 ${r.country}</span>`:''} ${r.device_type?`<span class="ac-chip">📱 ${r.device_type}</span>`:''}</div></div>`;
-    }).join('');
-  }
-
-  // ── CLICK MAP ──
-  function filterClickmap(period,btn){
-    currentClickmapPeriod=period;
-    document.querySelectorAll('#page-clickmap .filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');loadClickmap(period);
-  }
-
-  async function loadClickmap(period){
-    const data=await api(`/api/clickmap?period=${period}`);
-    const list=document.getElementById('clickmap-list');
-    if(!data||!data.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">🗺</div><div class="empty-title">No click data yet</div></div>`;return;}
-    list.innerHTML=data.map(r=>{
-      const pk=gp(r.traffic_source);const cfg=PC[pk];
-      const cvr=parseFloat(r.cvr||0);
-      return `<div class="clickmap-row"><div><div class="cm-campaign">${r.campaign_id||'Unknown campaign'} <span class="platform-tag ${cfg.tag}" style="font-size:9px">${cfg.label}</span></div><div class="cm-ad">${r.ad_id||'–'}</div></div><div class="cm-num" style="color:var(--text)">${r.clicks}</div><div class="cm-num" style="color:var(--green)">${r.conversions}</div><div class="cm-num" style="color:${cvr>3?'var(--green)':cvr>1?'var(--orange)':'var(--red)'}">${cvr}%</div><div class="cm-num" style="color:var(--green)">$${fmt(r.revenue)}</div></div>`;
-    }).join('');
-  }
-
-  // ── ROI ──
-  function filterROI(period,btn){
-    currentROIPeriod=period;
-    document.querySelectorAll('#page-roi .filter-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');loadROI(period);
-  }
-
-  async function loadROI(period){
-    const data=await api(`/api/roi?period=${period}`);
-    const grid=document.getElementById('roi-grid');
-    if(!data||!data.length){grid.innerHTML=`<div class="empty-state"><div class="empty-icon">💰</div><div class="empty-title">No ROI data yet</div><div class="empty-sub">Add ad spend to calculate profit</div></div>`;return;}
-    grid.innerHTML=data.map(r=>{
-      const pk=gp(r.platform);const cfg=PC[pk];
-      const profit=parseFloat(r.profit||0);
-      const profitClass=profit>0?'positive':profit<0?'negative':'neutral';
-      const roi=parseFloat(r.spend||0)>0?((profit/parseFloat(r.spend))*100).toFixed(0):null;
-      return `<div class="roi-card"><div class="roi-offer">${r.offer_name||'Unknown Offer'}</div><div class="roi-platform" style="background:${cfg.color}20;color:${cfg.color};border:1px solid ${cfg.color}30"><span class="tag-dot" style="background:${cfg.color}"></span>${cfg.label}</div><div class="roi-stats"><div class="roi-stat"><div class="roi-stat-val" style="color:var(--green)">$${fmt(r.revenue)}</div><div class="roi-stat-label">Revenue</div></div><div class="roi-stat"><div class="roi-stat-val" style="color:var(--red)">$${fmt(r.spend)}</div><div class="roi-stat-label">Spend</div></div></div><div class="roi-profit ${profitClass}">${profit>=0?'+':''}$${fmt(profit)} profit${roi?` · ${roi}% ROI`:''}</div></div>`;
-    }).join('');
-  }
-
-  async function saveSpend(){
-    const platform=document.getElementById('spend-platform').value;
-    const campaign_id=document.getElementById('spend-campaign').value;
-    const offer_name=document.getElementById('spend-offer').value;
-    const spend=document.getElementById('spend-amount').value;
-    const spend_date=document.getElementById('spend-date').value;
-    if(!spend){alert('Please enter a spend amount');return;}
-    await api('/api/spend',{method:'POST',body:JSON.stringify({platform,campaign_id,offer_name,spend,spend_date})});
-    document.getElementById('spend-modal').classList.remove('visible');
-    loadROI(currentROIPeriod);
-  }
-
-  // ── PIXEL SETTINGS ──
-  async function loadPixelSettings(){
-    const data=await api('/api/pixels');
-    if(Array.isArray(data))data.forEach(p=>{pixelData[p.platform]=p;});
-  }
-
-  function renderPixelForm(platform){
-    const p=pixelData[platform]||{};
-    const cfg=PC[platform]||PC.unknown;
-    const L={meta:{id:'Pixel ID',token:'Access Token (CAPI)',idph:'e.g. 1234567890',tokenph:'e.g. EAAxxxxxx'},youtube:{id:'Conversion ID',token:'Conversion Label',idph:'e.g. AW-123456789',tokenph:'e.g. abcDEFghij'},tiktok:{id:'Pixel ID',token:'Access Token',idph:'e.g. CXXXXXXXXX',tokenph:'e.g. xxxxxx'}};
-    const l=L[platform]||L.meta;
-    document.getElementById(`pf-${platform}`).innerHTML=`
-      <div class="pixel-form-card">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-          <div style="width:42px;height:42px;border-radius:10px;background:${cfg.color}20;border:1px solid ${cfg.color}30;display:flex;align-items:center;justify-content:center;font-size:20px">${cfg.icon}</div>
-          <div><div style="font-size:16px;font-weight:700;color:var(--white)">${cfg.label}</div><div style="font-size:11px;color:var(--muted2)">Pixel & API Configuration · ${p.pixel_id?'<span style="color:var(--green)">Connected</span>':'<span style="color:var(--muted2)">Not configured</span>'}</div></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">${l.id}</label><input class="form-input" type="text" id="${platform}-pixel-id" value="${p.pixel_id||''}" placeholder="${l.idph}"></div>
-          <div class="form-group"><label class="form-label">${l.token}</label><input class="form-input" type="text" id="${platform}-access-token" value="${p.access_token||''}" placeholder="${l.tokenph}"></div>
-        </div>
-        <button class="btn-save" onclick="savePixel('${platform}')">Save & Connect</button>
-        <div class="success-msg" id="${platform}-success">✓ Saved — pixel connected and active</div>
+async function loadUserDetail(uid,period,targetId){
+  const u=teamData.find(x=>x.id===uid);
+  const data=await api(`/api/team/${uid}/stats?period=${period}`);
+  if(data.error)return;const s=data.summary;
+  document.getElementById(targetId).innerHTML=`
+    <div class="ud-header"><div><div class="ud-name">${u?.name||'User'}</div><div class="ud-email">${u?.email||''}</div></div><span class="uc-role role-${u?.role}">${u?.role}</span></div>
+    <div class="ud-stats">
+      <div class="ud-stat"><div class="ud-stat-val" style="color:var(--green)">$${fmt(s.revenue)}</div><div class="ud-stat-label">Revenue</div></div>
+      <div class="ud-stat"><div class="ud-stat-val">${s.orders}</div><div class="ud-stat-label">Orders</div></div>
+      <div class="ud-stat"><div class="ud-stat-val">$${fmt(s.aov)}</div><div class="ud-stat-label">AOV</div></div>
+      <div class="ud-stat"><div class="ud-stat-val">${s.cvr}%</div><div class="ud-stat-label">CVR</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:8px">By Platform</div>
+        ${(data.by_platform||[]).map(p=>{const pk=gpk(p.platform);const cfg=PC[pk];const pct=parseFloat(s.revenue)>0?(parseFloat(p.revenue)/parseFloat(s.revenue)*100):0;return`<div class="pr" style="margin-bottom:8px"><div class="pi"><div class="pdot" style="background:${cfg.c}"></div><div class="pname">${cfg.l}</div></div><div class="bt"><div class="bf" style="width:${pct}%;background:${cfg.c};opacity:.8"></div></div><div class="pamt">$${fmt(p.revenue)}</div></div>`;}).join('')||'<div style="font-size:11px;color:var(--muted2)">No platform data</div>'}
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Where to find your credentials</div></div>
-        <div class="card-body" style="font-size:12px;color:var(--muted2);line-height:2">
-          ${platform==='meta'?`<b style="color:var(--text)">Pixel ID:</b> Facebook Events Manager → Your Dataset → Settings → Dataset ID<br><b style="color:var(--text)">Access Token:</b> Events Manager → Settings → Conversions API → Generate Access Token`:platform==='youtube'?`<b style="color:var(--text)">Conversion ID:</b> Google Ads → Tools → Conversions → your conversion → Tag setup → Conversion ID<br><b style="color:var(--text)">Conversion Label:</b> Same page — Conversion Label field`:`<b style="color:var(--text)">Pixel ID:</b> TikTok Ads Manager → Assets → Events → Web Events → your pixel<br><b style="color:var(--text)">Access Token:</b> Same page → Events API tab → Generate Access Token`}
-        </div>
-      </div>`;
-  }
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--white);margin-bottom:8px">Top Offers</div>
+        ${(data.by_offer||[]).slice(0,6).map(o=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)"><div style="font-size:11px;color:var(--text)">${o.offer||'Unknown'}</div><div style="font-size:11px;font-weight:600;color:var(--green);font-family:'Geist Mono',monospace">$${fmt(o.revenue)}</div></div>`).join('')||'<div style="font-size:11px;color:var(--muted2)">No offers yet</div>'}
+      </div>
+    </div>`;
+}
 
-  async function savePixel(platform){
-    const pixel_id=document.getElementById(`${platform}-pixel-id`).value;
-    const access_token=document.getElementById(`${platform}-access-token`).value;
-    const data=await api('/api/pixels',{method:'POST',body:JSON.stringify({platform,pixel_id,access_token,enabled:true})});
-    if(data.id){pixelData[platform]=data;const m=document.getElementById(`${platform}-success`);m.classList.add('visible');setTimeout(()=>{m.classList.remove('visible');renderPixelForm(platform);},3000);}
-  }
+async function loadPixels(){const data=await api('/api/pixels');if(Array.isArray(data)){pixelData={};data.forEach(p=>{if(!pixelData[p.platform])pixelData[p.platform]=[];pixelData[p.platform].push(p);});}}
 
-  // ── NOTIFICATIONS ──
-  async function loadNotificationSettings(){
-    const data=await api('/api/notifications');
-    if(data.pushover_user_key)document.getElementById('notif-user-key').value=data.pushover_user_key;
-    if(data.pushover_api_token)document.getElementById('notif-api-token').value=data.pushover_api_token;
-  }
+function renderPixelForm(platform){
+  const cfg=PCFG[platform];if(!cfg)return;
+  const pixels=pixelData[platform]||[];
+  document.getElementById(`pf-${platform}`).innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div style="width:40px;height:40px;border-radius:10px;background:${cfg.color}20;border:1px solid ${cfg.color}30;display:flex;align-items:center;justify-content:center;font-size:20px">${cfg.icon}</div>
+      <div><div style="font-size:15px;font-weight:700;color:var(--white)">${cfg.label}</div><div style="font-size:11px;color:var(--muted2)">${pixels.length} pixel${pixels.length!==1?'s':''} configured</div></div>
+    </div>
+    <div class="px-list">
+      ${pixels.map(p=>`<div class="px-item"><div style="flex:1"><div class="px-name">${p.pixel_name||'Default'}</div><div class="px-id">${p.pixel_id||'–'}</div></div><button class="px-del" onclick="deletePixel('${p.id}','${platform}')">Remove</button></div>`).join('')}
+      ${!pixels.length?`<div style="font-size:11px;color:var(--muted2);padding:8px 0">No pixels added yet. Add your first one below.</div>`:''}
+    </div>
+    <div class="px-add">
+      <div class="px-add-title">Add New Pixel</div>
+      <div class="fg"><label class="fl">Pixel Name / Label</label><input class="fi" type="text" id="px-name-${platform}" placeholder="e.g. Main Pixel, Account 2, Brand B"></div>
+      ${cfg.fields.map(f=>`<div class="fg"><label class="fl">${f.label}</label><input class="fi" type="text" id="px-${f.key}-${platform}" placeholder="${f.ph}"></div>`).join('')}
+      <button class="bsave" onclick="addPixel('${platform}')">Add Pixel</button>
+      <div class="smsg" id="px-success-${platform}">✓ Pixel saved and active</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="ch"><div class="ct">Where to find your credentials</div></div>
+      <div class="cbody" style="font-size:12px;color:var(--muted2);line-height:2">${cfg.help}</div>
+    </div>`;
+}
 
-  async function saveNotifications(){
-    const pushover_user_key=document.getElementById('notif-user-key').value;
-    const pushover_api_token=document.getElementById('notif-api-token').value;
-    await api('/api/notifications',{method:'POST',body:JSON.stringify({pushover_user_key,pushover_api_token,enabled:true})});
-    const m=document.getElementById('notif-success');m.classList.add('visible');setTimeout(()=>m.classList.remove('visible'),3000);
-  }
+async function addPixel(platform){
+  const cfg=PCFG[platform];
+  const pixel_name=document.getElementById(`px-name-${platform}`).value||'Default';
+  const fields={};cfg.fields.forEach(f=>{fields[f.key]=document.getElementById(`px-${f.key}-${platform}`).value;});
+  const data=await api('/api/pixels',{method:'POST',body:JSON.stringify({platform,pixel_name,...fields,enabled:true})});
+  if(data.id||data.pixel_id){await loadPixels();renderPixelForm(platform);const m=document.getElementById(`px-success-${platform}`);if(m){m.classList.add('v');setTimeout(()=>m.classList.remove('v'),3000);}}
+}
 
-  async function testNotification(){
-    const data=await api('/api/notifications/test',{method:'POST'});
-    if(data.success)alert('✓ Test notification sent! Check your iPhone.');
-    else alert('Error: '+( data.error||'Make sure you saved your Pushover keys first'));
-  }
+async function deletePixel(id,platform){
+  if(!confirm('Remove this pixel?'))return;
+  await api(`/api/pixels/${id}`,{method:'DELETE'});
+  await loadPixels();renderPixelForm(platform);
+}
 
-  // ── INIT ──
-  async function init(){
-    applyTheme();
-    if(token){
-      const me=await api('/api/auth/me');
-      if(me.id){currentUser=me;showApp();}
-      else{localStorage.removeItem('tracker_token');}
-    }
-  }
+async function loadNotifSettings(){const data=await api('/api/notifications');if(data.pushover_user_key)document.getElementById('nuk').value=data.pushover_user_key;if(data.pushover_api_token)document.getElementById('nat').value=data.pushover_api_token;}
+async function saveNotif(){await api('/api/notifications',{method:'POST',body:JSON.stringify({pushover_user_key:document.getElementById('nuk').value,pushover_api_token:document.getElementById('nat').value,enabled:true})});const m=document.getElementById('nsmsg');m.classList.add('v');setTimeout(()=>m.classList.remove('v'),3000);}
+async function testNotif(){const data=await api('/api/notifications/test',{method:'POST'});if(data.success)alert('✓ Test sent! Check your iPhone.');else{const m=document.getElementById('nerrmsg');m.textContent='Error: '+(data.error||'Save Pushover keys first');m.classList.add('v');setTimeout(()=>m.classList.remove('v'),4000);}}
 
-  init();
-  setInterval(()=>{if(currentPage==='dashboard')loadDashboard();},30000);
+function renderFAQ(){
+  const sections=[
+    {title:'Getting Started',items:[
+      {q:'How does the tracking work end to end?',a:'When someone clicks your ad, they land on your landing page. A tracking request fires to <code>/track/click</code> with a unique <code>click_id</code>. This click_id follows the visitor through to the offer. When they buy, the CPA network sends a postback to your <code>/postback</code> URL with that click_id + payout. Your tracker logs the sale, fires your pixels, and sends you a push notification.'},
+      {q:'How do I connect my CPA network?',a:'Go to Postback URLs, copy your unique URL, and paste it into your network postback settings. For Adexico replace <code>{CLICK_ID}</code> with <code>{clickid}</code>, <code>{PAYOUT}</code> with <code>{payout}</code>, and <code>{TRANSACTION_ID}</code> with <code>{transaction_id}</code>.'},
+      {q:'How do I track clicks on my landing page?',a:'Add this to your ad destination URL: <code>?click_id=UNIQUE_ID&source=meta&campaign=CAMP&ad=AD_ID&user_id=YOUR_UID</code>. Add a script on load that calls <code>/track/click</code> with those params. The click_id must also reach the offer checkout URL so the network returns it in the postback.'},
+    ]},
+    {title:'Platforms & Pixels',items:[
+      {q:'How do I add multiple pixels for the same platform?',a:'Go to any platform page (Meta, TikTok, Google, Snapchat). Click Add New Pixel, give it a label like "Account 1" or "Brand B", paste the credentials, and save. You can add as many as you want. All pixels for that platform fire on every matching sale.'},
+      {q:'What Google campaign types are supported?',a:'Search (keyword ads), Display (banner ads on websites), YouTube (video ads), Shopping (product listing ads), and Performance Max (PMax — automated across all Google channels). Pass the type via <code>campaign_type=search</code> (or display / youtube / shopping / pmax) in your click tracking URL.'},
+      {q:'How does Snapchat tracking work?',a:'Snapchat supports browser-side pixel (fires on page load) and server-side CAPI (fires from your server on confirmed sale). Add your Pixel ID and CAPI Access Token in the Snapchat page. The Snap Click ID is captured automatically from <code>?snapclid=</code> in the URL when someone clicks your Snap ad.'},
+      {q:'How does Meta CAPI work vs browser pixel?',a:'Browser pixel fires in the visitor\'s browser (blocked by ad blockers). CAPI fires from your server directly to Meta — it\'s more reliable, not blocked, and matches better. Your tracker uses CAPI only. You still need to keep your Meta pixel on the landing page for browser-side events like PageView and ViewContent.'},
+    ]},
+    {title:'Data & Reports',items:[
+      {q:'What is AOV?',a:'Average Order Value — the average payout per confirmed sale. Visible per user in the admin section and per offer in the ROI page.'},
+      {q:'How do I calculate ROI?',a:'Go to ROI and click Add Spend. Enter your ad spend per offer. The platform matches spend to revenue by offer name and calculates profit and ROI%. To make this work accurately, use the same offer name in your postback URL and when entering spend.'},
+      {q:'How do I export orders?',a:'Go to Orders, apply any date filter, then click CSV. All visible orders download as a spreadsheet with all fields.'},
+      {q:'What does the Click Map show?',a:'Which campaigns and ads are getting clicks versus actually converting. CVR is color coded: green = 3%+ (good), orange = 1-3% (average), red = under 1% (poor). Use this to cut losing ads fast.'},
+    ]},
+    {title:'Team & Admin',items:[
+      {q:'How do user roles work?',a:'First account created = Admin (sees all data from all users). Every account after = Member (sees only their own data). As admin you can view any user\'s stats from the Dashboard or Team & Users page.'},
+      {q:'Can each user have their own pixels and notifications?',a:'Yes. Each user sets up their own pixels and Pushover keys. When a sale comes in with that user\'s click_id, only their pixels fire and only they get the push notification.'},
+      {q:'How do I invite a team member?',a:'Share your platform URL. They click Sign Up and get assigned Member role automatically. Their postback URL includes their user ID so their data stays separate.'},
+    ]},
+    {title:'Notifications',items:[
+      {q:'How do I get push notifications on my iPhone?',a:'Go to Notifications page. Create account at pushover.net, copy User Key and API Token. Download Pushover app on iPhone. Paste both keys, Save, then Send Test to verify. Every sale sends a push with cash register sound showing amount, platform, and campaign.'},
+    ]},
+  ];
+  document.getElementById('faq-container').innerHTML=sections.map(s=>`
+    <span class="faq-section-label">${s.title}</span>
+    <div class="faq-list">
+      ${s.items.map((item,i)=>`<div class="faq-item" id="fq-${s.title}-${i}"><div class="faq-q" onclick="toggleFAQ('fq-${s.title}-${i}')">${item.q}<span class="faq-arrow">▼</span></div><div class="faq-a">${item.a}</div></div>`).join('')}
+    </div>`).join('');
+}
+
+function toggleFAQ(id){document.getElementById(id).classList.toggle('open');}
+
+async function init(){
+  applyTheme();
+  if(token){const me=await api('/api/auth/me');if(me.id){CU=me;showApp();}else localStorage.removeItem('tracker_token');}
+}
+
+init();
+setInterval(()=>{if(curPage==='dashboard')loadDash();},30000);
 </script>
 </body>
 </html>
