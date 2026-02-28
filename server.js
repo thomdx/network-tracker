@@ -78,9 +78,9 @@ app.get('/api/stats', async (req, res) => {
       by_platform:      platformStats.rows
     });
 
-  } catch(e) {
-    console.error('Stats error:', e.message);
-    res.status(500).json({ error: e.message });
+  }  catch(e) {
+    console.error('Stats error full:', e);
+    res.status(500).json({ error: e.message, detail: e.toString() });
   }
 });
 
@@ -109,8 +109,8 @@ app.get('/api/orders', async (req, res) => {
 
     res.json(rows);
   } catch(e) {
-    console.error('Orders error:', e.message);
-    res.status(500).json({ error: e.message });
+    console.error('Orders error full:', e);
+    res.status(500).json({ error: e.message, detail: e.toString() });
   }
 });
 
