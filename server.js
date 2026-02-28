@@ -7,6 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
+console.log('DB URL starts with:', process.env.DATABASE_URL?.substring(0, 30));
+
 const db = new Pool({ 
   connectionString: process.env.DATABASE_URL,
   ssl: false
