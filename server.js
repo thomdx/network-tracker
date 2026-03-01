@@ -7,7 +7,9 @@ require('dotenv').config({ path: '.env' });
 
 const app = express();
 app.use(express.json());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false
+}));
 app.use((req, res, next) => {
   if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
     return res.redirect(301, 'https://' + req.headers.host + req.url);
