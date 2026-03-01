@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -6,6 +7,13 @@ require('dotenv').config({ path: '.env' });
 
 const app = express();
 app.use(express.json());
+app.use(helmet());
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+    return res.redirect(301, 'https://' + req.headers.host + req.url);
+  }
+  next();
+});
 app.use(express.static('public'));
 
 const db = new Pool({
