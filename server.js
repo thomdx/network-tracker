@@ -405,12 +405,14 @@ app.get('/postback', async (req, res) => {
   const { click_id, platform, fbclid, ttclid, snapclid, gclid, payout, transaction_id, offer_id, network, offer_name, lp_url, creative, country, device } = req.query;
   try {
     const clickRes = await db.query('SELECT * FROM clicks WHERE click_id=$1', [click_id]);
-        const click = clickRes.rows[0];
+    const click = clickRes.rows[0];
     const trafficSource = platform || click?.traffic_source || 'unknown';
-const clickFbclid = fbclid || click?.fbclid;
-const clickTtclid = ttclid || click?.ttclid;
-const clickSnapclid = snapclid || click?.snapclid;
-const clickGclid = gclid || click?.gclid;
+    const clickFbclid = fbclid || click?.fbclid;
+    const clickTtclid = ttclid || click?.ttclid;
+    const clickSnapclid = snapclid || click?.snapclid;
+    const clickGclid = gclid || click?.gclid;
+    const resolvedUserId = click?.user_id || req.query.user_id || null;
+
 
     await db.query(`
       INSERT INTO orders (click_id,network,offer_id,payout,transaction_id,offer_name,landing_page_url,ad_creative,country,device_type,user_id,traffic_source)
@@ -421,7 +423,8 @@ const clickGclid = gclid || click?.gclid;
        country || null, device || null, resolvedUserId, trafficSource || null]
     );
 
-    const resolvedUserId = click?.user_id || req.query.user_id || null;
+
+
 const [notifRow, pixelRows] = await Promise.all([
       resolvedUserId ? db.query('SELECT * FROM notification_settings WHERE user_id=$1 AND enabled=TRUE', [resolvedUserId]) : { rows: [] },
       resolvedUserId ? db.query('SELECT * FROM pixel_settings WHERE user_id=$1 AND enabled=TRUE', [resolvedUserId]) : { rows: [] }
