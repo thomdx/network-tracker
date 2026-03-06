@@ -401,10 +401,14 @@ app.get('/track/click', async (req, res) => {
 // POSTBACK
 // ─────────────────────────────────────────
 app.get('/postback', async (req, res) => {
-  const { click_id, payout, transaction_id, offer_id, network, offer_name, lp_url, creative, country, device } = req.query;
+  const { click_id, platform, fbclid, ttclid, snapclid, gclid, payout, transaction_id, offer_id, network, offer_name, lp_url, creative, country, device } = req.query;
   try {
     const clickRes = await db.query('SELECT * FROM clicks WHERE click_id=$1', [click_id]);
-    const click = clickRes.rows[0];
+const trafficSource = platform || click?.traffic_source || 'unknown';
+const clickFbclid = fbclid || click?.fbclid;
+const clickTtclid = ttclid || click?.ttclid;
+const clickSnapclid = snapclid || click?.snapclid;
+const clickGclid = gclid || click?.gclid;
 
     await db.query(`
       INSERT INTO orders (click_id,network,offer_id,payout,transaction_id,offer_name,landing_page_url,ad_creative,country,device_type,user_id)
@@ -421,13 +425,20 @@ app.get('/postback', async (req, res) => {
     ]);
 
     await Promise.all([
-      fireAllPixels(click_id, payout, transaction_id, click, pixelRows.rows, offer_name),
+      fireAllPixels(click_id, payout, transaction_id, {
+        ...click,
+        traffic_source: trafficSource,
+        fbclid: clickFbclid,
+        ttclid: clickTtclid,
+        snapclid: snapclid || click?.snapclid,
+        gclid: gclid || click?.gclid
+      }, pixelRows.rows, offer_name),
       notifRow.rows[0] ? pushNotify(notifRow.rows[0].pushover_user_key, notifRow.rows[0].pushover_api_token, {
         title: `🔥 Sale — +$${parseFloat(payout).toFixed(2)}`,
-        message: `Source: ${click?.traffic_source || 'Unknown'}\nCampaign: ${click?.campaign_id || '–'}\nNetwork: ${network || '–'}`
+        message: `Source: ${trafficSource}\nCampaign: ${click?.campaign_id || '–'}\nNetwork: ${network || '–'}`
       }) : Promise.resolve()
     ]);
-
+    
     res.send('OK');
   } catch(e) { console.error('Postback error:', e.message); res.status(500).send('Error'); }
 });
