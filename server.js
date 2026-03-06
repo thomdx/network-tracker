@@ -249,11 +249,11 @@ app.get('/api/stats', auth, async (req, res) => {
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
     const isAdmin = req.user.role === 'admin';
     const uid = req.user.id;
-    const uf = isAdmin ? '' : 'AND o.user_id=$2';
-    const ufS = isAdmin ? '' : 'AND user_id=$2';
-    const p = isAdmin ? [today] : [today, uid];
-    const py = isAdmin ? [yesterday] : [yesterday, uid];
-    const pA = isAdmin ? [] : [uid];
+const uf = isAdmin ? '' : 'AND o.user_id=$2::uuid';
+const ufS = isAdmin ? '' : 'AND user_id=$2::uuid';
+const p = isAdmin ? [today] : [today, uid];
+const py = isAdmin ? [yesterday] : [yesterday, uid];
+const pA = isAdmin ? [] : [uid];
 
     const [t, total, clicks, platform, yest] = await Promise.all([
       db.query(`SELECT COUNT(*) as orders,COALESCE(SUM(payout),0) as revenue FROM orders o WHERE DATE(received_at)=$1 ${uf}`, p),
@@ -323,30 +323,6 @@ app.get('/api/orders', auth, async (req, res) => {
 // ANALYTICS
 // ─────────────────────────────────────────
 
-app.get('/api/analytics/overview', auth, async (req, res) => {
-  try {
-    const { period = '30days', from, to } = req.query;
-    const isAdmin = req.user.role === 'admin';
-    const uid = req.user.id;
-    const df = (from && to)
-      ? `AND o.received_at >= '${from}' AND o.received_at <= '${to} 23:59:59'`
-      : getPeriodFilter(period, 'o.received_at');
-    const uf = isAdmin ? '' : 'AND o.user_id=$1';
-    const params = isAdmin ? [] : [uid];
-
-    const { rows } = await db.query(`
-      SELECT o.offer_name,o.landing_page_url,o.ad_creative,o.country,o.device_type,
-        c.traffic_source as platform,c.campaign_id,c.campaign_type,
-        COUNT(o.id) as sales,COALESCE(SUM(o.payout),0) as revenue,AVG(o.payout) as avg_payout
-      FROM orders o
-      LEFT JOIN clicks c ON o.click_id=c.click_id
-      WHERE 1=1 ${df} ${uf}
-      GROUP BY o.offer_name,o.landing_page_url,o.ad_creative,o.country,o.device_type,c.traffic_source,c.campaign_id,c.campaign_type
-      ORDER BY revenue DESC`, params);
-
-    res.json(rows);
-  } catch(e) { console.error('Analytics error:', e); res.status(500).json({ error: e.message }); }
-});
 
 // ─────────────────────────────────────────
 // CLICK MAP
