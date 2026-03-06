@@ -888,12 +888,12 @@ async function loadAnalyticsCustom(from,to){
 // ── POSTBACK ──
 function basePostbackURL(network){
   const base=window.location.origin,uid=CU?.id||'YOUR_USER_ID';
-  return `${base}/postback?click_id={CLICK_ID}&payout={PAYOUT}&transaction_id={TRANSACTION_ID}&offer_name={OFFER_NAME}&country={COUNTRY}&device={DEVICE}&network=${encodeURIComponent(network)}&user_id=${uid}`;
+  return `${base}/postback?platform={sub1}&fbclid={sub2}&payout={payout}&transaction_id={transaction_id}&offer_name={offer_name}&country={geo_country_code}&device={device_type}&network=${encodeURIComponent(network)}&user_id=${uid}`;
 }
 
 function renderPB(){
   const base=window.location.origin,uid=CU?.id||'YOUR_USER_ID';
-  document.getElementById('pb-url').textContent=`${base}/postback?click_id={CLICK_ID}&payout={PAYOUT}&transaction_id={TRANSACTION_ID}&offer_name={OFFER_NAME}&country={COUNTRY}&device={DEVICE}&network={NETWORK_NAME}&user_id=${uid}`;
+  document.getElementById('pb-url').textContent=`${base}/postback?platform={sub1}&fbclid={sub2}&payout={payout}&transaction_id={transaction_id}&offer_name={offer_name}&country={geo_country_code}&device={device_type}&network=prismique&user_id=${uid}`;
   renderNetworkCards();
 }
 
