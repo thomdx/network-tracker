@@ -309,7 +309,8 @@ app.get('/api/orders', auth, async (req, res) => {
       SELECT o.id,o.transaction_id,o.payout,o.network,o.received_at,
         o.offer_name,o.landing_page_url,o.ad_creative,o.country,o.device_type,
         o.pixel_fired_fb,o.pixel_fired_tt,o.pixel_fired_snap,o.pixel_fired_google,
-        c.traffic_source,c.campaign_id,c.ad_id,c.campaign_type
+        COALESCE(o.traffic_source, c.traffic_source) as traffic_source,
+        c.campaign_id,c.ad_id,c.campaign_type
       FROM orders o
       LEFT JOIN clicks c ON o.click_id=c.click_id
       WHERE 1=1 ${df} ${sf} ${uf}
@@ -556,7 +557,7 @@ app.get('/api/analytics/overview', auth, async (req, res) => {
       db.query(`SELECT COALESCE(c.campaign_id,'Unknown') as name, c.traffic_source as platform, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue, COALESCE(AVG(o.payout),0) as aov FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY c.campaign_id, c.traffic_source ORDER BY revenue DESC LIMIT 10`, params),
       db.query(`SELECT COALESCE(o.network,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.network ORDER BY revenue DESC`, params),
       db.query(`SELECT COALESCE(o.country,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.country ORDER BY revenue DESC LIMIT 10`, params),
-      db.query(`SELECT COALESCE(c.traffic_source,'Unknown') as name, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY c.traffic_source ORDER BY revenue DESC`, params)
+db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source,'Unknown') as name, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC`, params)
     ]);
 
     // clicks for CVR
