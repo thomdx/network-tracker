@@ -418,12 +418,13 @@ const clickGclid = gclid || click?.gclid;
       ON CONFLICT (transaction_id) DO NOTHING`,
       [click_id, network || 'unknown', offer_id, parseFloat(payout) || 0, transaction_id,
        offer_name || null, lp_url || null, creative || click?.ad_id || null,
-       country || null, device || null, click?.user_id || null, trafficSource || null]
+       country || null, device || null, resolvedUserId, trafficSource || null]
     );
 
-    const [notifRow, pixelRows] = await Promise.all([
-      click?.user_id ? db.query('SELECT * FROM notification_settings WHERE user_id=$1 AND enabled=TRUE', [click.user_id]) : { rows: [] },
-      click?.user_id ? db.query('SELECT * FROM pixel_settings WHERE user_id=$1 AND enabled=TRUE', [click.user_id]) : { rows: [] }
+    const resolvedUserId = click?.user_id || req.query.user_id || null;
+const [notifRow, pixelRows] = await Promise.all([
+      resolvedUserId ? db.query('SELECT * FROM notification_settings WHERE user_id=$1 AND enabled=TRUE', [resolvedUserId]) : { rows: [] },
+      resolvedUserId ? db.query('SELECT * FROM pixel_settings WHERE user_id=$1 AND enabled=TRUE', [resolvedUserId]) : { rows: [] }
     ]);
 
     await Promise.all([
