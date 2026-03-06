@@ -412,12 +412,12 @@ const clickSnapclid = snapclid || click?.snapclid;
 const clickGclid = gclid || click?.gclid;
 
     await db.query(`
-      INSERT INTO orders (click_id,network,offer_id,payout,transaction_id,offer_name,landing_page_url,ad_creative,country,device_type,user_id)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+      INSERT INTO orders (click_id,network,offer_id,payout,transaction_id,offer_name,landing_page_url,ad_creative,country,device_type,user_id,traffic_source)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
       ON CONFLICT (transaction_id) DO NOTHING`,
       [click_id, network || 'unknown', offer_id, parseFloat(payout) || 0, transaction_id,
        offer_name || null, lp_url || null, creative || click?.ad_id || null,
-       country || null, device || null, click?.user_id || null]
+       country || null, device || null, click?.user_id || null, trafficSource || null]
     );
 
     const [notifRow, pixelRows] = await Promise.all([
