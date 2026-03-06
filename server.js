@@ -404,7 +404,8 @@ app.get('/postback', async (req, res) => {
   const { click_id, platform, fbclid, ttclid, snapclid, gclid, payout, transaction_id, offer_id, network, offer_name, lp_url, creative, country, device } = req.query;
   try {
     const clickRes = await db.query('SELECT * FROM clicks WHERE click_id=$1', [click_id]);
-const trafficSource = platform || click?.traffic_source || 'unknown';
+        const click = clickRes.rows[0];
+    const trafficSource = platform || click?.traffic_source || 'unknown';
 const clickFbclid = fbclid || click?.fbclid;
 const clickTtclid = ttclid || click?.ttclid;
 const clickSnapclid = snapclid || click?.snapclid;
@@ -438,7 +439,7 @@ const clickGclid = gclid || click?.gclid;
         message: `Source: ${trafficSource}\nCampaign: ${click?.campaign_id || '–'}\nNetwork: ${network || '–'}`
       }) : Promise.resolve()
     ]);
-    
+
     res.send('OK');
   } catch(e) { console.error('Postback error:', e.message); res.status(500).send('Error'); }
 });
