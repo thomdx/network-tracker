@@ -1119,12 +1119,19 @@ async function removeUser(uid){
     msg:'Permanently remove this user? This cannot be undone.',
     confirmText:'Remove',danger:true,
     onConfirm:async()=>{
-      await api(`/api/team/${uid}`,{method:'DELETE'});
-      await loadTeam();
-      document.getElementById('user-detail-section').style.display='none';
-      selUser=null;
-      toast('User removed.','success');
-    }
+  await api(`/api/team/${uid}`,{method:'DELETE'});
+  teamData = teamData.filter(u => u.id !== uid);
+  document.getElementById('users-grid').innerHTML = teamData.map(u=>`
+    <div class="user-card" onclick="selectUser('${u.id}',this)">
+      <div class="uc-av" style="opacity:${u.status==='paused'?'.4':'1'}">${(u.name||u.email)[0].toUpperCase()}</div>
+      <div class="uc-name">${u.name||'–'} ${u.status==='paused'?'<span style="font-size:9px;color:var(--orange);font-family:\'Geist Mono\',monospace">[paused]</span>':''}</div>
+      <div class="uc-email">${u.email}</div>
+      <span class="uc-role role-${u.role}">${u.role}</span>
+    </div>`).join('');
+  document.getElementById('user-detail-section').style.display='none';
+  selUser=null;
+  toast('User removed.','success');
+}
   });
 }
 
