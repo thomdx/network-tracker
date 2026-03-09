@@ -539,8 +539,6 @@ function getPeriodFilter(period, field) {
   return `AND ${field}>=NOW()-INTERVAL '30 days'`;
 }
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
 
 // ─────────────────────────────────────────
 // ANALYTICS V2 — full breakdown
@@ -588,3 +586,7 @@ app.get('/api/analytics/overview', auth, async (req, res) => {
     });
   } catch(e) { console.error('Analytics overview error:', e); res.status(500).json({ error: e.message }); }
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
+
