@@ -259,7 +259,7 @@ const pA = isAdmin ? [] : [uid];
       db.query(`SELECT COUNT(*) as orders,COALESCE(SUM(payout),0) as revenue FROM orders o WHERE DATE(received_at)=$1 ${uf}`, p),
       db.query(`SELECT COUNT(*) as orders,COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${uf.replace('AND o.','AND ')}`, pA),
       db.query(`SELECT COUNT(*) as clicks FROM clicks WHERE 1=1 ${ufS}`, pA),
-      db.query(`SELECT c.traffic_source as source,COALESCE(SUM(o.payout),0) as revenue,COUNT(o.id) as orders FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE DATE(o.received_at)=$1 ${uf} GROUP BY c.traffic_source`, p),
+      db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source) as source,COALESCE(SUM(o.payout),0) as revenue,COUNT(o.id) as orders FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE DATE(o.received_at)=$1 ${uf} GROUP BY COALESCE(o.traffic_source, c.traffic_source)`, p),
       db.query(`SELECT COUNT(*) as orders,COALESCE(SUM(payout),0) as revenue FROM orders o WHERE DATE(received_at)=$1 ${uf}`, py)
     ]);
 
