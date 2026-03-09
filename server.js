@@ -607,19 +607,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
 
 
-async function toggleUserStatus(uid, newStatus){
-  await api(`/api/team/${uid}/status`, {method:'PATCH', body:JSON.stringify({status:newStatus})});
-  await loadTeam();
-  loadUserDetail(uid, udPeriod);
-}
-
-async function removeUser(uid){
-  if(!confirm('Permanently remove this user? This cannot be undone.'))return;
-  await api(`/api/team/${uid}`, {method:'DELETE'});
-  await loadTeam();
-  document.getElementById('user-detail-section').style.display='none';
-  selUser=null;
-}
 
 
 
