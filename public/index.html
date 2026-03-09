@@ -511,8 +511,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
-          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
-        </div>
+<div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th><th></th></tr></thead><tbody id="dash-tbody"></tbody></table></div>        </div>
       </div>
 
       <!-- ═ ANALYTICS ═ -->
@@ -602,8 +601,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Orders</div><div class="cb" id="ord-badge">–</div></div>
-          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Type</th><th>Network</th><th>Offer</th><th>Campaign</th><th>Country</th><th>Device</th><th>Payout</th><th>Pixels</th><th>Time</th></tr></thead><tbody id="ord-tbody"></tbody></table></div>
-        </div>
+<div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Type</th><th>Network</th><th>Offer</th><th>Campaign</th><th>Country</th><th>Device</th><th>Payout</th><th>Pixels</th><th>Time</th><th></th></tr></thead><tbody id="ord-tbody"></tbody></table></div>        </div>
       </div>
 
       <!-- ═ POSTBACK ═ -->
@@ -971,6 +969,7 @@ async function loadDash(){
   document.getElementById('ord-change').innerHTML=`<span class="${oc>=0?'up':'down'}">${oc>=0?'+':''}${oc} vs yesterday</span>`;
   renderPlatforms(s.by_platform||[]);
   const orders=await api('/api/orders?limit=10');renderRows(orders,'dash-tbody',true);
+  
 }
 
 function renderPlatforms(pts){
@@ -1093,14 +1092,33 @@ function exportCSV(){
 
 function renderRows(orders,id,compact){
   const tbody=document.getElementById(id);const cols=compact?7:11;
+  
   if(!orders||!orders.length){tbody.innerHTML=`<tr><td colspan="${cols}"><div class="empty"><div class="eicon">📭</div><div class="etitle">No orders yet</div></div></td></tr>`;return;}
   tbody.innerHTML=orders.map(o=>{
     const pk=gpk(o.traffic_source);const cfg=PC[pk];
     const pixels=`<div class="pxc"><div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}">FB</div><div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}">TT</div><div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}">SC</div><div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}">GG</div></div>`;
     const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:'–';
-    if(compact)return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td></tr>`;
-    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="font-size:10px;color:var(--muted2)">${o.campaign_type||'–'}</td><td>${net}</td><td style="font-size:10px;color:var(--muted2)">${o.offer_name||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.campaign_id||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.country||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td></tr>`;
+    if(compact)return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">✕</button></td></tr>`;
+    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="font-size:10px;color:var(--muted2)">${o.campaign_type||'–'}</td><td>${net}</td><td style="font-size:10px;color:var(--muted2)">${o.offer_name||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.campaign_id||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.country||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">✕</button></td></tr>`;  
+  
   }).join('');
+}
+
+async function deleteOrder(id){
+  showModal({
+    icon:'🗑️',title:'Delete Order',
+    msg:'Permanently delete this order? This will affect analytics.',
+    confirmText:'Delete',danger:true,
+    onConfirm:async()=>{
+      const res = await api(`/api/orders/${id}`,{method:'DELETE'});
+      if(res.error){toast('Failed to delete order.','error');return;}
+      allOrders = allOrders.filter(o => o.id !== id);
+      searchOrders();
+      if(curPage==='dashboard')loadDash();
+      if(curPage==='analytics')loadAnalytics(aPeriod);
+      toast('Order deleted.','success');
+    }
+  });
 }
 
 // ── USERS (admin) ──

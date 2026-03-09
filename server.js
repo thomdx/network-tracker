@@ -602,6 +602,10 @@ app.delete('/api/team/:userId', auth, adminOnly, async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+app.delete('/api/orders/:id', auth, adminOnly, async (req, res) => {
+  await db.query('DELETE FROM orders WHERE id=$1', [req.params.id]);
+  res.json({ success: true });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
