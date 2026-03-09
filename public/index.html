@@ -905,7 +905,8 @@ function applyCustomRange(){
 
 async function loadAnalyticsCustom(from,to){
   const data=await api(`/api/analytics/overview?from=${from}&to=${to}`);
-  renderAnalyticsData(data);
+  if(data)data._customFrom=from,data._customTo=to;
+  renderAnalyticsData(data,'custom');
 }
 
 // ── POSTBACK ──
@@ -988,13 +989,13 @@ async function loadAnalytics(period){
   renderAnalyticsData(data);
 }
 
-function renderAnalyticsData(data){
+function renderAnalyticsData(data,period){
   if(!data||data.error)return;
   const s=data.summary;
   document.getElementById('a-rev').innerHTML=`<span class="cur">$</span>${fmt(s.revenue)}`;
   document.getElementById('a-sales').textContent=s.sales;
   document.getElementById('a-aov').innerHTML=`<span class="cur">$</span>${fmt(s.aov)}`;
-  renderChart(data.daily||[]);
+  renderChart(data.daily||[], period);
 
   const offers=data.offers||[];
   document.getElementById('a-offers-badge').textContent=`${offers.length}`;
@@ -1038,58 +1039,113 @@ function renderBreakdown(id,rows,color,usePlatformColor){
   }).join('');
 }
 
-function renderChart(daily){
+function renderChart(daily,period){
   const el=document.getElementById('a-chart');
-  if(!daily.length){el.className='chart-empty';el.innerHTML='No data for this period';return;}
   el.className='';el.style.cssText='height:160px;position:relative;';
-  const vals=daily.map(d=>parseFloat(d.revenue||0));
-  const max=Math.max(...vals,1);const min=0;
-  const W=el.offsetWidth||800;const H=140;const pad={t:10,r:10,b:28,l:44};
+
+  // build full time slots with zeros filled in
+  let slots=[];
+  const now=new Date();
+  if(period==='today'||period==='yesterday'){
+    const base=period==='yesterday'?new Date(now-86400000):now;
+    const dayStr=base.toISOString().split('T')[0];
+    for(let h=0;h<24;h++){
+      const key=`${dayStr}T${String(h).padStart(2,'0')}:00`;
+      const found=daily.find(d=>d.date&&d.date.startsWith&&(d.date.startsWith(key)||d.hour===h||d.date===key));
+      slots.push({label:`${String(h).padStart(2,'0')}:00`,revenue:found?parseFloat(found.revenue||0):0});
+    }
+  } else if(period==='7days'){
+    for(let i=6;i>=0;i--){
+      const d=new Date(now-i*86400000);
+      const key=d.toISOString().split('T')[0];
+      const found=daily.find(x=>x.date&&x.date.startsWith(key));
+      const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      slots.push({label:lbl,revenue:found?parseFloat(found.revenue||0):0});
+    }
+  } else if(period==='6months'){
+    for(let i=5;i>=0;i--){
+      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      const found=daily.filter(x=>x.date&&x.date.startsWith(key));
+      const rev=found.reduce((s,x)=>s+parseFloat(x.revenue||0),0);
+      const lbl=d.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
+      slots.push({label:lbl,revenue:rev});
+    }
+  } else if(period==='year'){
+    for(let i=11;i>=0;i--){
+      const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      const found=daily.filter(x=>x.date&&x.date.startsWith(key));
+      const rev=found.reduce((s,x)=>s+parseFloat(x.revenue||0),0);
+      const lbl=d.toLocaleDateString('en-US',{month:'short'});
+      slots.push({label:lbl,revenue:rev});
+    }
+  } else {
+    // 30days or custom — show all days
+    const days=period==='30days'?30:daily.length||30;
+    for(let i=days-1;i>=0;i--){
+      const d=new Date(now-i*86400000);
+      const key=d.toISOString().split('T')[0];
+      const found=daily.find(x=>x.date&&x.date.startsWith(key));
+      const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      slots.push({label:lbl,revenue:found?parseFloat(found.revenue||0):0});
+    }
+  }
+
+  if(!slots.length){el.innerHTML='<div class="chart-empty">No data for this period</div>';return;}
+
+  const vals=slots.map(s=>s.revenue);
+  const max=Math.max(...vals,1);
+  const W=el.offsetWidth||800;const H=150;
+  const pad={t:10,r:10,b:28,l:44};
   const iW=W-pad.l-pad.r;const iH=H-pad.t-pad.b;
-  const px=(i)=>pad.l+i/(daily.length-1||1)*iW;
-  const py=(v)=>pad.t+iH-(v-min)/(max-min||1)*iH;
-  // grid lines
-  const steps=4;const grids=Array.from({length:steps+1},(_,i)=>{
-    const v=max/steps*i;const y=py(v);
+  const px=i=>pad.l+i/(slots.length-1||1)*iW;
+  const py=v=>pad.t+iH-(v/max)*iH;
+
+  // grid + y labels
+  const grids=Array.from({length:5},(_,i)=>{
+    const v=max/4*i;const y=py(v);
     const label=v>=1000?`$${(v/1000).toFixed(1)}k`:`$${Math.round(v)}`;
     return `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--border)" stroke-width="1"/>
     <text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${label}</text>`;
   }).join('');
-  // x labels
-  const labelStep=Math.ceil(daily.length/6);
-  const xlabels=daily.map((d,i)=>{
-    if(i%labelStep!==0&&i!==daily.length-1)return'';
-    const dt=new Date(d.date);const lbl=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return `<text x="${px(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${lbl}</text>`;
+
+  // x labels — show ~6 evenly spaced
+  const labelStep=Math.ceil(slots.length/6);
+  const xlabels=slots.map((s,i)=>{
+    if(i%labelStep!==0&&i!==slots.length-1)return'';
+    return `<text x="${px(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${s.label}</text>`;
   }).join('');
-  // line path
-  const points=daily.map((d,i)=>`${px(i)},${py(parseFloat(d.revenue||0))}`).join(' ');
-  const linePath=daily.map((d,i)=>`${i===0?'M':'L'}${px(i)},${py(parseFloat(d.revenue||0))}`).join(' ');
-  // area fill path
-  const areaPath=linePath+` L${px(daily.length-1)},${py(0)} L${px(0)},${py(0)} Z`;
-  // dots for hover
-  const dots=daily.map((d,i)=>{
-    const rev=parseFloat(d.revenue||0);const dt=new Date(d.date);
-    const lbl=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return `<circle cx="${px(i)}" cy="${py(rev)}" r="3" fill="var(--green)" opacity="0" class="chart-dot">
-      <title>${lbl}: $${fmt(rev)}</title>
-    </circle>`;
-  }).join('');
+
+  // smooth line using bezier curves
+  const linePath=slots.map((s,i)=>{
+    if(i===0)return `M${px(i)},${py(s.revenue)}`;
+    const cpx=(px(i)+px(i-1))/2;
+    return `C${cpx},${py(slots[i-1].revenue)} ${cpx},${py(s.revenue)} ${px(i)},${py(s.revenue)}`;
+  }).join(' ');
+
+  const areaPath=linePath+` L${px(slots.length-1)},${py(0)} L${px(0)},${py(0)} Z`;
+
+  // hover dots with tooltips
+  const dots=slots.map((s,i)=>`
+    <circle cx="${px(i)}" cy="${py(s.revenue)}" r="3.5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5" opacity="0" class="cdot">
+      <title>${s.label}: $${fmt(s.revenue)}</title>
+    </circle>`).join('');
+
   el.innerHTML=`
     <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="overflow:visible">
       <defs>
-        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#00d084" stop-opacity="0.2"/>
+        <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00d084" stop-opacity="0.18"/>
           <stop offset="100%" stop-color="#00d084" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      ${grids}
-      ${xlabels}
-      <path d="${areaPath}" fill="url(#chartGrad)"/>
+      ${grids}${xlabels}
+      <path d="${areaPath}" fill="url(#cg)"/>
       <path d="${linePath}" fill="none" stroke="#00d084" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
       ${dots}
     </svg>
-    <style>.chart-dot{transition:opacity .15s;} svg:hover .chart-dot{opacity:1;}</style>`;
+    <style>.cdot{transition:opacity .15s} svg:hover .cdot{opacity:1}</style>`;
 }
 
 // ── ORDERS ──
