@@ -26,26 +26,19 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-h
 /* ── LOGIN ── */
 .login-page{display:none;min-height:100vh;align-items:center;justify-content:center;position:relative;overflow:hidden;background:#050505;}
 .login-page.active{display:flex;}
-
-/* animated orbs */
 .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:orbFloat linear infinite;}
 .orb1{width:500px;height:500px;background:radial-gradient(circle,#00d084,#005533);top:-10%;left:-15%;animation-duration:18s;}
 .orb2{width:400px;height:400px;background:radial-gradient(circle,#0082fb,#003366);bottom:-10%;right:-10%;animation-duration:22s;animation-delay:-8s;}
 .orb3{width:300px;height:300px;background:radial-gradient(circle,#00d084,#003322);top:50%;left:60%;animation-duration:15s;animation-delay:-4s;}
 .orb4{width:200px;height:200px;background:radial-gradient(circle,#4285f4,#001a66);top:20%;right:20%;animation-duration:20s;animation-delay:-12s;}
-
-/* floating particles */
 .particles{position:absolute;inset:0;pointer-events:none;}
 .p{position:absolute;width:2px;height:2px;background:var(--green);border-radius:50%;opacity:0;animation:pFloat linear infinite;}
-
 .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(0,208,132,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,208,132,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
-
 .lbox{width:100%;max-width:400px;padding:20px;position:relative;z-index:10;animation:loginEntrance .7s cubic-bezier(.4,0,.2,1) both;}
 .llogo{text-align:center;margin-bottom:28px;}
 .llogo-mark{width:52px;height:52px;background:linear-gradient(135deg,#00d084,#00a066);border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 0 32px #00d08440;animation:logoPulse 3s ease-in-out infinite;}
 .llogo-name{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.5px;}
 .llogo-sub{font-size:11px;color:#555;font-family:'Geist Mono',monospace;margin-top:2px;}
-
 .lcard{background:rgba(15,15,15,.9);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px;backdrop-filter:blur(20px);box-shadow:0 24px 80px rgba(0,0,0,.6);}
 .ltitle{font-size:20px;font-weight:700;color:#fff;margin-bottom:3px;}
 .lsub{font-size:12px;color:#666;margin-bottom:20px;}
@@ -69,7 +62,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-h
 .app{display:none;}
 .app.active{display:flex;min-height:100vh;}
 
-/* ── SIDEBAR (desktop) ── */
+/* ── SIDEBAR ── */
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sw);background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0;z-index:100;transition:transform .25s;}
 .logo{padding:0 16px 16px;border-bottom:1px solid var(--border);margin-bottom:12px;}
 .logo-mark{width:30px;height:30px;background:linear-gradient(135deg,#00d084,#00a066);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
@@ -147,15 +140,6 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-h
 .bt{height:3px;background:var(--s3);border-radius:2px;overflow:hidden;}
 .bf{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1);}
 .pamt{font-size:11px;font-weight:600;color:var(--white);text-align:right;font-family:'Geist Mono',monospace;}
-
-/* cvr */
-.cvb{display:flex;align-items:flex-end;gap:5px;margin-bottom:8px;}
-.cvn{font-size:40px;font-weight:700;color:var(--white);letter-spacing:-2px;line-height:1;}
-.cvp{font-size:16px;color:var(--muted2);margin-bottom:4px;}
-.cvd{font-size:11px;color:var(--muted2);margin-bottom:12px;}
-.cvbl{display:flex;justify-content:space-between;font-size:10px;color:var(--muted2);font-family:'Geist Mono',monospace;margin-bottom:5px;}
-.cvt{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;}
-.cvf{height:100%;background:linear-gradient(90deg,var(--green),#00ffaa);border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
 
 /* ── FILTERS ── */
 .filters{display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
@@ -258,7 +242,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 .network-copy{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:6px;border:1px solid var(--green-b);background:var(--green-d);color:var(--green);font-size:10px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;}
 .network-copy:hover{background:var(--green);color:#000;}
 
-/* ── NOTIFICATIONS ── */
+/* ── NOTIFICATIONS SETTINGS ── */
 .nc{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:12px;}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px;}
 .bsave{background:var(--green);color:#000;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;}
@@ -297,18 +281,28 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 .ud-stat-val{font-size:17px;font-weight:700;color:var(--white);font-family:'Geist Mono',monospace;}
 .ud-stat-label{font-size:10px;color:var(--muted2);margin-top:3px;}
 
-<!-- ── MODAL ── -->
-<div class="mo" id="modal-overlay">
-  <div class="modal" id="modal-box">
-    <div style="font-size:22px;margin-bottom:10px" id="modal-icon">⚠️</div>
-    <div class="modal-title" id="modal-title">Confirm</div>
-    <div class="modal-sub" id="modal-msg">Are you sure?</div>
-    <div class="mf" style="justify-content:flex-end">
-      <button class="bcancel" id="modal-cancel" onclick="closeModal()">Cancel</button>
-      <button class="bsave" id="modal-confirm" onclick="confirmModal()">Confirm</button>
-    </div>
-  </div>
-</div>
+/* ── MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);z-index:9999;align-items:center;justify-content:center;}
+.mo.v{display:flex;}
+.modal{background:var(--s1);border:1px solid var(--border2);border-radius:18px;padding:28px 28px 24px;max-width:360px;width:calc(100% - 40px);box-shadow:0 32px 80px rgba(0,0,0,.6);animation:modalIn .22s cubic-bezier(.34,1.56,.64,1) both;text-align:center;}
+.modal-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:7px;}
+.modal-sub{font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:20px;}
+.mf{display:flex;align-items:center;justify-content:center;gap:8px;}
+.bcancel{background:var(--s2);color:var(--text);border:1px solid var(--border2);border-radius:9px;padding:9px 22px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Geist',sans-serif;min-width:100px;}
+.bcancel:hover{border-color:var(--border);color:var(--white);}
+.bsave-red{background:var(--red);color:#fff;border:none;border-radius:9px;padding:9px 22px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;min-width:100px;}
+.bsave-red:hover{opacity:.88;}
+
+/* ── TOAST ── */
+.toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;font-size:12px;font-weight:500;font-family:'Geist',sans-serif;color:#fff;min-width:220px;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.5);pointer-events:all;animation:toastIn .28s cubic-bezier(.34,1.56,.64,1) both;backdrop-filter:blur(12px);}
+.toast.removing{animation:toastOut .22s ease forwards;}
+.toast-icon{font-size:15px;flex-shrink:0;}
+.toast-msg{flex:1;line-height:1.4;}
+.toast-success{background:rgba(0,208,132,.18);border:1px solid rgba(0,208,132,.35);color:#00e896;}
+.toast-error{background:rgba(255,77,77,.18);border:1px solid rgba(255,77,77,.35);color:#ff6b6b;}
+.toast-info{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#e8e8e8;}
+.toast-warning{background:rgba(255,149,0,.15);border:1px solid rgba(255,149,0,.3);color:#ffaa33;}
 
 /* ── EMPTY ── */
 .empty{padding:40px;text-align:center;}
@@ -323,11 +317,13 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 @keyframes loginEntrance{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+@keyframes modalIn{from{opacity:0;transform:scale(.88) translateY(12px);}to{opacity:1;transform:scale(1) translateY(0);}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px) scale(.94);}to{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0) scale(1);}to{opacity:0;transform:translateY(-8px) scale(.94);}}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.a-grid-3{grid-template-columns:1fr 1fr;}}
 @media(max-width:900px){.sg{grid-template-columns:repeat(2,1fr);}.sr{grid-template-columns:1fr;}.a-grid-2{grid-template-columns:1fr;}.a-grid-3{grid-template-columns:1fr;}.fr{grid-template-columns:1fr;}.ud-stats{grid-template-columns:repeat(2,1fr);}}
-
 @media(max-width:720px){
   :root{--sw:0px;}
   .sidebar{transform:translateX(-100%);width:260px;}
@@ -353,22 +349,11 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .drp-dropdown{right:auto;left:0;min-width:260px;}
   .athead,.atrow{font-size:10px;}
 }
-
 @media(max-width:400px){
   .sg{grid-template-columns:1fr 1fr;}
   .users-grid{grid-template-columns:1fr;}
   .ud-stats{grid-template-columns:1fr 1fr;}
 }
-
-
-.modal-icon{font-size:22px;margin-bottom:10px;text-align:center;}
-#modal-overlay{backdrop-filter:blur(6px);}
-#modal-box{animation:fadeIn .2s ease;text-align:center;max-width:360px;}
-#modal-box .mf{justify-content:center;gap:10px;}
-#modal-box .bcancel{min-width:100px;}
-#modal-box .bsave{min-width:100px;}
-.bsave-red{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;min-width:100px;}
-.bsave-red:hover{opacity:.88;}
 </style>
 </head>
 <body>
@@ -381,11 +366,10 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   <div class="orb orb4"></div>
   <div class="grid-overlay"></div>
   <div class="particles" id="particles"></div>
-
   <div class="lbox">
     <div class="llogo">
       <div class="llogo-mark">
-        <svg width="52" height="52" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg1)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg1" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg>
+        <svg width="52" height="52" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg1)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg1" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg>
       </div>
       <div class="llogo-name">AdLedger</div>
       <div class="llogo-sub">CPA Tracking Platform</div>
@@ -419,7 +403,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
   <!-- Mobile top bar -->
   <div class="mbar">
-    <svg width="26" height="26" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg3)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg3" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg>
+    <svg width="26" height="26" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg3)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg3" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg>
     <div class="mbar-logo">Ad<span>Ledger</span></div>
     <div class="ib" onclick="toggleTheme()" id="mtheme">🌙</div>
     <div class="ib" onclick="refreshPage()">↻</div>
@@ -431,7 +415,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   <!-- Sidebar -->
   <nav class="sidebar" id="sidebar">
     <div class="logo">
-      <div class="logo-mark"><svg width="30" height="30" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg2)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg2" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg></div>
+      <div class="logo-mark"><svg width="30" height="30" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="13" fill="#080808"/><path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="url(#lg2)"/><path d="M17 21H31M17 24H27M17 27H23" stroke="#080808" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="lg2" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#00d084"/><stop offset="1" stop-color="#00a066"/></linearGradient></defs></svg></div>
       <div class="logo-name">AdLedger</div>
       <div class="logo-sub">adledger.io</div>
     </div>
@@ -442,16 +426,14 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         Dashboard <div class="ldot"></div>
       </button>
       <button class="ni" id="nav-users" style="display:none" onclick="gp('users',this,'Users')">
-        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5"/><circle cx="12" cy="5" r="2" /><path d="M15 14c0-2.21-1.34-4-3-4.5"/></svg>
+        <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="2.5"/><path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5"/><circle cx="12" cy="5" r="2"/><path d="M15 14c0-2.21-1.34-4-3-4.5"/></svg>
         Users
       </button>
-
       <div class="ns">Platforms</div>
       <button class="ni" onclick="gp('pixels-meta',this,'Meta — Pixels')"><div class="pdot" style="background:#0082fb"></div>Meta</button>
       <button class="ni" onclick="gp('pixels-tiktok',this,'TikTok — Pixels')"><div class="pdot" style="background:#ff2d55"></div>TikTok</button>
       <button class="ni" onclick="gp('pixels-google',this,'Google — Pixels')"><div class="pdot" style="background:#4285f4"></div>Google</button>
       <button class="ni" onclick="gp('pixels-snapchat',this,'Snapchat — Pixels')"><div class="pdot" style="background:#FFFC00"></div>Snapchat</button>
-
       <div class="ns">Data</div>
       <button class="ni" onclick="gp('analytics',this,'Analytics')">
         <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L5 8L8 10L11 5L14 8"/><path d="M2 2V14H14"/></svg>Analytics
@@ -459,7 +441,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
       <button class="ni" onclick="gp('orders',this,'Orders')">
         <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4H14M4 8H12M6 12H10"/></svg>Orders
       </button>
-
       <div class="ns">Settings</div>
       <button class="ni" onclick="gp('postback',this,'Postback URLs')">
         <svg class="ni-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8H3M8 3l-5 5 5 5"/></svg>Postback URLs
@@ -527,7 +508,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
             <div class="ch"><div class="ct">Revenue by Platform</div><div class="cb">Today</div></div>
             <div class="cbody"><div class="pl" id="platform-list"></div></div>
           </div>
-          
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
@@ -537,7 +517,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
       <!-- ═ ANALYTICS ═ -->
       <div class="page" id="page-analytics">
-        <!-- Filters + date range -->
         <div class="filters" id="a-filters">
           <button class="fb active" id="a-preset-today" onclick="setPreset('today')">Today</button>
           <button class="fb" id="a-preset-yesterday" onclick="setPreset('yesterday')">Yesterday</button>
@@ -545,7 +524,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
           <button class="fb" id="a-preset-30days" onclick="setPreset('30days')">30 Days</button>
           <button class="fb" id="a-preset-6months" onclick="setPreset('6months')">6 Months</button>
           <button class="fb" id="a-preset-year" onclick="setPreset('year')">Last Year</button>
-          <!-- custom range -->
           <div class="drp-wrap" id="drp-wrap">
             <button class="drp-btn" id="drp-btn" onclick="toggleDRP()">📅 Custom</button>
             <div class="drp-dropdown" id="drp-dropdown">
@@ -564,24 +542,16 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
             </div>
           </div>
         </div>
-
-        <!-- overview stats -->
         <div class="sg">
           <div class="sc"><div class="slabel">Revenue</div><div class="sval" id="a-rev"><span class="cur">$</span>0</div></div>
           <div class="sc"><div class="slabel">Sales</div><div class="sval" id="a-sales">0</div></div>
           <div class="sc"><div class="slabel">AOV</div><div class="sval" id="a-aov"><span class="cur">$</span>0</div></div>
           <div class="sc"><div class="slabel">CVR</div><div class="sval" id="a-cvr">0%</div></div>
         </div>
-
-        <!-- chart -->
         <div class="card">
           <div class="ch"><div class="ct">Revenue Over Time</div><div class="cb" id="a-chart-label">daily</div></div>
-          <div class="cbody" style="padding-bottom:6px">
-            <div id="a-chart" class="chart-wrap"></div>
-          </div>
+          <div class="cbody" style="padding-bottom:6px"><div id="a-chart" class="chart-wrap"></div></div>
         </div>
-
-        <!-- offers + campaigns -->
         <div class="a-grid-2">
           <div class="card" style="margin-bottom:0">
             <div class="ch"><div class="ct">Top Offers</div><div class="cb" id="a-offers-badge">–</div></div>
@@ -598,7 +568,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
             </div>
           </div>
         </div>
-
         <div class="a-grid-3" style="margin-top:12px">
           <div class="card" style="margin-bottom:0">
             <div class="ch"><div class="ct">By Network</div></div>
@@ -731,7 +700,24 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
     </div>
   </div>
+
+  <!-- ═══ MODAL ═══ -->
+  <div class="mo" id="modal-overlay" onclick="closeModal()">
+    <div class="modal" id="modal-box" onclick="event.stopPropagation()">
+      <div id="modal-icon" style="font-size:28px;margin-bottom:12px">⚠️</div>
+      <div class="modal-title" id="modal-title">Confirm</div>
+      <div class="modal-sub" id="modal-msg">Are you sure?</div>
+      <div class="mf">
+        <button class="bcancel" onclick="closeModal()">Cancel</button>
+        <button id="modal-confirm" class="bsave" onclick="confirmModal()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<!-- ═══ TOAST CONTAINER ═══ -->
+<div class="toast-container" id="toast-container"></div>
 
 <script>
 // ── STATE ──
@@ -764,6 +750,41 @@ function ago(d){const diff=(Date.now()-new Date(d))/1000;if(diff<60)return'just 
 async function api(url,opts={}){
   try{const r=await fetch(url,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`,...(opts.headers||{})}});return r.json();}
   catch(e){return{error:e.message};}
+}
+
+// ── TOAST ──
+function toast(msg,type='info',duration=3500){
+  const icons={success:'✅',error:'❌',info:'ℹ️',warning:'⚠️'};
+  const container=document.getElementById('toast-container');
+  const el=document.createElement('div');
+  el.className=`toast toast-${type}`;
+  el.innerHTML=`<span class="toast-icon">${icons[type]||'ℹ️'}</span><span class="toast-msg">${msg}</span>`;
+  container.appendChild(el);
+  setTimeout(()=>{
+    el.classList.add('removing');
+    setTimeout(()=>el.remove(),240);
+  },duration);
+}
+
+// ── MODAL ──
+let modalCallback=null;
+function showModal({icon='⚠️',title,msg,confirmText='Confirm',danger=false,onConfirm}){
+  document.getElementById('modal-icon').textContent=icon;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  const btn=document.getElementById('modal-confirm');
+  btn.textContent=confirmText;
+  btn.className=danger?'bsave-red':'bsave';
+  modalCallback=onConfirm;
+  document.getElementById('modal-overlay').classList.add('v');
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('v');
+  modalCallback=null;
+}
+function confirmModal(){
+  closeModal();
+  if(modalCallback)modalCallback();
 }
 
 // ── THEME ──
@@ -813,7 +834,6 @@ function showApp(){
   applyTheme();
   if(CU.role==='admin'){document.getElementById('nav-users').style.display='flex';loadTeam();}
   renderPB();loadDash();loadPixels();loadNotifSettings();loadNetworks();
-  // default date range inputs to today
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('drp-from').value=today;
   document.getElementById('drp-to').value=today;
@@ -827,8 +847,7 @@ function gp(page,btn,title){
   if(el){el.style.display='';el.classList.add('active');}
   if(btn)btn.classList.add('active');
   curPage=page;
-  const t=title||page;
-  document.getElementById('pgtitle').textContent=t;
+  document.getElementById('pgtitle').textContent=title||page;
   if(page==='orders')loadOrders(oPeriod);
   if(page==='analytics')loadAnalytics(aPeriod);
   if(page.startsWith('pixels-'))renderPixelForm(page.replace('pixels-',''));
@@ -876,8 +895,8 @@ function setPreset(preset){
 function applyCustomRange(){
   const from=document.getElementById('drp-from').value;
   const to=document.getElementById('drp-to').value;
-  if(!from||!to){alert('Select both dates');return;}
-  if(from>to){alert('From date must be before To date');return;}
+  if(!from||!to){toast('Please select both a from and to date.','warning');return;}
+  if(from>to){toast('From date must be before To date.','warning');return;}
   isCustomRange=true;customFrom=from;customTo=to;
   document.querySelectorAll('[id^="a-preset-"]').forEach(b=>b.classList.remove('active'));
   document.getElementById('drp-btn').classList.add('active');
@@ -931,10 +950,12 @@ function addCustomNetwork(){
 function copyPB(urlId,sucId){
   navigator.clipboard.writeText(document.getElementById(urlId).textContent);
   const el=document.getElementById(sucId);el.classList.add('v');setTimeout(()=>el.classList.remove('v'),2500);
+  toast('Postback URL copied!','success',2000);
 }
 function copyNC(i,sucId){
   navigator.clipboard.writeText(document.getElementById(`nc-url-${i}`).textContent);
   const el=document.getElementById(sucId);el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2000);
+  toast('URL copied!','success',2000);
 }
 
 // ── DASHBOARD ──
@@ -943,12 +964,6 @@ async function loadDash(){
   document.getElementById('rev-today').innerHTML=`<span class="cur">$</span>${fmt(s.revenue_today)}`;
   document.getElementById('ord-today').textContent=s.orders_today||0;
   document.getElementById('rev-total').innerHTML=`<span class="cur">$</span>${fmt(s.revenue_total)}`;
-  document.getElementById('cvr-rate').textContent=`${(s.conversion_rate||0).toFixed(1)}%`;
-  document.getElementById('cvn').textContent=(s.conversion_rate||0).toFixed(1);
-  document.getElementById('cvf').style.width=`${Math.min((s.conversion_rate||0)*5,100)}%`;
-  document.getElementById('cvbr').textContent=`${(s.conversion_rate||0).toFixed(1)}%`;
-  document.getElementById('cvd').textContent=`${s.total_clicks||0} clicks → ${s.total_orders||0} orders`;
-  document.getElementById('cvr-lbl').textContent=`${s.total_clicks||0} tracked clicks`;
   document.getElementById('total-lbl').textContent=`${s.total_orders||0} total orders`;
   document.getElementById('recent-badge').textContent=`${s.orders_today||0} today`;
   const rc=s.revenue_change||0,oc=s.orders_change||0;
@@ -961,7 +976,8 @@ async function loadDash(){
 function renderPlatforms(pts){
   const total=pts.reduce((s,p)=>s+parseFloat(p.revenue||0),0);
   const keys=['meta','google','tiktok','snapchat'];
-  const map={};pts.forEach(p=>{map[gpk(p.source||p.traffic_source)]=p;});  document.getElementById('platform-list').innerHTML=keys.map(k=>{
+  const map={};pts.forEach(p=>{map[gpk(p.source||p.traffic_source)]=p;});
+  document.getElementById('platform-list').innerHTML=keys.map(k=>{
     const p=map[k];const rev=p?parseFloat(p.revenue||0):0;const pct=total>0?(rev/total*100):0;const cfg=PC[k];
     return `<div class="pr"><div class="pi"><div class="pdot" style="background:${cfg.c}"></div><div class="pname">${cfg.l}</div></div><div class="bt"><div class="bf" style="width:${pct}%;background:${cfg.c};opacity:.8"></div></div><div class="pamt">$${fmt(rev)}</div></div>`;
   }).join('');
@@ -1029,7 +1045,6 @@ function renderChart(daily){
   if(!daily.length){el.className='chart-empty';el.innerHTML='No data for this period';return;}
   el.className='chart-wrap';
   const max=Math.max(...daily.map(d=>parseFloat(d.revenue||0)),1);
-  // show fewer labels on mobile
   const isMobile=window.innerWidth<720;
   const step=isMobile&&daily.length>14?Math.ceil(daily.length/7):1;
   el.innerHTML=daily.map((d,i)=>{
@@ -1068,11 +1083,12 @@ function exportCSV(){
   let f=allOrders||[];
   if(q)f=f.filter(o=>(o.transaction_id||'').toLowerCase().includes(q));
   if(net)f=f.filter(o=>(o.network||'').toLowerCase()===net.toLowerCase());
-  if(!f.length){alert('No orders to export');return;}
+  if(!f.length){toast('No orders found to export.','warning');return;}
   const h=['Transaction ID','Platform','Type','Network','Offer','Campaign','Country','Device','Payout','Time'];
   const rows=f.map(o=>[o.transaction_id,gpk(o.traffic_source),o.campaign_type||'',o.network||'',o.offer_name||'',o.campaign_id||'',o.country||'',o.device_type||'',o.payout,o.received_at].map(v=>`"${v||''}"`).join(','));
   const csv=[h.join(','),...rows].join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=`orders_${new Date().toISOString().split('T')[0]}.csv`;a.click();
+  toast(`Exported ${f.length} orders.`,'success');
 }
 
 function renderRows(orders,id,compact){
@@ -1088,50 +1104,28 @@ function renderRows(orders,id,compact){
 }
 
 // ── USERS (admin) ──
-async function toggleUserStatus(uid, newStatus){
-  const res = await api(`/api/team/${uid}/status`, {method:'PATCH', body:JSON.stringify({status:newStatus})});
-  if(res.error){console.error('Pause error:',res.error);return;}
-  teamData = teamData.map(u => u.id===uid ? {...u, status:newStatus} : u);
+async function toggleUserStatus(uid,newStatus){
+  const res=await api(`/api/team/${uid}/status`,{method:'PATCH',body:JSON.stringify({status:newStatus})});
+  if(res.error){toast('Failed to update status: '+res.error,'error');return;}
+  teamData=teamData.map(u=>u.id===uid?{...u,status:newStatus}:u);
   await loadTeam();
-  const card = document.querySelector(`#users-grid .user-card.selected`);
-  loadUserDetail(uid, udPeriod);
+  loadUserDetail(uid,udPeriod);
+  toast(newStatus==='paused'?'User paused.':'User activated.','success');
 }
 
 async function removeUser(uid){
   showModal({
-    icon:'🗑️',
-    title:'Remove User',
+    icon:'🗑️',title:'Remove User',
     msg:'Permanently remove this user? This cannot be undone.',
-    confirmText:'Remove',
-    danger:true,
+    confirmText:'Remove',danger:true,
     onConfirm:async()=>{
       await api(`/api/team/${uid}`,{method:'DELETE'});
       await loadTeam();
       document.getElementById('user-detail-section').style.display='none';
       selUser=null;
+      toast('User removed.','success');
     }
   });
-}
-
-
-let modalCallback=null;
-function showModal({icon='⚠️',title,msg,confirmText='Confirm',danger=false,onConfirm}){
-  document.getElementById('modal-icon').textContent=icon;
-  document.getElementById('modal-title').textContent=title;
-  document.getElementById('modal-msg').textContent=msg;
-  const btn=document.getElementById('modal-confirm');
-  btn.textContent=confirmText;
-  btn.className=danger?'bsave-red':'bsave';
-  modalCallback=onConfirm;
-  document.getElementById('modal-overlay').classList.add('v');
-}
-function closeModal(){
-  document.getElementById('modal-overlay').classList.remove('v');
-  modalCallback=null;
-}
-function confirmModal(){
-  closeModal();
-  if(modalCallback)modalCallback();
 }
 
 async function loadTeam(){
@@ -1173,7 +1167,7 @@ async function loadUserDetail(uid,period){
         <button onclick="removeUser('${uid}')" style="padding:5px 11px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">🗑 Remove</button>`:''}
       </div>
     </div>
-  <div class="ud-stats">
+    <div class="ud-stats">
       <div class="ud-stat"><div class="ud-stat-val" style="color:var(--green)">$${fmt(s.revenue)}</div><div class="ud-stat-label">Revenue</div></div>
       <div class="ud-stat"><div class="ud-stat-val">${s.orders}</div><div class="ud-stat-label">Orders</div></div>
       <div class="ud-stat"><div class="ud-stat-val">$${fmt(s.aov)}</div><div class="ud-stat-label">AOV</div></div>
@@ -1192,7 +1186,10 @@ async function loadUserDetail(uid,period){
 }
 
 // ── PIXELS ──
-async function loadPixels(){const data=await api('/api/pixels');if(Array.isArray(data)){pixelData={};data.forEach(p=>{if(!pixelData[p.platform])pixelData[p.platform]=[];pixelData[p.platform].push(p);});}}
+async function loadPixels(){
+  const data=await api('/api/pixels');
+  if(Array.isArray(data)){pixelData={};data.forEach(p=>{if(!pixelData[p.platform])pixelData[p.platform]=[];pixelData[p.platform].push(p);});}
+}
 
 function renderPixelForm(platform){
   const cfg=PCFG[platform];if(!cfg)return;
@@ -1224,18 +1221,47 @@ async function addPixel(platform){
   const pixel_name=document.getElementById(`px-name-${platform}`).value||'Default';
   const fields={};cfg.fields.forEach(f=>{fields[f.key]=document.getElementById(`px-${f.key}-${platform}`).value;});
   const data=await api('/api/pixels',{method:'POST',body:JSON.stringify({platform,pixel_name,...fields,enabled:true})});
-  if(data.id||data.pixel_id){await loadPixels();renderPixelForm(platform);const m=document.getElementById(`px-success-${platform}`);if(m){m.classList.add('v');setTimeout(()=>m.classList.remove('v'),3000);}}
+  if(data.id||data.pixel_id){
+    await loadPixels();renderPixelForm(platform);
+    toast('Pixel saved successfully!','success');
+  } else {
+    toast('Failed to save pixel.','error');
+  }
 }
 
 async function deletePixel(id,platform){
-  if(!confirm('Remove this pixel?'))return;
-  await api(`/api/pixels/${id}`,{method:'DELETE'});await loadPixels();renderPixelForm(platform);
+  showModal({
+    icon:'🗑️',title:'Remove Pixel',
+    msg:'Remove this pixel? This cannot be undone.',
+    confirmText:'Remove',danger:true,
+    onConfirm:async()=>{
+      await api(`/api/pixels/${id}`,{method:'DELETE'});
+      await loadPixels();renderPixelForm(platform);
+      toast('Pixel removed.','success');
+    }
+  });
 }
 
 // ── NOTIFICATIONS ──
-async function loadNotifSettings(){const data=await api('/api/notifications');if(data.pushover_user_key)document.getElementById('nuk').value=data.pushover_user_key;if(data.pushover_api_token)document.getElementById('nat').value=data.pushover_api_token;}
-async function saveNotif(){await api('/api/notifications',{method:'POST',body:JSON.stringify({pushover_user_key:document.getElementById('nuk').value,pushover_api_token:document.getElementById('nat').value,enabled:true})});const m=document.getElementById('nsmsg');m.classList.add('v');setTimeout(()=>m.classList.remove('v'),3000);}
-async function testNotif(){const data=await api('/api/notifications/test',{method:'POST'});if(data.success)alert('✓ Sent! Check your iPhone.');else{const m=document.getElementById('nerrmsg');m.textContent='Error: '+(data.error||'Save keys first');m.classList.add('v');setTimeout(()=>m.classList.remove('v'),4000);}}
+async function loadNotifSettings(){
+  const data=await api('/api/notifications');
+  if(data.pushover_user_key)document.getElementById('nuk').value=data.pushover_user_key;
+  if(data.pushover_api_token)document.getElementById('nat').value=data.pushover_api_token;
+}
+
+async function saveNotif(){
+  await api('/api/notifications',{method:'POST',body:JSON.stringify({pushover_user_key:document.getElementById('nuk').value,pushover_api_token:document.getElementById('nat').value,enabled:true})});
+  toast('Notifications saved — active!','success');
+}
+
+async function testNotif(){
+  const data=await api('/api/notifications/test',{method:'POST'});
+  if(data.success){
+    toast('Test sent! Check your iPhone. 📱','success');
+  } else {
+    toast('Error: '+(data.error||'Save your keys first.'),'error');
+  }
+}
 
 // ── PARTICLES ──
 function spawnParticles(){
@@ -1254,10 +1280,6 @@ async function init(){
   spawnParticles();
   if(token){const me=await api('/api/auth/me');if(me.id){CU=me;showApp();}else{localStorage.removeItem('tracker_token');}}
 }
-
-// update analytics endpoint to support custom from/to range
-// we need to also update the backend call in loadAnalytics to handle from/to
-// For now, we pass period or from/to as query params
 
 init();
 setInterval(()=>{if(curPage==='dashboard')loadDash();},30000);
