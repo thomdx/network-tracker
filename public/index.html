@@ -507,22 +507,13 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
           <div class="sc"><div class="slabel">Revenue Today</div><div class="sval" id="rev-today"><span class="cur">$</span>0.00</div><div class="schange neu" id="rev-change">–</div></div>
           <div class="sc"><div class="slabel">Orders Today</div><div class="sval" id="ord-today">0</div><div class="schange neu" id="ord-change">–</div></div>
           <div class="sc"><div class="slabel">Total Revenue</div><div class="sval" id="rev-total"><span class="cur">$</span>0.00</div><div class="schange neu" id="total-lbl">–</div></div>
-          <div class="sc"><div class="slabel">CVR</div><div class="sval" id="cvr-rate">0%</div><div class="schange neu" id="cvr-lbl">–</div></div>
         </div>
         <div class="sr">
           <div class="card">
             <div class="ch"><div class="ct">Revenue by Platform</div><div class="cb">Today</div></div>
             <div class="cbody"><div class="pl" id="platform-list"></div></div>
           </div>
-          <div class="card">
-            <div class="ch"><div class="ct">Conversion Rate</div><div class="cb">Clicks → Sales</div></div>
-            <div class="cbody">
-              <div class="cvb"><div class="cvn" id="cvn">0</div><div class="cvp">%</div></div>
-              <div class="cvd" id="cvd">No data yet</div>
-              <div class="cvbl"><span>0%</span><span id="cvbr">0%</span></div>
-              <div class="cvt"><div class="cvf" id="cvf" style="width:0%"></div></div>
-            </div>
-          </div>
+          
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
@@ -955,8 +946,7 @@ async function loadDash(){
 function renderPlatforms(pts){
   const total=pts.reduce((s,p)=>s+parseFloat(p.revenue||0),0);
   const keys=['meta','google','tiktok','snapchat'];
-  const map={};pts.forEach(p=>{map[gpk(p.source)]=p;});
-  document.getElementById('platform-list').innerHTML=keys.map(k=>{
+  const map={};pts.forEach(p=>{map[gpk(p.source||p.traffic_source)]=p;});  document.getElementById('platform-list').innerHTML=keys.map(k=>{
     const p=map[k];const rev=p?parseFloat(p.revenue||0):0;const pct=total>0?(rev/total*100):0;const cfg=PC[k];
     return `<div class="pr"><div class="pi"><div class="pdot" style="background:${cfg.c}"></div><div class="pname">${cfg.l}</div></div><div class="bt"><div class="bf" style="width:${pct}%;background:${cfg.c};opacity:.8"></div></div><div class="pamt">$${fmt(rev)}</div></div>`;
   }).join('');
