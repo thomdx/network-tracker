@@ -297,14 +297,18 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 .ud-stat-val{font-size:17px;font-weight:700;color:var(--white);font-family:'Geist Mono',monospace;}
 .ud-stat-label{font-size:10px;color:var(--muted2);margin-top:3px;}
 
-/* ── MODAL ── */
-.mo{display:none;position:fixed;inset:0;background:#00000070;z-index:300;align-items:center;justify-content:center;}
-.mo.v{display:flex;}
-.modal{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:22px;width:100%;max-width:420px;margin:20px;}
-.modal-title{font-size:14px;font-weight:700;color:var(--white);margin-bottom:3px;}
-.modal-sub{font-size:11px;color:var(--muted2);margin-bottom:16px;}
-.mf{display:flex;gap:8px;margin-top:14px;}
-.bcancel{background:var(--s2);color:var(--muted2);border:1px solid var(--border);border-radius:7px;padding:8px 15px;font-size:11px;cursor:pointer;font-family:'Geist',sans-serif;}
+<!-- ── MODAL ── -->
+<div class="mo" id="modal-overlay">
+  <div class="modal" id="modal-box">
+    <div style="font-size:22px;margin-bottom:10px" id="modal-icon">⚠️</div>
+    <div class="modal-title" id="modal-title">Confirm</div>
+    <div class="modal-sub" id="modal-msg">Are you sure?</div>
+    <div class="mf" style="justify-content:flex-end">
+      <button class="bcancel" id="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="bsave" id="modal-confirm" onclick="confirmModal()">Confirm</button>
+    </div>
+  </div>
+</div>
 
 /* ── EMPTY ── */
 .empty{padding:40px;text-align:center;}
@@ -355,6 +359,16 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .users-grid{grid-template-columns:1fr;}
   .ud-stats{grid-template-columns:1fr 1fr;}
 }
+
+
+.modal-icon{font-size:22px;margin-bottom:10px;text-align:center;}
+#modal-overlay{backdrop-filter:blur(6px);}
+#modal-box{animation:fadeIn .2s ease;text-align:center;max-width:360px;}
+#modal-box .mf{justify-content:center;gap:10px;}
+#modal-box .bcancel{min-width:100px;}
+#modal-box .bsave{min-width:100px;}
+.bsave-red{background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;min-width:100px;}
+.bsave-red:hover{opacity:.88;}
 </style>
 </head>
 <body>
@@ -1084,11 +1098,40 @@ async function toggleUserStatus(uid, newStatus){
 }
 
 async function removeUser(uid){
-  if(!confirm('Permanently remove this user? This cannot be undone.'))return;
-  await api(`/api/team/${uid}`, {method:'DELETE'});
-  await loadTeam();
-  document.getElementById('user-detail-section').style.display='none';
-  selUser=null;
+  showModal({
+    icon:'🗑️',
+    title:'Remove User',
+    msg:'Permanently remove this user? This cannot be undone.',
+    confirmText:'Remove',
+    danger:true,
+    onConfirm:async()=>{
+      await api(`/api/team/${uid}`,{method:'DELETE'});
+      await loadTeam();
+      document.getElementById('user-detail-section').style.display='none';
+      selUser=null;
+    }
+  });
+}
+
+
+let modalCallback=null;
+function showModal({icon='⚠️',title,msg,confirmText='Confirm',danger=false,onConfirm}){
+  document.getElementById('modal-icon').textContent=icon;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  const btn=document.getElementById('modal-confirm');
+  btn.textContent=confirmText;
+  btn.className=danger?'bsave-red':'bsave';
+  modalCallback=onConfirm;
+  document.getElementById('modal-overlay').classList.add('v');
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('v');
+  modalCallback=null;
+}
+function confirmModal(){
+  closeModal();
+  if(modalCallback)modalCallback();
 }
 
 async function loadTeam(){
