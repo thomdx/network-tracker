@@ -547,6 +547,15 @@ app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
 // ─────────────────────────────────────────
 app.get('/api/analytics/overview', auth, async (req, res) => {
   try {
+    const { period = '30days', from, to } = req.query;
+    const isAdmin = req.user.role === 'admin';
+    const uid = req.user.id;
+    const df = (from && to)
+      ? `AND o.received_at >= '${from}' AND o.received_at <= '${to} 23:59:59'`
+      : getPeriodFilter(period, 'o.received_at');
+    const uf = isAdmin ? '' : 'AND o.user_id=$1::uuid';
+    const params = isAdmin ? [] : [uid];
+
     const [summary, daily, offers, campaigns, networks, countries, platforms] = await Promise.all([
       db.query(`SELECT COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue, COALESCE(AVG(payout),0) as aov FROM orders o WHERE 1=1 ${df} ${uf}`, params),
       db.query(`SELECT DATE(o.received_at) as date, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY DATE(o.received_at) ORDER BY date ASC`, params),
@@ -556,6 +565,11 @@ app.get('/api/analytics/overview', auth, async (req, res) => {
       db.query(`SELECT COALESCE(o.country,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.country ORDER BY revenue DESC LIMIT 10`, params),
       db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source, 'Unknown') as name, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC`, params)
     ]);
+
+    const clicksQ = isAdmin
+      ? await db.query(`SELECT COUNT(*) as clicks FROM clicks WHERE 1=1 ${getPeriodFilter(period, 'created_at').replace('o.received_at','created_at')}`)
+      : await db.query(`SELECT COUNT(*) as clicks FROM clicks WHERE 1=1 ${getPeriodFilter(period, 'created_at').replace('o.received_at','created_at')} AND user_id=$1::uuid`, [uid]);
+
     const totalSales = parseInt(summary.rows[0].sales);
     const totalClicks = parseInt(clicksQ.rows[0].clicks);
 
