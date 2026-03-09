@@ -97,7 +97,7 @@ app.get('/api/team/:userId/stats', auth, adminOnly, async (req, res) => {
 
     const [summary, byPlatform, byOffer, daily] = await Promise.all([
       db.query(`SELECT COUNT(*) as orders, COALESCE(SUM(payout),0) as revenue, COALESCE(AVG(payout),0) as aov FROM orders WHERE user_id=$1 ${df}`, [uid]),
-      db.query(`SELECT c.traffic_source as platform, COUNT(o.id) as orders, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE o.user_id=$1 ${df} GROUP BY c.traffic_source ORDER BY revenue DESC`, [uid]),
+db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source) as platform, COUNT(o.id) as orders, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE o.user_id=$1 ${df} GROUP BY COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC`, [uid]),
       db.query(`SELECT COALESCE(offer_name,'Unknown') as offer, COUNT(*) as orders, COALESCE(SUM(payout),0) as revenue FROM orders WHERE user_id=$1 ${df} GROUP BY offer_name ORDER BY revenue DESC LIMIT 10`, [uid]),
       db.query(`SELECT DATE(received_at) as date, COUNT(*) as orders, COALESCE(SUM(payout),0) as revenue FROM orders WHERE user_id=$1 ${df} GROUP BY DATE(received_at) ORDER BY date`, [uid])
     ]);
