@@ -1075,8 +1075,11 @@ function renderRows(orders,id,compact){
 
 // ── USERS (admin) ──
 async function toggleUserStatus(uid, newStatus){
-  await api(`/api/team/${uid}/status`, {method:'PATCH', body:JSON.stringify({status:newStatus})});
+  const res = await api(`/api/team/${uid}/status`, {method:'PATCH', body:JSON.stringify({status:newStatus})});
+  if(res.error){console.error('Pause error:',res.error);return;}
+  teamData = teamData.map(u => u.id===uid ? {...u, status:newStatus} : u);
   await loadTeam();
+  const card = document.querySelector(`#users-grid .user-card.selected`);
   loadUserDetail(uid, udPeriod);
 }
 
