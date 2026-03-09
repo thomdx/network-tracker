@@ -199,7 +199,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 .px-off{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
 
 /* ── CHART ── */
-.chart-wrap{height:140px;display:flex;align-items:flex-end;gap:3px;padding:0 2px;}
+.chart-wrap{height:160px;display:flex;align-items:flex-end;gap:3px;padding:0 2px;}
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;cursor:pointer;}
 .bar-col:hover .bar-tip{display:block;}
 .bar-inner{width:100%;border-radius:3px 3px 0 0;background:var(--green);transition:height .6s cubic-bezier(.4,0,.2,1);min-height:2px;opacity:.85;}
@@ -1041,16 +1041,55 @@ function renderBreakdown(id,rows,color,usePlatformColor){
 function renderChart(daily){
   const el=document.getElementById('a-chart');
   if(!daily.length){el.className='chart-empty';el.innerHTML='No data for this period';return;}
-  el.className='chart-wrap';
-  const max=Math.max(...daily.map(d=>parseFloat(d.revenue||0)),1);
-  const isMobile=window.innerWidth<720;
-  const step=isMobile&&daily.length>14?Math.ceil(daily.length/7):1;
-  el.innerHTML=daily.map((d,i)=>{
-    const rev=parseFloat(d.revenue||0);const pct=Math.max((rev/max*100),1.5);
-    const dt=new Date(d.date);
-    const label=(step===1||i%step===0)?dt.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-    return `<div class="bar-col"><div class="bar-tip">${dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})}: $${fmt(rev)}</div><div class="bar-inner" style="height:${pct}%"></div><div class="bar-label">${label}</div></div>`;
+  el.className='';el.style.cssText='height:160px;position:relative;';
+  const vals=daily.map(d=>parseFloat(d.revenue||0));
+  const max=Math.max(...vals,1);const min=0;
+  const W=el.offsetWidth||800;const H=140;const pad={t:10,r:10,b:28,l:44};
+  const iW=W-pad.l-pad.r;const iH=H-pad.t-pad.b;
+  const px=(i)=>pad.l+i/(daily.length-1||1)*iW;
+  const py=(v)=>pad.t+iH-(v-min)/(max-min||1)*iH;
+  // grid lines
+  const steps=4;const grids=Array.from({length:steps+1},(_,i)=>{
+    const v=max/steps*i;const y=py(v);
+    const label=v>=1000?`$${(v/1000).toFixed(1)}k`:`$${Math.round(v)}`;
+    return `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--border)" stroke-width="1"/>
+    <text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${label}</text>`;
   }).join('');
+  // x labels
+  const labelStep=Math.ceil(daily.length/6);
+  const xlabels=daily.map((d,i)=>{
+    if(i%labelStep!==0&&i!==daily.length-1)return'';
+    const dt=new Date(d.date);const lbl=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<text x="${px(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${lbl}</text>`;
+  }).join('');
+  // line path
+  const points=daily.map((d,i)=>`${px(i)},${py(parseFloat(d.revenue||0))}`).join(' ');
+  const linePath=daily.map((d,i)=>`${i===0?'M':'L'}${px(i)},${py(parseFloat(d.revenue||0))}`).join(' ');
+  // area fill path
+  const areaPath=linePath+` L${px(daily.length-1)},${py(0)} L${px(0)},${py(0)} Z`;
+  // dots for hover
+  const dots=daily.map((d,i)=>{
+    const rev=parseFloat(d.revenue||0);const dt=new Date(d.date);
+    const lbl=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return `<circle cx="${px(i)}" cy="${py(rev)}" r="3" fill="var(--green)" opacity="0" class="chart-dot">
+      <title>${lbl}: $${fmt(rev)}</title>
+    </circle>`;
+  }).join('');
+  el.innerHTML=`
+    <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="overflow:visible">
+      <defs>
+        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00d084" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#00d084" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${grids}
+      ${xlabels}
+      <path d="${areaPath}" fill="url(#chartGrad)"/>
+      <path d="${linePath}" fill="none" stroke="#00d084" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dots}
+    </svg>
+    <style>.chart-dot{transition:opacity .15s;} svg:hover .chart-dot{opacity:1;}</style>`;
 }
 
 // ── ORDERS ──
