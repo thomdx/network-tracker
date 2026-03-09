@@ -587,6 +587,40 @@ db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source, 'Unknown') as name
   } catch(e) { console.error('Analytics overview error:', e); res.status(500).json({ error: e.message }); }
 });
 
+app.patch('/api/team/:userId/status', auth, adminOnly, async (req, res) => {
+  try {
+    const { status } = req.body; // 'active' or 'paused'
+    await db.query('UPDATE users SET status=$1 WHERE id=$2', [status, req.params.userId]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/team/:userId', auth, adminOnly, async (req, res) => {
+  try {
+    await db.query('DELETE FROM users WHERE id=$1 AND role!=\'admin\'', [req.params.userId]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
+
+
+async function toggleUserStatus(uid, newStatus){
+  await api(`/api/team/${uid}/status`, {method:'PATCH', body:JSON.stringify({status:newStatus})});
+  await loadTeam();
+  loadUserDetail(uid, udPeriod);
+}
+
+async function removeUser(uid){
+  if(!confirm('Permanently remove this user? This cannot be undone.'))return;
+  await api(`/api/team/${uid}`, {method:'DELETE'});
+  await loadTeam();
+  document.getElementById('user-detail-section').style.display='none';
+  selUser=null;
+}
+
+
+
 

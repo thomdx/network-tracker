@@ -1079,8 +1079,8 @@ async function loadTeam(){
   if(!Array.isArray(teamData))return;
   document.getElementById('users-grid').innerHTML=teamData.map(u=>`
     <div class="user-card" onclick="selectUser('${u.id}',this)">
-      <div class="uc-av">${(u.name||u.email)[0].toUpperCase()}</div>
-      <div class="uc-name">${u.name||'–'}</div>
+      <div class="uc-av" style="opacity:${u.status==='paused'?'.4':'1'}">${(u.name||u.email)[0].toUpperCase()}</div>
+      <div class="uc-name">${u.name||'–'} ${u.status==='paused'?'<span style="font-size:9px;color:var(--orange);font-family:\'Geist Mono\',monospace">[paused]</span>':''}</div>
       <div class="uc-email">${u.email}</div>
       <span class="uc-role role-${u.role}">${u.role}</span>
     </div>`).join('');
@@ -1101,9 +1101,18 @@ async function loadUserDetail(uid,period){
   const u=teamData.find(x=>x.id===uid);
   const data=await api(`/api/team/${uid}/stats?period=${period}`);
   if(data.error)return;const s=data.summary;
+  const isPaused=u?.status==='paused';
   document.getElementById('user-detail-panel').innerHTML=`
-    <div class="ud-header"><div><div class="ud-name">${u?.name||'User'}</div><div class="ud-email">${u?.email||''}</div></div><span class="uc-role role-${u?.role}">${u?.role}</span></div>
-    <div class="ud-stats">
+    <div class="ud-header">
+      <div><div class="ud-name">${u?.name||'User'}</div><div class="ud-email">${u?.email||''}</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="uc-role role-${u?.role}">${u?.role}</span>
+        ${u?.role!=='admin'?`
+        <button onclick="toggleUserStatus('${uid}','${isPaused?'active':'paused'}')" style="padding:5px 11px;border-radius:6px;border:1px solid ${isPaused?'var(--green-b)':'var(--orange)'};background:${isPaused?'var(--green-d)':'#ff950015'};color:${isPaused?'var(--green)':'var(--orange)'};font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">${isPaused?'▶ Activate':'⏸ Pause'}</button>
+        <button onclick="removeUser('${uid}')" style="padding:5px 11px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">🗑 Remove</button>`:''}
+      </div>
+    </div>
+  <div class="ud-stats">
       <div class="ud-stat"><div class="ud-stat-val" style="color:var(--green)">$${fmt(s.revenue)}</div><div class="ud-stat-label">Revenue</div></div>
       <div class="ud-stat"><div class="ud-stat-val">${s.orders}</div><div class="ud-stat-label">Orders</div></div>
       <div class="ud-stat"><div class="ud-stat-val">$${fmt(s.aov)}</div><div class="ud-stat-label">AOV</div></div>
