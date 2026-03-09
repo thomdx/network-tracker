@@ -498,7 +498,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
       <!-- ═ DASHBOARD ═ -->
       <div class="page active" id="page-dashboard">
-        <div class="sg">
+<div class="sg" style="grid-template-columns:repeat(3,1fr)">
           <div class="sc"><div class="slabel">Revenue Today</div><div class="sval" id="rev-today"><span class="cur">$</span>0.00</div><div class="schange neu" id="rev-change">–</div></div>
           <div class="sc"><div class="slabel">Orders Today</div><div class="sval" id="ord-today">0</div><div class="schange neu" id="ord-change">–</div></div>
           <div class="sc"><div class="slabel">Total Revenue</div><div class="sval" id="rev-total"><span class="cur">$</span>0.00</div><div class="schange neu" id="total-lbl">–</div></div>
@@ -511,7 +511,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
-<div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th><th></th></tr></thead><tbody id="dash-tbody"></tbody></table></div>        </div>
+<div class="tw"><table><thead><div class="sc"><div class="slabel">CVR</div><div class="sval" id="a-cvr">0%</div></div></thead><tbody id="dash-tbody"></tbody></table></div>        </div>
       </div>
 
       <!-- ═ ANALYTICS ═ -->
@@ -545,7 +545,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
           <div class="sc"><div class="slabel">Revenue</div><div class="sval" id="a-rev"><span class="cur">$</span>0</div></div>
           <div class="sc"><div class="slabel">Sales</div><div class="sval" id="a-sales">0</div></div>
           <div class="sc"><div class="slabel">AOV</div><div class="sval" id="a-aov"><span class="cur">$</span>0</div></div>
-          <div class="sc"><div class="slabel">CVR</div><div class="sval" id="a-cvr">0%</div></div>
         </div>
         <div class="card">
           <div class="ch"><div class="ct">Revenue Over Time</div><div class="cb" id="a-chart-label">daily</div></div>
