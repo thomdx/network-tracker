@@ -79,7 +79,7 @@ app.get('/api/auth/me', auth, async (req, res) => {
 // ADMIN — TEAM
 // ─────────────────────────────────────────
 app.get('/api/team', auth, adminOnly, async (req, res) => {
-  const { rows } = await db.query('SELECT id,email,name,role,created_at FROM users ORDER BY created_at');
+  const { rows } = await db.query('SELECT id,email,name,role,status,created_at FROM users ORDER BY created_at');
   res.json(rows);
 });
 
