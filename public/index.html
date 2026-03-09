@@ -1098,8 +1098,8 @@ function renderRows(orders,id,compact){
     const pk=gpk(o.traffic_source);const cfg=PC[pk];
     const pixels=`<div class="pxc"><div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}">FB</div><div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}">TT</div><div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}">SC</div><div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}">GG</div></div>`;
     const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:'–';
-    if(compact)return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">✕</button></td></tr>`;
-    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="font-size:10px;color:var(--muted2)">${o.campaign_type||'–'}</td><td>${net}</td><td style="font-size:10px;color:var(--muted2)">${o.offer_name||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.campaign_id||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.country||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:10px;cursor:pointer;font-family:'Geist',sans-serif">✕</button></td></tr>`;  
+    if(compact)return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;opacity:1">✕</button></td></tr>`;
+    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="font-size:10px;color:var(--muted2)">${o.campaign_type||'–'}</td><td>${net}</td><td style="font-size:10px;color:var(--muted2)">${o.offer_name||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.campaign_id||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.country||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;opacity:1">✕</button></td></tr>`;  
   
   }).join('');
 }
@@ -1110,12 +1110,19 @@ async function deleteOrder(id){
     msg:'Permanently delete this order? This will affect analytics.',
     confirmText:'Delete',danger:true,
     onConfirm:async()=>{
-      const res = await api(`/api/orders/${id}`,{method:'DELETE'});
+      const res=await api(`/api/orders/${id}`,{method:'DELETE'});
       if(res.error){toast('Failed to delete order.','error');return;}
-      allOrders = allOrders.filter(o => o.id !== id);
-      searchOrders();
-      if(curPage==='dashboard')loadDash();
-      if(curPage==='analytics')loadAnalytics(aPeriod);
+      // remove from local array immediately
+      allOrders=allOrders.filter(o=>String(o.id)!==String(id));
+      // re-render whatever table is visible without changing page
+      if(curPage==='orders'){
+        searchOrders();
+        // refresh analytics in background so it's ready when user navigates there
+        loadAnalytics(aPeriod);
+      } else if(curPage==='dashboard'){
+        renderRows(allOrders.slice(0,10),'dash-tbody',true);
+        loadDash();
+      }
       toast('Order deleted.','success');
     }
   });
