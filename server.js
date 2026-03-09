@@ -333,7 +333,7 @@ app.get('/api/clickmap', auth, async (req, res) => {
     const { period = '7days' } = req.query;
     const isAdmin = req.user.role === 'admin';
     const uid = req.user.id;
-    const df = getPeriodFilter(period, 'c.created_at');
+const df = getPeriodFilter(period, 'o.received_at');
     const uf = isAdmin ? '' : 'AND c.user_id=$1';
     const params = isAdmin ? [] : [uid];
 
