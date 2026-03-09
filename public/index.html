@@ -1112,18 +1112,15 @@ async function deleteOrder(id){
     onConfirm:async()=>{
       const res=await api(`/api/orders/${id}`,{method:'DELETE'});
       if(res.error){toast('Failed to delete order.','error');return;}
-      // remove from local array immediately
-      allOrders=allOrders.filter(o=>String(o.id)!==String(id));
-      // re-render whatever table is visible without changing page
-      if(curPage==='orders'){
-        searchOrders();
-        // refresh analytics in background so it's ready when user navigates there
-        loadAnalytics(aPeriod);
-      } else if(curPage==='dashboard'){
-        renderRows(allOrders.slice(0,10),'dash-tbody',true);
-        loadDash();
-      }
       toast('Order deleted.','success');
+      // always reload fresh data regardless of current page
+      if(curPage==='dashboard'){
+        await loadDash();
+      } else if(curPage==='orders'){
+        await loadOrders(oPeriod);
+      }
+      // refresh analytics in background
+      loadAnalytics(aPeriod);
     }
   });
 }
