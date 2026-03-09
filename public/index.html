@@ -781,8 +781,9 @@ function closeModal(){
   modalCallback=null;
 }
 function confirmModal(){
+  const cb=modalCallback;
   closeModal();
-  if(modalCallback)modalCallback();
+  if(cb)cb();
 }
 
 // ── THEME ──
