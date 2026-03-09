@@ -558,11 +558,10 @@ app.get('/api/analytics/overview', auth, async (req, res) => {
       db.query(`SELECT COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue, COALESCE(AVG(payout),0) as aov FROM orders o WHERE 1=1 ${df} ${uf}`, params),
       db.query(`SELECT DATE(o.received_at) as date, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY DATE(o.received_at) ORDER BY date ASC`, params),
       db.query(`SELECT COALESCE(o.offer_name,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue, COALESCE(AVG(payout),0) as aov FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.offer_name ORDER BY revenue DESC LIMIT 10`, params),
-      db.query(`SELECT COALESCE(c.campaign_id,'Unknown') as name, c.traffic_source as platform, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue, COALESCE(AVG(o.payout),0) as aov FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY c.campaign_id, c.traffic_source ORDER BY revenue DESC LIMIT 10`, params),
+db.query(`SELECT COALESCE(c.campaign_id,'Unknown') as name, COALESCE(o.traffic_source, c.traffic_source) as platform, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue, COALESCE(AVG(o.payout),0) as aov FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY c.campaign_id, COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC LIMIT 10`, params)
       db.query(`SELECT COALESCE(o.network,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.network ORDER BY revenue DESC`, params),
       db.query(`SELECT COALESCE(o.country,'Unknown') as name, COUNT(*) as sales, COALESCE(SUM(payout),0) as revenue FROM orders o WHERE 1=1 ${df} ${uf} GROUP BY o.country ORDER BY revenue DESC LIMIT 10`, params),
-db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source,'Unknown') as name, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC`, params)
-    ]);
+db.query(`SELECT COALESCE(o.traffic_source, c.traffic_source, 'Unknown') as name, COUNT(o.id) as sales, COALESCE(SUM(o.payout),0) as revenue FROM orders o LEFT JOIN clicks c ON o.click_id=c.click_id WHERE 1=1 ${df} ${uf} GROUP BY COALESCE(o.traffic_source, c.traffic_source) ORDER BY revenue DESC`, params)    ]);
 
     // clicks for CVR
     const clicksQ = isAdmin
