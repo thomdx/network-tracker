@@ -1115,6 +1115,7 @@ async function selectUser(uid,card){
 function filterUD(period,btn){udPeriod=period;document.querySelectorAll('#ud-filters .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(selUser)loadUserDetail(selUser,period);}
 
 async function loadUserDetail(uid,period){
+  await loadTeam();
   const u=teamData.find(x=>x.id===uid);
   const data=await api(`/api/team/${uid}/stats?period=${period}`);
   if(data.error)return;const s=data.summary;
