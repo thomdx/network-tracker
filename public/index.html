@@ -846,6 +846,7 @@ function gp(page,btn,title){
   if(el){el.style.display='';el.classList.add('active');}
   if(btn)btn.classList.add('active');
   curPage=page;
+  history.replaceState(null,'',`#${page}`);
   document.getElementById('pgtitle').textContent=title||page;
   if(page==='orders')loadOrders(oPeriod);
   if(page==='analytics')loadAnalytics(aPeriod);
@@ -1308,7 +1309,8 @@ function spawnParticles(){
 async function init(){
   applyTheme();
   spawnParticles();
-  if(token){const me=await api('/api/auth/me');if(me.id){CU=me;showApp();}else{localStorage.removeItem('tracker_token');}}
+  if(token){const me=await api('/api/auth/me');if(me.id){CU=me;showApp();const hash=location.hash.replace('#','');if(hash)setTimeout(()=>gp(hash,null,hash.charAt(0).toUpperCase()+hash.slice(1).replace('-',' ')),100);}
+else{localStorage.removeItem('tracker_token');}}
 }
 
 init();
