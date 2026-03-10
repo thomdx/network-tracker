@@ -498,12 +498,26 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
       <!-- ═ DASHBOARD ═ -->
       <div class="page active" id="page-dashboard">
-        <div class="sg" style="grid-template-columns:repeat(4,1fr)">
+        <div class="sc" style="border-radius:0;border:none;border-right:1px solid var(--border);padding:28px 32px;min-height:110px;">
+  <div class="slabel">Revenue Today</div>
+  <div class="sval" id="d-rev-today"><span class="cur">$</span>0.00</div>
+  <div id="d-rev-vs" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
+</div>
+<div class="sc" style="border-radius:0;border:none;border-right:1px solid var(--border);padding:28px 32px;min-height:110px;">
+  <div class="slabel">Orders Today</div>
+  <div class="sval" id="d-orders-today">0</div>
+  <div id="d-orders-vs" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
+</div>
+<div class="sc" style="border-radius:0;border:none;padding:28px 32px;min-height:110px;">
+  <div class="slabel">Total Revenue</div>
+  <div class="sval" id="d-total-rev"><span class="cur">$</span>0.00</div>
+  <div id="d-total-orders" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
+</div>
+```
 
-          <div class="sc"><div class="slabel">Revenue Today</div><div class="sval" id="rev-today"><span class="cur">$</span>0.00</div><div class="schange neu" id="rev-change">–</div></div>
-          <div class="sc"><div class="slabel">Orders Today</div><div class="sval" id="ord-today">0</div><div class="schange neu" id="ord-change">–</div></div>
-          <div class="sc"><div class="slabel">Total Revenue</div><div class="sval" id="rev-total"><span class="cur">$</span>0.00</div><div class="schange neu" id="total-lbl">–</div></div>
-        </div>
+Then push:
+```
+git add . && git commit -m "dashboard stat cards seamless bigger style" && git push
         <div class="card">
           <div class="ch"><div class="ct">Revenue by Platform</div><div class="cb">Today</div></div>
           <div class="cbody"><div class="pl" id="platform-list"></div></div>
