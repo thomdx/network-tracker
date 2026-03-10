@@ -1047,18 +1047,14 @@ function renderChart(daily,period){
   const now=new Date();
 
   if(period==='today'||period==='yesterday'){
-    const base=period==='yesterday'?new Date(now-86400000):now;
-    const dayStr=base.toISOString().split('T')[0];
-    for(let h=0;h<24;h++){
-      const found=daily.find(d=>{
-        if(d.hour!==undefined) return parseInt(d.hour)===h;
-        if(d.date) return d.date.includes(`T${String(h).padStart(2,'0')}`)||d.date===`${dayStr} ${String(h).padStart(2,'0')}:00:00`;
-        return false;
-      });
-      const ampm=h===0?'12 AM':h<12?`${h} AM`:h===12?'12 PM':`${h-12} PM`;
-      slots.push({label:(h%2===0)?ampm:'',revenue:found?parseFloat(found.revenue||0):0});
-    }
-  } else if(period==='7days'){
+  const base=period==='yesterday'?new Date(now-86400000):now;
+  const dayStr=base.toISOString().split('T')[0];
+  for(let h=0;h<24;h++){
+    const found=daily.find(d=>d.hour!==undefined&&parseInt(d.hour)===h);
+    const ampm=h===0?'12 AM':h<12?`${h} AM`:h===12?'12 PM':`${h-12} PM`;
+    slots.push({label:(h%3===0)?ampm:'',revenue:found?parseFloat(found.revenue||0):0});
+  }
+} else if(period==='7days'){
     for(let i=6;i>=0;i--){
       const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
       const key=d.toISOString().split('T')[0];
