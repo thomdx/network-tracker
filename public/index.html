@@ -323,7 +323,14 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.a-grid-3{grid-template-columns:1fr 1fr;}}
-@media(max-width:900px){.sg{grid-template-columns:repeat(2,1fr);}.sr{grid-template-columns:1fr;}.a-grid-2{grid-template-columns:1fr;}.a-grid-3{grid-template-columns:1fr;}.fr{grid-template-columns:1fr;}.ud-stats{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:900px){
+  .sg{grid-template-columns:repeat(2,1fr);}
+  .sr{grid-template-columns:1fr;}
+  .a-grid-2{grid-template-columns:1fr;}
+  .a-grid-3{grid-template-columns:1fr;}
+  .fr{grid-template-columns:1fr;}
+  .ud-stats{grid-template-columns:repeat(2,1fr);}
+}
 @media(max-width:720px){
   :root{--sw:0px;}
   .sidebar{transform:translateX(-100%);width:260px;}
@@ -332,28 +339,106 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .mbar{display:flex;}
   .tab-bar{display:block;}
   .topbar{display:none;}
-  .content{padding:14px;}
-  .sg{grid-template-columns:1fr 1fr;gap:8px;}
-  .sc{padding:13px 12px;border-radius:10px;}
-  .sval{font-size:20px;}
-  .sr{grid-template-columns:1fr;}
-  .card{border-radius:10px;}
+  .content{padding:12px;}
+
+  /* stat cards — 1 column on mobile for bigger feel */
+  .sg{grid-template-columns:1fr 1fr;gap:10px;}
+  .sc{padding:16px 14px;border-radius:12px;}
+  .sval{font-size:22px;}
+  .slabel{font-size:11px;}
+
+  /* dashboard 3-card grid override */
+  #page-dashboard .sg{grid-template-columns:1fr;}
+  #page-dashboard .sc{padding:18px 16px;min-height:auto!important;}
+  #page-dashboard .sval{font-size:26px!important;}
+
+  /* cards */
+  .card{border-radius:12px;}
+  .ch{padding:12px 14px;}
+  .ct{font-size:13px;}
+  .cbody{padding:12px 14px;}
+
+  /* hide horizontal scroll tables — show card layout instead */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;display:block;}
+  table{min-width:520px;}
+  
+  /* dashboard table — fewer columns */
+  #dash-tbody tr td:nth-child(3),
+  #dash-tbody tr td:nth-child(4),
+  #dash-tbody thead th:nth-child(3),
+  #dash-tbody thead th:nth-child(4){display:none;}
+
+  /* orders table — hide less important cols */
+  #ord-tbody tr td:nth-child(3),
+  #ord-tbody tr td:nth-child(6),
+  #ord-tbody tr td:nth-child(7),
+  #ord-tbody tr td:nth-child(8){display:none;}
+  #page-orders thead th:nth-child(3),
+  #page-orders thead th:nth-child(6),
+  #page-orders thead th:nth-child(7),
+  #page-orders thead th:nth-child(8){display:none;}
+
+  /* analytics */
+  .filters{gap:5px;flex-wrap:wrap;}
+  .fb{font-size:11px;padding:7px 11px;border-radius:8px;}
   .a-grid-2{grid-template-columns:1fr;}
   .a-grid-3{grid-template-columns:1fr;}
-  .fr{grid-template-columns:1fr;}
-  .ud-stats{grid-template-columns:repeat(2,1fr);}
+  #a-chart{width:100%!important;}
+
+  /* analytics stat cards */
+  #page-analytics .sg{grid-template-columns:1fr 1fr;}
+  #page-analytics .sc{padding:14px 12px;}
+  #page-analytics .sval{font-size:20px;}
+
+  /* date picker */
+  .drp-dropdown{position:fixed;left:12px;right:12px;top:auto;bottom:calc(var(--tab-h) + 10px);min-width:auto;border-radius:16px;}
+  .drp-presets{grid-template-columns:1fr 1fr 1fr;}
+
+  /* breakdown rows */
+  .breakdown-name{font-size:12px;}
+  .breakdown-rev{font-size:12px;}
+  .athead,.atrow{font-size:11px;}
+
+  /* users */
   .users-grid{grid-template-columns:1fr 1fr;}
+  .ud-stats{grid-template-columns:1fr 1fr;gap:8px;}
+  .ud-stat{padding:10px;}
+  .ud-stat-val{font-size:15px;}
+
+  /* network cards */
   .network-cards{grid-template-columns:1fr;}
-  .filters{gap:5px;}
-  .fb{font-size:10px;padding:5px 9px;}
-  .drp-dropdown{right:auto;left:0;min-width:260px;}
-  .athead,.atrow{font-size:10px;}
+  .network-url{font-size:9px;word-break:break-all;}
+
+  /* postback url */
+  .pburl{font-size:10px;word-break:break-all;line-height:1.7;}
+
+  /* pixel form */
+  .fr{grid-template-columns:1fr;}
+
+  /* modal */
+  .modal{padding:24px 20px 20px;border-radius:16px;}
+
+  /* platform bars */
+  .pr{grid-template-columns:70px 1fr 58px;gap:7px;}
+  .pname{font-size:11px;}
+  .pamt{font-size:11px;}
+
+  /* top bar in analytics */
+  .drp-btn{font-size:11px;padding:7px 10px;}
+
+  /* search bar */
+  .sbar{flex-wrap:wrap;}
+  .si{min-width:0;width:100%;}
+  .sel{flex:1;}
 }
 @media(max-width:400px){
   .sg{grid-template-columns:1fr 1fr;}
+  #page-dashboard .sg{grid-template-columns:1fr;}
   .users-grid{grid-template-columns:1fr;}
   .ud-stats{grid-template-columns:1fr 1fr;}
+  .fb{font-size:10px;padding:6px 9px;}
 }
+
 </style>
 </head>
 <body>
