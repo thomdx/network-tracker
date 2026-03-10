@@ -611,6 +611,64 @@ app.delete('/api/orders/:id', auth, adminOnly, async (req, res) => {
   res.json({ success: true });
 });
 
+
+
+function setPresetMobile(preset){
+  // sync desktop too
+  aPeriod=preset;
+  document.querySelectorAll('[id^="a-preset-"]').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('a-preset-'+preset);
+  if(btn)btn.classList.add('active');
+  document.getElementById('drp-btn').classList.remove('active');
+  document.getElementById('drp-btn').textContent='📅 Custom';
+  loadAnalytics(preset);
+}
+
+function foFilterSel(p){oPeriod=p;loadOrders(p);}
+
+function toggleDRPMobile(){
+  document.getElementById('drp-dropdown-mobile').classList.toggle('open');
+}
+
+function applyCustomRangeMobile(){
+  const from=document.getElementById('drp-from-mobile').value;
+  const to=document.getElementById('drp-to-mobile').value;
+  if(!from||!to){toast('Select both dates.','warning');return;}
+  if(from>to){toast('From must be before To.','warning');return;}
+  isCustomRange=true;customFrom=from;customTo=to;
+  document.getElementById('drp-btn-mobile').classList.add('active');
+  document.getElementById('drp-btn-mobile').textContent=`📅 ${from.slice(5)}→${to.slice(5)}`;
+  document.getElementById('drp-dropdown-mobile').classList.remove('open');
+  loadAnalyticsCustom(from,to);
+}
+
+
+function showOrderDetail(o){
+  const pk=gpk(o.traffic_source);const cfg=PC[pk];
+  const pixels=`<div class="pxc" style="gap:6px"><div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}" style="width:24px;height:24px;font-size:9px">FB</div><div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}" style="width:24px;height:24px;font-size:9px">TT</div><div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}" style="width:24px;height:24px;font-size:9px">SC</div><div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}" style="width:24px;height:24px;font-size:9px">GG</div></div>`;
+  const row=(label,val)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:11px;color:var(--muted2)">${label}</div><div style="font-size:12px;font-weight:500;color:var(--text);text-align:right">${val||'–'}</div></div>`;
+  document.getElementById('modal-icon').textContent='🧾';
+  document.getElementById('modal-title').textContent='Order Details';
+  document.getElementById('modal-msg').innerHTML=`
+    <div style="text-align:left">
+      ${row('Transaction ID',`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--green)">${o.transaction_id||'–'}</span>`)}
+      ${row('Platform',`<span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span>`)}
+      ${row('Network',o.network)}
+      ${row('Offer',o.offer_name)}
+      ${row('Campaign',o.campaign_id)}
+      ${row('Country',o.country)}
+      ${row('Device',o.device_type)}
+      ${row('Payout',`<span style="color:var(--green);font-family:'Geist Mono',monospace;font-weight:700">+$${fmt(o.payout)}</span>`)}
+      ${row('Pixels',pixels)}
+      ${row('Time',new Date(o.received_at).toLocaleString())}
+    </div>`;
+  document.getElementById('modal-confirm').textContent='Delete';
+  document.getElementById('modal-confirm').className='bsave-red';
+  document.querySelector('.bcancel').textContent='Close';
+  modalCallback=()=>deleteOrder(o.id);
+  document.getElementById('modal-overlay').classList.add('v');
+}
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Tracker running on port ${PORT}`));
 
