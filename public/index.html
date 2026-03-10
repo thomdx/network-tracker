@@ -1041,111 +1041,122 @@ function renderBreakdown(id,rows,color,usePlatformColor){
 
 function renderChart(daily,period){
   const el=document.getElementById('a-chart');
-  el.className='';el.style.cssText='height:160px;position:relative;';
+  el.className='';el.style.cssText='height:180px;position:relative;width:100%;';
 
-  // build full time slots with zeros filled in
   let slots=[];
   const now=new Date();
+
   if(period==='today'||period==='yesterday'){
     const base=period==='yesterday'?new Date(now-86400000):now;
     const dayStr=base.toISOString().split('T')[0];
     for(let h=0;h<24;h++){
-      const key=`${dayStr}T${String(h).padStart(2,'0')}:00`;
-      const found=daily.find(d=>d.date&&d.date.startsWith&&(d.date.startsWith(key)||d.hour===h||d.date===key));
-      slots.push({label:`${String(h).padStart(2,'0')}:00`,revenue:found?parseFloat(found.revenue||0):0});
+      const found=daily.find(d=>{
+        if(d.hour!==undefined) return parseInt(d.hour)===h;
+        if(d.date) return d.date.includes(`T${String(h).padStart(2,'0')}`)||d.date===`${dayStr} ${String(h).padStart(2,'0')}:00:00`;
+        return false;
+      });
+      const ampm=h===0?'12 AM':h<12?`${h} AM`:h===12?'12 PM':`${h-12} PM`;
+      slots.push({label:(h%2===0)?ampm:'',revenue:found?parseFloat(found.revenue||0):0});
     }
   } else if(period==='7days'){
     for(let i=6;i>=0;i--){
-      const d=new Date(now-i*86400000);
+      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
       const key=d.toISOString().split('T')[0];
       const found=daily.find(x=>x.date&&x.date.startsWith(key));
-      const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-      slots.push({label:lbl,revenue:found?parseFloat(found.revenue||0):0});
+      slots.push({label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),revenue:found?parseFloat(found.revenue||0):0});
     }
   } else if(period==='6months'){
     for(let i=5;i>=0;i--){
       const d=new Date(now.getFullYear(),now.getMonth()-i,1);
       const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-      const found=daily.filter(x=>x.date&&x.date.startsWith(key));
-      const rev=found.reduce((s,x)=>s+parseFloat(x.revenue||0),0);
-      const lbl=d.toLocaleDateString('en-US',{month:'short',year:'2-digit'});
-      slots.push({label:lbl,revenue:rev});
+      const rev=daily.filter(x=>x.date&&x.date.startsWith(key)).reduce((s,x)=>s+parseFloat(x.revenue||0),0);
+      slots.push({label:d.toLocaleDateString('en-US',{month:'short',year:'2-digit'}),revenue:rev});
     }
   } else if(period==='year'){
     for(let i=11;i>=0;i--){
       const d=new Date(now.getFullYear(),now.getMonth()-i,1);
       const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-      const found=daily.filter(x=>x.date&&x.date.startsWith(key));
-      const rev=found.reduce((s,x)=>s+parseFloat(x.revenue||0),0);
-      const lbl=d.toLocaleDateString('en-US',{month:'short'});
-      slots.push({label:lbl,revenue:rev});
+      const rev=daily.filter(x=>x.date&&x.date.startsWith(key)).reduce((s,x)=>s+parseFloat(x.revenue||0),0);
+      slots.push({label:d.toLocaleDateString('en-US',{month:'short'}),revenue:rev});
     }
   } else {
-    // 30days or custom — show all days
-    const days=period==='30days'?30:daily.length||30;
+    const days=period==='30days'?30:Math.max(daily.length,7);
     for(let i=days-1;i>=0;i--){
-      const d=new Date(now-i*86400000);
+      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
       const key=d.toISOString().split('T')[0];
       const found=daily.find(x=>x.date&&x.date.startsWith(key));
-      const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-      slots.push({label:lbl,revenue:found?parseFloat(found.revenue||0):0});
+      slots.push({label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),revenue:found?parseFloat(found.revenue||0):0});
     }
   }
 
-  if(!slots.length){el.innerHTML='<div class="chart-empty">No data for this period</div>';return;}
+  const W=el.offsetWidth||900;
+  const H=160;
+  const pad={t:14,r:16,b:32,l:48};
+  const iW=W-pad.l-pad.r;
+  const iH=H-pad.t-pad.b;
 
   const vals=slots.map(s=>s.revenue);
-  const max=Math.max(...vals,1);
-  const W=el.offsetWidth||800;const H=150;
-  const pad={t:10,r:10,b:28,l:44};
-  const iW=W-pad.l-pad.r;const iH=H-pad.t-pad.b;
-  const px=i=>pad.l+i/(slots.length-1||1)*iW;
-  const py=v=>pad.t+iH-(v/max)*iH;
+  const maxVal=Math.max(...vals,1);
 
-  // grid + y labels
+  // nice round max for y axis
+  const magnitude=Math.pow(10,Math.floor(Math.log10(maxVal)));
+  const niceMax=Math.ceil(maxVal/magnitude)*magnitude;
+  const step=niceMax/4;
+
+  const px=i=>pad.l+(i/(slots.length-1||1))*iW;
+  const py=v=>pad.t+iH-((v/niceMax)*iH);
+
+  // Y axis: 5 lines (0, step, step*2, step*3, niceMax)
   const grids=Array.from({length:5},(_,i)=>{
-    const v=max/4*i;const y=py(v);
-    const label=v>=1000?`$${(v/1000).toFixed(1)}k`:`$${Math.round(v)}`;
-    return `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="var(--border)" stroke-width="1"/>
-    <text x="${pad.l-6}" y="${y+4}" text-anchor="end" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${label}</text>`;
+    const v=step*i;
+    const y=py(v);
+    const label=v>=1000?`$${(v/1000).toFixed(v%1000===0?0:1)}k`:`$${Math.round(v)}`;
+    return `
+      <line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#ffffff10" stroke-width="1"/>
+      <text x="${pad.l-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#666" font-family="system-ui,sans-serif">${label}</text>`;
   }).join('');
 
-  // x labels — show ~6 evenly spaced
-  const labelStep=Math.ceil(slots.length/6);
+  // X labels — evenly spaced, skip empty labels
+  const labelStep=Math.ceil(slots.length/7);
   const xlabels=slots.map((s,i)=>{
+    if(!s.label)return'';
     if(i%labelStep!==0&&i!==slots.length-1)return'';
-    return `<text x="${px(i)}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted2)" font-family="'Geist Mono',monospace">${s.label}</text>`;
+    return `<text x="${px(i)}" y="${H-6}" text-anchor="middle" font-size="10" fill="#666" font-family="system-ui,sans-serif">${s.label}</text>`;
   }).join('');
 
-  // smooth line using bezier curves
+  // smooth bezier line
   const linePath=slots.map((s,i)=>{
-    if(i===0)return `M${px(i)},${py(s.revenue)}`;
-    const cpx=(px(i)+px(i-1))/2;
-    return `C${cpx},${py(slots[i-1].revenue)} ${cpx},${py(s.revenue)} ${px(i)},${py(s.revenue)}`;
+    if(i===0)return`M${px(0)},${py(s.revenue)}`;
+    const x0=px(i-1),y0=py(slots[i-1].revenue),x1=px(i),y1=py(s.revenue);
+    const cpx=(x0+x1)/2;
+    return`C${cpx},${y0} ${cpx},${y1} ${x1},${y1}`;
   }).join(' ');
 
-  const areaPath=linePath+` L${px(slots.length-1)},${py(0)} L${px(0)},${py(0)} Z`;
+  const areaPath=`${linePath} L${px(slots.length-1)},${py(0)} L${px(0)},${py(0)} Z`;
 
-  // hover dots with tooltips
   const dots=slots.map((s,i)=>`
-    <circle cx="${px(i)}" cy="${py(s.revenue)}" r="3.5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5" opacity="0" class="cdot">
-      <title>${s.label}: $${fmt(s.revenue)}</title>
+    <circle cx="${px(i)}" cy="${py(s.revenue)}" r="4" fill="#00d084" stroke="#111" stroke-width="2" opacity="0" class="cdot">
+      <title>${slots[i].label||i}: $${fmt(s.revenue)}</title>
     </circle>`).join('');
 
   el.innerHTML=`
-    <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="overflow:visible">
+    <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block;">
       <defs>
-        <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#00d084" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#00d084" stop-opacity="0"/>
+        <linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00d084" stop-opacity="0.25"/>
+          <stop offset="85%" stop-color="#00d084" stop-opacity="0"/>
         </linearGradient>
       </defs>
-      ${grids}${xlabels}
-      <path d="${areaPath}" fill="url(#cg)"/>
-      <path d="${linePath}" fill="none" stroke="#00d084" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${grids}
+      ${xlabels}
+      <path d="${areaPath}" fill="url(#cg2)"/>
+      <path d="${linePath}" fill="none" stroke="#00d084" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
       ${dots}
     </svg>
-    <style>.cdot{transition:opacity .15s} svg:hover .cdot{opacity:1}</style>`;
+    <style>
+      .cdot{transition:opacity .15s;cursor:pointer;}
+      svg:hover .cdot{opacity:1;}
+    </style>`;
 }
 
 // ── ORDERS ──
