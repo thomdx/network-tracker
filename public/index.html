@@ -498,21 +498,13 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
       <!-- ═ DASHBOARD ═ -->
       <div class="page active" id="page-dashboard">
-<div class="sg" style="grid-template-columns:repeat(3,1fr);gap:0;border-radius:14px;overflow:hidden;border:1px solid var(--border);">  <div class="slabel">Revenue Today</div>
-  <div class="sval" id="d-rev-today"><span class="cur">$</span>0.00</div>
-  <div id="d-rev-vs" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
+        <div class="sg" style="grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;">
+
+          <div class="sc" style="padding:24px 24px;min-height:100px;"><div class="slabel">Revenue Today</div><div class="sval" id="rev-today" style="font-size:28px"><span class="cur">$</span>0.00</div><div class="schange neu" id="rev-change">–</div></div>
+<div class="sc" style="padding:24px 24px;min-height:100px;"><div class="slabel">Orders Today</div><div class="sval" id="ord-today" style="font-size:28px">0</div><div class="schange neu" id="ord-change">–</div></div>
+<div class="sc" style="padding:24px 24px;min-height:100px;"><div class="slabel">Total Revenue</div><div class="sval" id="rev-total" style="font-size:28px"><span class="cur">$</span>0.00</div><div class="schange neu" id="total-lbl">–</div></div>
 </div>
-<div class="sc" style="border-radius:0;border:none;border-right:1px solid var(--border);padding:28px 32px;min-height:110px;">
-  <div class="slabel">Orders Today</div>
-  <div class="sval" id="d-orders-today">0</div>
-  <div id="d-orders-vs" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
-</div>
-<div class="sc" style="border-radius:0;border:none;padding:28px 32px;min-height:110px;">
-  <div class="slabel">Total Revenue</div>
-  <div class="sval" id="d-total-rev"><span class="cur">$</span>0.00</div>
-  <div id="d-total-orders" style="font-size:11px;margin-top:6px;color:var(--muted2)"></div>
-</div>
- <div class="card">
+        <div class="card">
           <div class="ch"><div class="ct">Revenue by Platform</div><div class="cb">Today</div></div>
           <div class="cbody"><div class="pl" id="platform-list"></div></div>
         </div>
