@@ -1147,7 +1147,7 @@ function renderChart(daily,period){
     </circle>`).join('');
 
   el.innerHTML=`
-    <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block;">
+    <svg id="chart-svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block;">
       <defs>
         <linearGradient id="cg2" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#00d084" stop-opacity="0.25"/>
@@ -1158,12 +1158,53 @@ function renderChart(daily,period){
       ${xlabels}
       <path d="${areaPath}" fill="url(#cg2)"/>
       <path d="${linePath}" fill="none" stroke="#00d084" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      ${dots}
+      ${slots.map((s,i)=>`<circle cx="${px(i)}" cy="${py(s.revenue)}" r="5" fill="#00d084" stroke="#111" stroke-width="2" opacity="0" class="cdot" data-i="${i}"/>`).join('')}
     </svg>
+    <div id="chart-tip" style="
+      position:absolute;pointer-events:none;opacity:0;transition:opacity .1s;
+      background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;
+      padding:7px 11px;white-space:nowrap;z-index:99;
+      box-shadow:0 4px 16px #0008;
+    ">
+      <div id="ct-label" style="font-size:10px;color:#666;margin-bottom:2px"></div>
+      <div id="ct-val" style="font-size:14px;font-weight:600;color:#00d084;font-family:'Geist Mono',monospace"></div>
+    </div>
     <style>
-      .cdot{transition:opacity .15s;cursor:pointer;}
-      svg:hover .cdot{opacity:1;}
+      .cdot{transition:opacity .08s;cursor:crosshair;}
     </style>`;
+
+  // fast hover via mousemove on SVG
+  const svg=el.querySelector('#chart-svg');
+  const tip=el.querySelector('#chart-tip');
+  const tlabel=el.querySelector('#ct-label');
+  const tval=el.querySelector('#ct-val');
+
+  svg.addEventListener('mousemove',e=>{
+    const rect=svg.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    // find nearest slot
+    let closest=0,minDist=Infinity;
+    slots.forEach((s,i)=>{const d=Math.abs(px(i)-mx);if(d<minDist){minDist=d;closest=i;}});
+    const s=slots[closest];
+    // show all dots, highlight nearest
+    el.querySelectorAll('.cdot').forEach((c,i)=>{c.style.opacity=i===closest?'1':'0.3';});
+    tlabel.textContent=s.label||(closest+'');
+    tval.textContent=`$${fmt(s.revenue)}`;
+    // position tooltip
+    const tx=px(closest);const ty=py(s.revenue);
+    let left=tx+12;let top=ty-36;
+    const tipW=110;
+    if(left+tipW>W)left=tx-tipW-8;
+    if(top<0)top=ty+10;
+    tip.style.left=left+'px';
+    tip.style.top=top+'px';
+    tip.style.opacity='1';
+  });
+
+  svg.addEventListener('mouseleave',()=>{
+    tip.style.opacity='0';
+    el.querySelectorAll('.cdot').forEach(c=>c.style.opacity='0');
+  });
 }
 
 // ── ORDERS ──
