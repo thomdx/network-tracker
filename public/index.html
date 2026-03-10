@@ -985,8 +985,9 @@ function renderPlatforms(pts){
 
 // ── ANALYTICS ──
 async function loadAnalytics(period){
+  aPeriod=period;
   const data=await api(`/api/analytics/overview?period=${period}`);
-  renderAnalyticsData(data);
+  renderAnalyticsData(data,period);
 }
 
 function renderAnalyticsData(data,period){
