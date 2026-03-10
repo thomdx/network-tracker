@@ -906,7 +906,8 @@ function applyCustomRange(){
 async function loadAnalyticsCustom(from,to){
   const data=await api(`/api/analytics/overview?from=${from}&to=${to}`);
   if(data)data._customFrom=from,data._customTo=to;
-  renderAnalyticsData(data,'custom');
+  const p=from===to?'today_custom':('custom_'+from+'_'+to);
+  renderAnalyticsData(data,p);
 }
 
 // ── POSTBACK ──
@@ -1076,13 +1077,22 @@ function renderChart(daily,period){
       const rev=daily.filter(x=>x.date&&x.date.startsWith(key)).reduce((s,x)=>s+parseFloat(x.revenue||0),0);
       slots.push({label:d.toLocaleDateString('en-US',{month:'short'}),revenue:rev});
     }
-  } else {
-    const days=period==='30days'?30:Math.max(daily.length,7);
-    for(let i=days-1;i>=0;i--){
-      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
-      const key=d.toISOString().split('T')[0];
-      const found=daily.find(x=>x.date&&x.date.startsWith(key));
-      slots.push({label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),revenue:found?parseFloat(found.revenue||0):0});
+  }  else {
+    // single day custom range → show hours
+    if(period.startsWith('today_custom')||( daily.length>0&&daily[0].hour!==undefined)){
+      for(let h=0;h<24;h++){
+        const found=daily.find(d=>parseInt(d.hour)===h);
+        const ampm=h===0?'12 AM':h<12?`${h} AM`:h===12?'12 PM':`${h-12} PM`;
+        slots.push({label:(h%3===0)?ampm:'',revenue:found?parseFloat(found.revenue||0):0});
+      }
+    } else {
+      const days=period==='30days'?30:Math.max(daily.length,7);
+      for(let i=days-1;i>=0;i--){
+        const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);
+        const key=d.toISOString().split('T')[0];
+        const found=daily.find(x=>x.date&&x.date.startsWith(key));
+        slots.push({label:d.toLocaleDateString('en-US',{month:'short',day:'numeric'}),revenue:found?parseFloat(found.revenue||0):0});
+      }
     }
   }
 
