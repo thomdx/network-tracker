@@ -361,8 +361,8 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
   /* dashboard 3-card grid override */
   #page-dashboard .sg{grid-template-columns:1fr!important;}
-  #page-dashboard .sc{padding:18px 16px;min-height:auto!important;}
-  #page-dashboard .sval{font-size:26px!important;}
+  #page-dashboard .sc{padding:10px 8px;min-height:auto!important;}
+  #page-dashboard .sval{font-size:11px!important;}
 
   /* cards */
   .card{border-radius:12px;}
@@ -1451,7 +1451,7 @@ function renderRows(orders,id,compact){
   tbody.innerHTML=orders.map(o=>{
     const pk=gpk(o.traffic_source);const cfg=PC[pk];
     const pixels=`<div class="pxc"><div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}">FB</div><div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}">TT</div><div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}">SC</div><div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}">GG</div></div>`;
-    const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:'–';
+        const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:`<span style="font-size:10px;color:var(--muted)">–</span>`;
     if(compact){
       const isMobile=window.innerWidth<=720;
       if(isMobile)return `<tr style="cursor:pointer" onclick="showOrderDetail(${JSON.stringify(o).replace(/"/g,'&quot;')})">
