@@ -213,10 +213,15 @@ app.post('/api/notifications/test', auth, async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM notification_settings WHERE user_id=$1', [req.user.id]);
     const s = rows[0];
-    if (!s?.pushover_user_key) return res.status(400).json({ error: 'No notification settings found' });
-    await pushNotify(s.pushover_user_key, s.pushover_api_token, { title: '🔔 Test', message: 'Network Tracker notifications are working!' });
+    console.log('Notification settings:', s);
+    if (!s?.pushover_user_key) return res.status(400).json({ error: 'No settings saved. Please save your Chat ID and Bot Token first.' });
+    const result = await pushNotify(s.pushover_user_key, s.pushover_api_token, { title: '🔔 AdLedger Test', message: 'Telegram notifications are working!' });
+    console.log('Telegram result:', result);
     res.json({ success: true });
-  } catch(e) { res.status(500).json({ error: e.message }); }
+  } catch(e) { 
+    console.error('Test notif error:', e);
+    res.status(500).json({ error: e.message }); 
+  }
 });
 
 // ─────────────────────────────────────────
@@ -523,7 +528,7 @@ async function fireGoogle(conversionId, token, payout, transaction_id, click) {
 
 async function pushNotify(userKey, apiToken, { title, message }) {
   try {
-    await fetch(`https://api.telegram.org/bot${apiToken}/sendMessage`, {
+    const r = await fetch(`https://api.telegram.org/bot${apiToken}/sendMessage`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: userKey,
@@ -531,6 +536,9 @@ async function pushNotify(userKey, apiToken, { title, message }) {
         parse_mode: 'HTML'
       })
     });
+    const data = await r.json();
+    console.log('Telegram API response:', data);
+    return data;
   } catch(e) { console.error('Telegram error:', e.message); }
 }
 
