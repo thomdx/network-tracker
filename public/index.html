@@ -719,6 +719,20 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
       <!-- ═ ORDERS ═ -->
       <div class="page" id="page-orders">
+
+        <!-- mobile orders period -->
+  <div class="mobile-period-wrap" id="o-mobile-filters">
+    <select class="period-sel" id="o-period-sel" onchange="foFilterSel(this.value)">
+      <option value="all">All Time</option>
+      <option value="today">Today</option>
+      <option value="yesterday">Yesterday</option>
+      <option value="7days">7 Days</option>
+      <option value="30days">30 Days</option>
+      <option value="6months">6 Months</option>
+      <option value="year">Year</option>
+    </select>
+  </div>
+
         <div class="filters" id="o-filters">
           <button class="fb active" onclick="foFilter('all',this)">All</button>
           <button class="fb" onclick="foFilter('today',this)">Today</button>
@@ -738,18 +752,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Type</th><th>Network</th><th>Offer</th><th>Campaign</th><th>Country</th><th>Device</th><th>Payout</th><th>Pixels</th><th>Time</th><th></th></tr></thead><tbody id="ord-tbody"></tbody></table></div>        </div>
       </div>
 
-      <!-- mobile orders period -->
-<div class="mobile-period-wrap" id="o-mobile-filters">
-  <select class="period-sel" id="o-period-sel" onchange="foFilterSel(this.value)">
-    <option value="all">All Time</option>
-    <option value="today">Today</option>
-    <option value="yesterday">Yesterday</option>
-    <option value="7days">7 Days</option>
-    <option value="30days">30 Days</option>
-    <option value="6months">6 Months</option>
-    <option value="year">Year</option>
-  </select>
-</div>
+  
 
 
 
