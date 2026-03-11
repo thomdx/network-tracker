@@ -883,6 +883,29 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 function foFilterSel(p){oPeriod=p;loadOrders(p);}
 
 
+function toggleDRPMobile(){
+  const dd=document.getElementById('drp-dropdown-mobile');
+  dd.classList.toggle('open');
+}
+
+function applyCustomRangeMobile(){
+  const from=document.getElementById('drp-from-mobile').value;
+  const to=document.getElementById('drp-to-mobile').value;
+  if(!from||!to){toast('Please select both dates.','warning');return;}
+  if(from>to){toast('From date must be before To date.','warning');return;}
+  document.getElementById('drp-dropdown-mobile').classList.remove('open');
+  document.getElementById('drp-btn-mobile').classList.add('active');
+  document.getElementById('a-period-sel').value='';
+  loadAnalyticsCustom(from,to);
+}
+
+function setPresetMobile(val){
+  document.getElementById('drp-btn-mobile').classList.remove('active');
+  setPreset(val);
+}
+
+
+
 function showOrderDetail(o){
   const pk=gpk(o.traffic_source);const cfg=PC[pk];
   const pixels=`<div class="pxc" style="gap:6px">
@@ -1041,6 +1064,7 @@ function showApp(){
   const today=new Date().toISOString().split('T')[0];
   document.getElementById('drp-from').value=today;
   document.getElementById('drp-to').value=today;
+  document.getElementById('a-period-sel').value='today';
 }
 
 // ── NAV ──
