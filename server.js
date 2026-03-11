@@ -523,11 +523,15 @@ async function fireGoogle(conversionId, token, payout, transaction_id, click) {
 
 async function pushNotify(userKey, apiToken, { title, message }) {
   try {
-    await fetch('https://api.pushover.net/1/messages.json', {
+    await fetch(`https://api.telegram.org/bot${apiToken}/sendMessage`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: apiToken, user: userKey, title, message, sound: 'cashregister', priority: 1 })
+      body: JSON.stringify({
+        chat_id: userKey,
+        text: `${title}\n\n${message}`,
+        parse_mode: 'HTML'
+      })
     });
-  } catch(e) { console.error('Pushover error:', e.message); }
+  } catch(e) { console.error('Telegram error:', e.message); }
 }
 
 function getPeriodFilter(period, field) {
@@ -610,39 +614,6 @@ app.delete('/api/orders/:id', auth, adminOnly, async (req, res) => {
   await db.query('DELETE FROM orders WHERE id=$1', [req.params.id]);
   res.json({ success: true });
 });
-
-
-
-function setPresetMobile(preset){
-  // sync desktop too
-  aPeriod=preset;
-  document.querySelectorAll('[id^="a-preset-"]').forEach(b=>b.classList.remove('active'));
-  const btn=document.getElementById('a-preset-'+preset);
-  if(btn)btn.classList.add('active');
-  document.getElementById('drp-btn').classList.remove('active');
-  document.getElementById('drp-btn').textContent='📅 Custom';
-  loadAnalytics(preset);
-}
-
-function foFilterSel(p){oPeriod=p;loadOrders(p);}
-
-function toggleDRPMobile(){
-  document.getElementById('drp-dropdown-mobile').classList.toggle('open');
-}
-
-function applyCustomRangeMobile(){
-  const from=document.getElementById('drp-from-mobile').value;
-  const to=document.getElementById('drp-to-mobile').value;
-  if(!from||!to){toast('Select both dates.','warning');return;}
-  if(from>to){toast('From must be before To.','warning');return;}
-  isCustomRange=true;customFrom=from;customTo=to;
-  document.getElementById('drp-btn-mobile').classList.add('active');
-  document.getElementById('drp-btn-mobile').textContent=`📅 ${from.slice(5)}→${to.slice(5)}`;
-  document.getElementById('drp-dropdown-mobile').classList.remove('open');
-  loadAnalyticsCustom(from,to);
-}
-
-
 
 
 const PORT = process.env.PORT || 3000;
