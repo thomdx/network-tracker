@@ -880,6 +880,8 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 
 <script>
 
+function foFilterSel(p){oPeriod=p;loadOrders(p);}
+
 
 function showOrderDetail(o){
   const pk=gpk(o.traffic_source);const cfg=PC[pk];
@@ -1420,6 +1422,8 @@ function renderChart(daily,period){
 
 // ── ORDERS ──
 function foFilter(p,btn){oPeriod=p;document.querySelectorAll('#o-filters .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadOrders(p);}
+function foFilter(p,btn){oPeriod=p;document.querySelectorAll('#o-filters .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadOrders(p);}
+function foFilterSel(p){oPeriod=p;loadOrders(p);}
 
 async function loadOrders(period){
   const url=period==='all'?'/api/orders?limit=300':`/api/orders?limit=300&period=${period}`;
