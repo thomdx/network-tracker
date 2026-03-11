@@ -528,10 +528,10 @@ async function fireGoogle(conversionId, token, payout, transaction_id, click) {
 
 async function pushNotify(userKey, apiToken, { title, message }) {
   try {
-    const r = await fetch(`https://api.telegram.org/bot${apiToken}/sendMessage`, {
+    const r = await fetch(`https://api.telegram.org/bot${userKey}/sendMessage`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        chat_id: userKey,
+        chat_id: apiToken,
         text: `${title}\n\n${message}`,
         parse_mode: 'HTML'
       })
