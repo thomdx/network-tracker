@@ -349,7 +349,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .sf{padding:16px 16px 20px;background:var(--s1);position:sticky;bottom:0;z-index:10;}
   .uname{font-size:13px;}
   .desktop-only{display:none!important;}
-  .mobile-only{display:table-header-group!important;}
+.mobile-only{display:table-header-group!important;}
   .urole{font-size:11px;}
   .uav{width:32px;height:32px;font-size:13px;}
   .lout{font-size:12px;}
@@ -365,6 +365,12 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   #page-dashboard .sc{padding:18px 16px;min-height:auto!important;}
   #page-dashboard .sval{font-size:28px!important;}
 
+
+  #page-dashboard table{min-width:unset!important;width:100%;}
+  #page-dashboard table td:first-child{max-width:100px;overflow:hidden;text-overflow:ellipsis;}
+  #page-dashboard table td:nth-child(2){width:90px;}
+  #page-dashboard table td:nth-child(3){width:auto;}
+
   /* cards */
   .card{border-radius:12px;}
   .ch{padding:12px 14px;}
@@ -376,7 +382,6 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   table{min-width:520px;}
   
   /* dashboard table — fewer columns */
-  #dash-tbody tr td:nth-child(3),
   #dash-tbody tr td:nth-child(4),
   #dash-tbody thead th:nth-child(3),
   #dash-tbody thead th:nth-child(4){display:none;}
@@ -609,7 +614,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
           <div class="tw"><table><thead id="dash-thead-desktop" class="desktop-only"><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th><th style="width:40px"></th></tr></thead>
-<thead id="dash-thead-mobile" class="mobile-only"><tr><th>Transaction ID</th><th>Platform</th><th>Network</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
+<thead id="dash-thead-mobile" class="mobile-only"><tr><th>ID</th><th>Platform</th><th>Network</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
         </div>
       </div>
 
