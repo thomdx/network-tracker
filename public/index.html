@@ -358,7 +358,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .slabel{font-size:11px;}
 
   /* dashboard 3-card grid override */
-  #page-dashboard .sg{grid-template-columns:1fr;}
+  #page-dashboard .sg{grid-template-columns:1fr!important;}
   #page-dashboard .sc{padding:18px 16px;min-height:auto!important;}
   #page-dashboard .sval{font-size:26px!important;}
 
@@ -605,7 +605,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
-          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th><th style="width:40px"></th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
+          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Payout</th><th>Pixels</th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
         </div>
       </div>
 
@@ -867,6 +867,42 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
 <div class="toast-container" id="toast-container"></div>
 
 <script>
+
+
+function showOrderDetail(o){
+  const pk=gpk(o.traffic_source);const cfg=PC[pk];
+  const pixels=`<div class="pxc" style="gap:6px">
+    <div class="pxd ${o.pixel_fired_fb?'px-on':'px-off'}" style="width:22px;height:22px;font-size:8px">FB</div>
+    <div class="pxd ${o.pixel_fired_tt?'px-on':'px-off'}" style="width:22px;height:22px;font-size:8px">TT</div>
+    <div class="pxd ${o.pixel_fired_snap?'px-on':'px-off'}" style="width:22px;height:22px;font-size:8px">SC</div>
+    <div class="pxd ${o.pixel_fired_google?'px-on':'px-off'}" style="width:22px;height:22px;font-size:8px">GG</div>
+  </div>`;
+  const row=(label,val)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--muted2);flex-shrink:0">${label}</div>
+      <div style="font-size:12px;font-weight:500;color:var(--text);text-align:right;margin-left:12px;overflow:hidden;text-overflow:ellipsis">${val||'–'}</div>
+    </div>`;
+  document.getElementById('modal-icon').textContent='🧾';
+  document.getElementById('modal-title').textContent='Order Details';
+  document.getElementById('modal-msg').innerHTML=`
+    <div style="text-align:left;margin-top:4px">
+      ${row('Transaction ID',`<span style="font-family:'Geist Mono',monospace;font-size:10px;color:var(--green);word-break:break-all">${o.transaction_id||'–'}</span>`)}
+      ${row('Platform',`<span class="ptag ${cfg.tag}" style="display:inline-flex;align-items:center;gap:4px"><span class="tdot"></span>${cfg.l}</span>`)}
+      ${row('Network',`<span style="font-family:'Geist Mono',monospace;font-size:11px">${o.network||'–'}</span>`)}
+      ${row('Offer',`<span style="font-size:11px">${o.offer_name||'–'}</span>`)}
+      ${row('Payout',`<span style="color:var(--green);font-family:'Geist Mono',monospace;font-weight:700;font-size:14px">+$${fmt(o.payout)}</span>`)}
+      ${row('Pixels',pixels)}
+      ${row('Time',`<span style="font-size:11px">${new Date(o.received_at).toLocaleString()}</span>`)}
+    </div>
+    <button onclick="closeModal();setTimeout(()=>deleteOrder('${o.id}'),100)" style="width:100%;margin-top:16px;padding:11px;border-radius:9px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;">🗑 Delete Order</button>`;
+  // hide the default confirm/cancel buttons — we have our own delete above
+  document.getElementById('modal-confirm').style.display='none';
+  document.querySelector('.bcancel').textContent='Close';
+  document.querySelector('.bcancel').style.cssText='width:100%;margin-top:6px;padding:11px;font-size:13px;';
+  modalCallback=null;
+  document.getElementById('modal-overlay').classList.add('v');
+}
+  
 // ── STATE ──
 let token=localStorage.getItem('tracker_token');
 let CU=null,curPage='dashboard',oPeriod='all',aPeriod='today',udPeriod='30days';
@@ -928,6 +964,12 @@ function showModal({icon='⚠️',title,msg,confirmText='Confirm',danger=false,o
 function closeModal(){
   document.getElementById('modal-overlay').classList.remove('v');
   modalCallback=null;
+  const btn=document.getElementById('modal-confirm');
+  btn.style.display='';
+  btn.className='bsave';
+  const cancel=document.querySelector('.bcancel');
+  cancel.textContent='Cancel';
+  cancel.style.cssText='';
 }
 function confirmModal(){
   const cb=modalCallback;
@@ -1410,10 +1452,24 @@ function renderRows(orders,id,compact){
     const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:'–';
     if(compact){
       const isMobile=window.innerWidth<=720;
-      if(isMobile)return `<tr style="cursor:pointer" onclick="showOrderDetail(${JSON.stringify(o).replace(/"/g,'&quot;')})"><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td>${pixels}</td></tr>`;
-      return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td>${net}</td><td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;opacity:1">✕</button></td></tr>`;
+      if(isMobile)return `<tr style="cursor:pointer;active:background:var(--s3)" onclick="showOrderDetail(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+        <td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td>
+        <td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td>
+        <td>${net}</td>
+        <td class="pc">+$${fmt(o.payout)}</td>
+        <td>${pixels}</td>
+      </tr>`;
+      return `<tr>
+        <td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td>
+        <td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td>
+        <td>${net}</td>
+        <td style="color:var(--muted2);font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td>
+        <td class="pc">+$${fmt(o.payout)}</td>
+        <td>${pixels}</td>
+        <td class="tc2">${ago(o.received_at)}</td>
+        <td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;">✕</button></td>
+      </tr>`;
     }
-    return `<tr><td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td><td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td><td style="font-size:10px;color:var(--muted2)">${o.campaign_type||'–'}</td><td>${net}</td><td style="font-size:10px;color:var(--muted2)">${o.offer_name||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.campaign_id||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.country||'–'}</td><td style="font-size:10px;color:var(--muted2)">${o.device_type||'–'}</td><td class="pc">+$${fmt(o.payout)}</td><td>${pixels}</td><td class="tc2">${ago(o.received_at)}</td><td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;opacity:1">✕</button></td></tr>`;
 
   }).join('');
 }
