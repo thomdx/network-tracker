@@ -1484,7 +1484,20 @@ function renderRows(orders,id,compact){
         <td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;">✕</button></td>
       </tr>`;
     }
-
+    return `<tr>
+      <td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td>
+      <td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td>
+      <td>${o.campaign_type||'–'}</td>
+      <td>${net}</td>
+      <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis">${o.offer_name||'–'}</td>
+      <td style="color:var(--muted2);font-size:10px">${o.campaign_id||'–'}</td>
+      <td style="color:var(--muted2);font-size:10px">${o.country||'–'}</td>
+      <td style="color:var(--muted2);font-size:10px">${o.device_type||'–'}</td>
+      <td class="pc">+$${fmt(o.payout)}</td>
+      <td>${pixels}</td>
+      <td class="tc2">${ago(o.received_at)}</td>
+      <td><button onclick="deleteOrder('${o.id}')" style="padding:5px 10px;border-radius:6px;border:1px solid var(--red-b);background:var(--red-d);color:var(--red);font-size:11px;font-weight:600;cursor:pointer;font-family:'Geist',sans-serif;">✕</button></td>
+    </tr>`;
   }).join('');
 }
 
