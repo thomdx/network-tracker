@@ -43,6 +43,7 @@ body{background:var(--bg);color:var(--text);font-family:'Geist',sans-serif;min-h
 .ltitle{font-size:20px;font-weight:700;color:#fff;margin-bottom:3px;}
 .lsub{font-size:12px;color:#666;margin-bottom:20px;}
 .fg{margin-bottom:12px;}
+.desktop-only{display:table-cell;}
 .fl{font-size:11px;color:#666;margin-bottom:5px;display:block;font-weight:500;}
 .fi{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:11px 13px;font-size:13px;color:#e8e8e8;font-family:'Geist',sans-serif;outline:none;transition:border-color .2s,background .2s;}
 .fi:focus{border-color:var(--green);background:rgba(0,208,132,.06);}
@@ -347,6 +348,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
   .mobile-period-wrap .drp-btn{font-size:13px;padding:9px 14px;}
   .sf{padding:16px 16px 20px;background:var(--s1);position:sticky;bottom:0;z-index:10;}
   .uname{font-size:13px;}
+  .desktop-only{display:none!important;}
   .urole{font-size:11px;}
   .uav{width:32px;height:32px;font-size:13px;}
   .lout{font-size:12px;}
@@ -605,7 +607,7 @@ tbody td{padding:11px 13px;font-size:11px;white-space:nowrap;}
         </div>
         <div class="tc">
           <div class="ch"><div class="ct">Recent Orders</div><div class="cb" id="recent-badge">0 today</div></div>
-          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th>Offer</th><th>Payout</th><th>Pixels</th><th>Time</th><th style="width:40px"></th></tr></thead>><tbody id="dash-tbody"></tbody></table></div>
+          <div class="tw"><table><thead><tr><th>Transaction ID</th><th>Platform</th><th>Network</th><th class="desktop-only">Offer</th><th class="desktop-only">Payout</th><th class="desktop-only">Pixels</th><th class="desktop-only">Time</th><th class="desktop-only" style="width:40px"></th></tr></thead><tbody id="dash-tbody"></tbody></table></div>
         </div>
       </div>
 
@@ -1452,12 +1454,11 @@ function renderRows(orders,id,compact){
     const net=o.network?`<span style="font-size:10px;font-family:'Geist Mono',monospace;color:var(--muted2)">${o.network}</span>`:'–';
     if(compact){
       const isMobile=window.innerWidth<=720;
-      if(isMobile)return `<tr style="cursor:pointer;active:background:var(--s3)" onclick="showOrderDetail(${JSON.stringify(o).replace(/"/g,'&quot;')})">
+      if(isMobile)return `<tr style="cursor:pointer" onclick="showOrderDetail(${JSON.stringify(o).replace(/"/g,'&quot;')})">
         <td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td>
         <td><span class="ptag ${cfg.tag}"><span class="tdot"></span>${cfg.l}</span></td>
         <td>${net}</td>
         <td class="pc">+$${fmt(o.payout)}</td>
-        <td>${pixels}</td>
       </tr>`;
       return `<tr>
         <td class="ic">${(o.transaction_id||'–').substring(0,12)}…</td>
