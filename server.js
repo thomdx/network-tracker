@@ -16,7 +16,9 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.static('public'));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/landing.html');
+});
 
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
