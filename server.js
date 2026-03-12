@@ -16,9 +16,11 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.get('/', (req, res) => {
+app.get('/app', (req, res) => {
   res.sendFile(__dirname + '/public/landing.html');
 });
+
+
 
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
