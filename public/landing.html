@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdLedger — CPA Tracking Platform</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><rect width='48' height='48' rx='13' fill='%23080808'/><path d='M24 6L40 15V33L24 42L8 33V15L24 6Z' fill='%2300d084'/><path d='M17 21H31M17 24H27M17 27H23' stroke='%23080808' stroke-width='2' stroke-linecap='round'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050505;
+  --s1: #0a0a0a;
+  --s2: #111;
+  --s3: #181818;
+  --border: #1e1e1e;
+  --border2: #2a2a2a;
+  --text: #d8d8d8;
+  --muted: #444;
+  --muted2: #777;
+  --white: #f0f0f0;
+  --green: #00d084;
+  --green-d: #00d08412;
+  --green-b: #00d08430;
+  --green2: #00ff9f;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(5,5,5,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-mark {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #00d084, #00a066);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-logo-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.5px;
+}
+.nav-logo-name span { color: var(--green); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  color: var(--muted2);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+  letter-spacing: 0.2px;
+}
+.nav-links a:hover { color: var(--white); }
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-ghost {
+  padding: 8px 18px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: none;
+  color: var(--muted2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--green-b); color: var(--green); }
+
+.btn-primary {
+  padding: 8px 20px;
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+.btn-primary:hover { background: var(--green2); transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* background glow orbs */
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0,208,132,0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  pointer-events: none;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,208,132,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,208,132,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-d);
+  border: 1px solid var(--green-b);
+  border-radius: 100px;
+  padding: 5px 14px 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+  margin-bottom: 28px;
+  text-transform: uppercase;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(44px, 7vw, 86px);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.02;
+  letter-spacing: -3px;
+  margin-bottom: 24px;
+  max-width: 900px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title .accent { color: var(--green); }
+.hero-title .dim { color: var(--muted2); }
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--muted2);
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  font-weight: 400;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.btn-hero {
+  padding: 14px 32px;
+  background: var(--green);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-hero:hover { background: var(--green2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,208,132,0.25); }
+
+.btn-hero-ghost {
+  padding: 14px 28px;
+  background: none;
+  color: var(--muted2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-hero-ghost:hover { border-color: var(--border); color: var(--white); }
+
+/* ── DASHBOARD PREVIEW ── */
+.hero-preview {
+  margin-top: 64px;
+  width: 100%;
+  max-width: 960px;
+  position: relative;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.hero-preview-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(0,208,132,0.12), transparent 70%);
+  pointer-events: none;
+}
+.preview-window {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.8);
+}
+.preview-bar {
+  height: 42px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 6px;
+}
+.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+.preview-dot:nth-child(1) { background: #ff5f57; }
+.preview-dot:nth-child(2) { background: #febc2e; }
+.preview-dot:nth-child(3) { background: #28c840; }
+.preview-url {
+  margin-left: 12px;
+  background: var(--s3);
+  border-radius: 6px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--muted2);
+  flex: 1;
+  max-width: 300px;
+}
+.preview-body {
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background: #080808;
+}
+.preview-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.preview-card-label {
+  font-size: 9px;
+  color: var(--muted2);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.preview-card-val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  font-family: 'Syne', sans-serif;
+  letter-spacing: -1px;
+}
+.preview-card-val.green { color: var(--green); }
+.preview-card-change {
+  font-size: 10px;
+  color: var(--green);
+  margin-top: 4px;
+  font-family: 'DM Mono', monospace;
+}
+.preview-chart {
+  grid-column: 1 / -1;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+.preview-bar-item {
+  flex: 1;
+  background: var(--green);
+  border-radius: 3px 3px 0 0;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.preview-bar-item:hover { opacity: 1; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--s1);
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+}
+.stat-item {
+  padding: 28px 20px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -1.5px;
+  margin-bottom: 4px;
+}
+.stat-num span { color: var(--green); }
+.stat-label {
+  font-size: 11px;
+  color: var(--muted2);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── SECTION ── */
+section {
+  padding: 100px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--green);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-badge::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--green);
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 15px;
+  color: var(--muted2);
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+/* ── FEATURES ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 60px;
+}
+.feature-card {
+  background: var(--s1);
+  padding: 36px 32px;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green-b), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover { background: var(--s2); }
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--green-d);
+  border: 1px solid var(--green-b);
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.feature-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+.feature-desc {
+  font-size: 13px;
+  color: var(--muted2);
+  line-height: 1.7;
+}
+.feature-tag {
+  display: inline-flex;
+  margin-top: 16px;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: var(--green);
+  background: var(--green-d);
+  border: 1px solid var(--green-b);
+  border-radius: 4px;
+  padding: 2px 8px;
+}
+
+/* ── HOW IT WORKS ── */
+.hiw-section {
+  padding: 100px 40px;
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.hiw-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 60px;
+  position: relative;
+}
+.hiw-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(16.66% + 20px);
+  right: calc(16.66% + 20px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--green-b), var(--green-b));
+  border-top: 1px dashed var(--border2);
+}
+.hiw-step {
+  padding: 0 32px;
+  text-align: center;
+}
+.hiw-num {
+  width: 56px;
+  height: 56px;
+  background: var(--s2);
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--green);
+  margin: 0 auto 24px;
+  position: relative;
+  z-index: 1;
+}
+.hiw-step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
+}
+.hiw-step-desc {
+  font-size: 13px;
+  color: var(--muted2);
+  line-height: 1.7;
+}
+
+/* ── PLATFORMS ── */
+.platforms-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+.platform-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  transition: all 0.2s;
+}
+.platform-pill:hover {
+  border-color: var(--border2);
+  background: var(--s3);
+  transform: translateY(-2px);
+}
+.platform-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ── PIXEL SECTION ── */
+.pixel-section {
+  padding: 100px 40px;
+}
+.pixel-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.pixel-visual {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.pixel-visual-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s2);
+}
+.pixel-visual-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+}
+.pixel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.pixel-row:last-child { border-bottom: none; }
+.pixel-row-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pixel-dot { width: 8px; height: 8px; border-radius: 50%; }
+.pixel-row-name { font-size: 12px; font-weight: 600; color: var(--white); }
+.pixel-row-id { font-size: 10px; color: var(--muted2); font-family: 'DM Mono', monospace; }
+.pixel-status {
+  display: flex;
+  gap: 4px;
+}
+.px-chip {
+  width: 26px;
+  height: 18px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  font-family: 'DM Mono', monospace;
+}
+.px-on { background: rgba(0,208,132,0.12); color: var(--green); border: 1px solid rgba(0,208,132,0.2); }
+.px-off { background: var(--s3); color: var(--muted); border: 1px solid var(--border); }
+
+/* ── POSTBACK ── */
+.postback-section {
+  padding: 100px 40px;
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.postback-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.postback-url-box {
+  margin-top: 40px;
+  background: var(--s2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  word-break: break-all;
+  line-height: 2;
+  position: relative;
+}
+.postback-url-box .param { color: var(--muted2); }
+.postback-url-box .val { color: var(--green); }
+.network-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 32px;
+}
+.network-item {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.network-item:hover {
+  border-color: var(--green-b);
+  background: var(--green-d);
+}
+.network-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── CTA ── */
+.cta-section {
+  padding: 120px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(0,208,132,0.06) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.cta-inner { position: relative; z-index: 1; }
+.cta-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -2.5px;
+  line-height: 1.02;
+  margin-bottom: 20px;
+}
+.cta-title span { color: var(--green); }
+.cta-sub {
+  font-size: 16px;
+  color: var(--muted2);
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--s1);
+}
+.footer-left {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+}
+.footer-right {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-title { letter-spacing: -2px; }
+  .stats-bar { grid-template-columns: repeat(2,1fr); padding: 0 20px; }
+  section { padding: 60px 20px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .hiw-section { padding: 60px 20px; }
+  .hiw-steps { grid-template-columns: 1fr; gap: 40px; }
+  .hiw-steps::before { display: none; }
+  .pixel-inner { grid-template-columns: 1fr; gap: 40px; }
+  .network-list { grid-template-columns: repeat(2,1fr); }
+  .postback-section { padding: 60px 20px; }
+  .cta-section { padding: 80px 20px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+        <path d="M24 6L40 15V33L24 42L8 33V15L24 6Z" fill="white"/>
+        <path d="M17 21H31M17 24H27M17 27H23" stroke="#00a066" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="nav-logo-name">Ad<span>Ledger</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#pixels">Pixels</a></li>
+    <li><a href="#postback">Postback</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="/index.html" class="btn-ghost">Sign in</a>
+    <a href="/index.html" class="btn-primary">Get Started →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    CPA Tracking Platform
+  </div>
+  <h1 class="hero-title">
+    Track Every Sale.<br>
+    <span class="accent">Fire Every Pixel.</span><br>
+    <span class="dim">Scale with data.</span>
+  </h1>
+  <p class="hero-sub">
+    AdLedger connects your CPA campaigns to Meta, TikTok, Google and Snapchat pixels automatically — no code, no guesswork.
+  </p>
+  <div class="hero-actions">
+    <a href="/index.html" class="btn-hero">
+      Start Tracking Free
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+    <a href="#how-it-works" class="btn-hero-ghost">See how it works</a>
+  </div>
+
+  <!-- dashboard preview -->
+  <div class="hero-preview">
+    <div class="hero-preview-glow"></div>
+    <div class="preview-window">
+      <div class="preview-bar">
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-url">adledger.store/dashboard</div>
+      </div>
+      <div class="preview-body">
+        <div class="preview-card">
+          <div class="preview-card-label">Revenue Today</div>
+          <div class="preview-card-val green">$2,847</div>
+          <div class="preview-card-change">↑ 24.3% vs yesterday</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-label">Orders Today</div>
+          <div class="preview-card-val">178</div>
+          <div class="preview-card-change" style="color:var(--green)">+32 vs yesterday</div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-label">Total Revenue</div>
+          <div class="preview-card-val">$48.2k</div>
+          <div class="preview-card-change" style="color:var(--muted2)">1,204 total orders</div>
+        </div>
+        <div class="preview-chart" id="preview-chart"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">$<span>2.4M</span></div>
+    <div class="stat-label">Revenue Tracked</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span>48k</span>+</div>
+    <div class="stat-label">Orders Processed</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span>4</span></div>
+    <div class="stat-label">Ad Platforms</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num"><span>100</span>%</div>
+    <div class="stat-label">Uptime SLA</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-badge">Features</div>
+  <h2 class="section-title">Everything you need<br>to scale CPA.</h2>
+  <p class="section-sub">Built for media buyers who need real data, fast attribution, and clean pixel reporting.</p>
+
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <div class="feature-title">Universal Postback</div>
+      <div class="feature-desc">One URL for all your CPA networks. Works with Prismique, Adexico, MaxBounty, ClickDealer and any network that supports postback tracking.</div>
+      <div class="feature-tag">plug & play</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔥</div>
+      <div class="feature-title">Multi-Pixel CAPI</div>
+      <div class="feature-desc">Fire Meta, TikTok, Google and Snapchat Conversions API simultaneously on every sale. Assign different pixels to different offers or campaigns.</div>
+      <div class="feature-tag">server-side</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Real-Time Analytics</div>
+      <div class="feature-desc">Revenue charts, platform breakdowns, top offers, campaign performance — all updating live as sales come in.</div>
+      <div class="feature-tag">live data</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <div class="feature-title">Click Tracking</div>
+      <div class="feature-desc">Track every click with campaign, adset and ad ID. Match clicks to conversions for full attribution even without cookies.</div>
+      <div class="feature-tag">cookieless</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <div class="feature-title">Team Management</div>
+      <div class="feature-desc">Add media buyers to your workspace. Each user sees their own data. Admins see everything. Pause or remove users anytime.</div>
+      <div class="feature-tag">multi-user</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✈️</div>
+      <div class="feature-title">Telegram Alerts</div>
+      <div class="feature-desc">Get an instant Telegram notification every time a sale fires. Know your numbers in real time, wherever you are.</div>
+      <div class="feature-tag">instant</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="hiw-section" id="how-it-works">
+  <div class="hiw-inner">
+    <div class="section-badge">How it works</div>
+    <h2 class="section-title">Up and running<br>in 3 steps.</h2>
+    <div class="hiw-steps reveal">
+      <div class="hiw-step">
+        <div class="hiw-num">01</div>
+        <div class="hiw-step-title">Add Your Pixels</div>
+        <div class="hiw-step-desc">Connect your Meta, TikTok, Google and Snapchat pixels with your CAPI tokens. Multiple pixels per platform supported.</div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">02</div>
+        <div class="hiw-step-title">Set Postback URL</div>
+        <div class="hiw-step-desc">Copy your unique postback URL and paste it into your CPA network's settings. One URL works for all networks.</div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">03</div>
+        <div class="hiw-step-title">Watch Sales Roll In</div>
+        <div class="hiw-step-desc">Every confirmed sale fires your pixels automatically and appears in your dashboard in real time with full attribution.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATFORMS -->
+<section style="text-align:center">
+  <div class="section-badge" style="justify-content:center">Platforms</div>
+  <h2 class="section-title">Works with every<br>major ad platform.</h2>
+  <div class="platforms-row reveal">
+    <div class="platform-pill">
+      <div class="platform-dot" style="background:#0082fb"></div>
+      Meta Ads
+    </div>
+    <div class="platform-pill">
+      <div class="platform-dot" style="background:#ff2d55"></div>
+      TikTok Ads
+    </div>
+    <div class="platform-pill">
+      <div class="platform-dot" style="background:#4285f4"></div>
+      Google Ads
+    </div>
+    <div class="platform-pill">
+      <div class="platform-dot" style="background:#FFFC00"></div>
+      Snapchat Ads
+    </div>
+    <div class="platform-pill">
+      <div class="platform-dot" style="background:#00d084"></div>
+      + Any Network
+    </div>
+  </div>
+</section>
+
+<!-- PIXEL SECTION -->
+<div class="pixel-section" id="pixels">
+  <div class="pixel-inner">
+    <div>
+      <div class="section-badge">Pixel Management</div>
+      <h2 class="section-title">Multiple pixels,<br>zero conflicts.</h2>
+      <p class="section-sub" style="margin-bottom:24px">Add unlimited pixels per platform. Assign specific pixels to specific offers. Each pixel fires independently with its own CAPI token and event data.</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:12px">
+        <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted2)">
+          <span style="color:var(--green);font-size:16px">✓</span> Server-side CAPI — no browser required
+        </li>
+        <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted2)">
+          <span style="color:var(--green);font-size:16px">✓</span> Full deduplication via transaction ID
+        </li>
+        <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted2)">
+          <span style="color:var(--green);font-size:16px">✓</span> Assign pixels per offer or campaign
+        </li>
+        <li style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted2)">
+          <span style="color:var(--green);font-size:16px">✓</span> Real-time pixel fire status per order
+        </li>
+      </ul>
+    </div>
+    <div class="pixel-visual reveal">
+      <div class="pixel-visual-header">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>
+        <div class="pixel-visual-title">Pixel Settings</div>
+      </div>
+      <div class="pixel-row">
+        <div class="pixel-row-left">
+          <div class="pixel-dot" style="background:#0082fb"></div>
+          <div>
+            <div class="pixel-row-name">Meta — Main Account</div>
+            <div class="pixel-row-id">1234567890123</div>
+          </div>
+        </div>
+        <div class="pixel-status">
+          <div class="px-chip px-on">FB</div>
+          <div class="px-chip px-off">TT</div>
+          <div class="px-chip px-off">SC</div>
+          <div class="px-chip px-off">GG</div>
+        </div>
+      </div>
+      <div class="pixel-row">
+        <div class="pixel-row-left">
+          <div class="pixel-dot" style="background:#ff2d55"></div>
+          <div>
+            <div class="pixel-row-name">TikTok — Brand Campaign</div>
+            <div class="pixel-row-id">CXXXXXXXXX01</div>
+          </div>
+        </div>
+        <div class="pixel-status">
+          <div class="px-chip px-off">FB</div>
+          <div class="px-chip px-on">TT</div>
+          <div class="px-chip px-off">SC</div>
+          <div class="px-chip px-off">GG</div>
+        </div>
+      </div>
+      <div class="pixel-row">
+        <div class="pixel-row-left">
+          <div class="pixel-dot" style="background:#4285f4"></div>
+          <div>
+            <div class="pixel-row-name">Google — Search</div>
+            <div class="pixel-row-id">123-456-7890</div>
+          </div>
+        </div>
+        <div class="pixel-status">
+          <div class="px-chip px-off">FB</div>
+          <div class="px-chip px-off">TT</div>
+          <div class="px-chip px-off">SC</div>
+          <div class="px-chip px-on">GG</div>
+        </div>
+      </div>
+      <div class="pixel-row">
+        <div class="pixel-row-left">
+          <div class="pixel-dot" style="background:#fffc00"></div>
+          <div>
+            <div class="pixel-row-name">Snapchat — Retarget</div>
+            <div class="pixel-row-id">xxxx-xxxx-xxxx</div>
+          </div>
+        </div>
+        <div class="pixel-status">
+          <div class="px-chip px-off">FB</div>
+          <div class="px-chip px-off">TT</div>
+          <div class="px-chip px-on">SC</div>
+          <div class="px-chip px-off">GG</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- POSTBACK -->
+<div class="postback-section" id="postback">
+  <div class="postback-inner">
+    <div class="section-badge">Postback</div>
+    <h2 class="section-title">One URL.<br>Every network.</h2>
+    <p class="section-sub">Generate a single postback URL and use it across all your CPA networks. The network name is passed as a parameter so you can filter and analyze by source.</p>
+    <div class="postback-url-box reveal">
+      <span class="val">https://adledger.store/postback</span><span class="param">?platform=</span><span class="val">{sub1}</span><span class="param">&payout=</span><span class="val">{payout}</span><span class="param">&transaction_id=</span><span class="val">{transaction_id}</span><span class="param">&offer_name=</span><span class="val">{offer_name}</span><span class="param">&network=</span><span class="val">prismique</span><span class="param">&user_id=</span><span class="val">YOUR_ID</span>
+    </div>
+    <div class="network-list reveal">
+      <div class="network-item"><div class="network-item-name">Prismique</div></div>
+      <div class="network-item"><div class="network-item-name">Adexico</div></div>
+      <div class="network-item"><div class="network-item-name">MaxBounty</div></div>
+      <div class="network-item"><div class="network-item-name">ClickDealer</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-title">Ready to track<br><span>every dollar?</span></h2>
+    <p class="cta-sub">Join media buyers already using AdLedger to scale their CPA campaigns.</p>
+    <a href="/index.html" class="btn-hero">
+      Create Free Account
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2026 AdLedger — CPA Tracking Platform</div>
+  <div class="footer-right">adledger.store</div>
+</footer>
+
+<script>
+// Generate preview chart bars
+const chart = document.getElementById('preview-chart');
+const heights = [20, 35, 28, 45, 38, 55, 42, 68, 52, 75, 60, 82, 70, 90, 78, 95, 85, 72, 88, 65, 78, 92, 70, 85];
+heights.forEach(h => {
+  const bar = document.createElement('div');
+  bar.className = 'preview-bar-item';
+  bar.style.height = h + '%';
+  chart.appendChild(bar);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const el = document.querySelector(a.getAttribute('href'));
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+</body>
+</html>
