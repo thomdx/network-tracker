@@ -17,7 +17,7 @@ app.use((req, res, next) => {
   next();
 });
 app.get('/app', (req, res) => {
-  res.sendFile(__dirname + '/public/landing.html');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 
